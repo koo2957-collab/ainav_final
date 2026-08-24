@@ -10069,8 +10069,8 @@
                            ondragstart="event.preventDefault()"
                            onfocus="this.style.background='rgba(37,99,235,0.05)';this.style.outline='1.5px solid rgba(37,99,235,0.3)'"
                            onblur="this.style.background='transparent';this.style.outline='none';app.saveFocusItemText(${workflow.id},${index},this.value)"
-                           onkeydown="if(event.key==='Enter'){event.preventDefault();app.focusAddItemAfterLive(${workflow.id},${index});}
-                                      if(event.key==='Tab'){event.preventDefault();app.focusToggleItemIndent(${workflow.id},${index},event.shiftKey);}
+                           onkeydown="if(event.key==='Enter'){event.preventDefault();app.saveFocusItemText(${workflow.id},${index},this.value);app.focusAddItemAfterLive(${workflow.id},${index});}
+                                      if(event.key==='Tab'){event.preventDefault();app.saveFocusItemText(${workflow.id},${index},this.value);app.focusToggleItemIndent(${workflow.id},${index},event.shiftKey);}
                                       if(event.key==='Backspace'&&!this.value.trim()){event.preventDefault();app.focusDeleteItemLive(${workflow.id},${index});}"
                            placeholder="항목명 입력...">`;
 
@@ -10149,6 +10149,7 @@
             focusDeleteItemLive(workflowId, index) {
                 const workflow = this.allData.workflows.find(w => w.id === workflowId);
                 if (!workflow) return;
+                this._commitFocusedChecklistInput(workflowId);
                 workflow.checklist.splice(index, 1);
                 this.hasUnsavedChanges = true;
                 this.saveData();
@@ -10161,10 +10162,25 @@
                 });
             }
 
+            // 재렌더링 직전, 아직 blur되지 않아 데이터에 반영 안 된 입력값을 먼저 커밋한다.
+            // 버튼 클릭 시에는 mousedown 시점에 포커스가 이미 버튼으로 넘어가 있어
+            // document.activeElement로는 방금까지 입력 중이던 input을 찾을 수 없으므로,
+            // 현재 화면에 그려진 모든 항목 입력창의 실시간 값을 직접 훑어서 반영한다.
+            _commitFocusedChecklistInput(workflowId) {
+                const workflow = this.allData.workflows.find(w => w.id === workflowId);
+                const container = document.getElementById(`checklist-items-${workflowId}`);
+                if (!workflow || !workflow.checklist || !container) return;
+                container.querySelectorAll('.fci-title-input').forEach(inp => {
+                    const idx = parseInt(inp.closest('.checklist-card')?.dataset.index);
+                    if (!isNaN(idx)) this.saveFocusItemText(workflowId, idx, inp.value);
+                });
+            }
+
             // 포커스모드 항목 추가 (맨 끝)
             focusAddItem(workflowId) {
                 const workflow = this.allData.workflows.find(w => w.id === workflowId);
                 if (!workflow) return;
+                this._commitFocusedChecklistInput(workflowId);
                 if (!workflow.checklist) workflow.checklist = [];
                 workflow.checklist.push({ text: '', completed: false });
                 this.hasUnsavedChanges = true;
@@ -10181,6 +10197,7 @@
             focusAddItemAfterLive(workflowId, index) {
                 const workflow = this.allData.workflows.find(w => w.id === workflowId);
                 if (!workflow) return;
+                this._commitFocusedChecklistInput(workflowId);
                 workflow.checklist.splice(index + 1, 0, { text: '', completed: false });
                 this.hasUnsavedChanges = true;
                 this.saveData();
@@ -12584,11 +12601,24 @@ ${GOVERNMENT_DOCUMENT_GUIDELINES}
                 return item.itemId;
             }
 
+            // 재렌더링 직전, 아직 change/blur가 발생하지 않아 데이터에 반영 안 된 편집 중인 항목명을 먼저 커밋한다.
+            // 버튼 클릭 시에는 mousedown 시점에 포커스가 이미 버튼으로 넘어가 있어 document.activeElement로는
+            // 방금까지 입력 중이던 input을 찾을 수 없으므로, 현재 그려진 모든 항목명 입력창을 직접 훑어서 반영한다.
+            _commitFocusedEditChecklistInput() {
+                const container = document.getElementById('editChecklistItems');
+                if (!container) return;
+                container.querySelectorAll('.item-title').forEach(inp => {
+                    const card = inp.closest('.checklist-card');
+                    const idx = card ? parseInt(card.dataset.index) : NaN;
+                    if (!isNaN(idx)) this.updateChecklistItemText(idx, inp.value);
+                });
+            }
+
             // 체크리스트 항목 추가 (편집 모달) - 맨 아래에 추가
             addEditChecklistItem() {
                 const workflow = this.allData.workflows.find(w => w.id === this.currentEditingWorkflowId);
                 if (!workflow) return;
-                
+                this._commitFocusedEditChecklistInput();
                 if (!workflow.checklist) workflow.checklist = [];
                 
                 workflow.checklist.push({ 
@@ -12608,6 +12638,7 @@ ${GOVERNMENT_DOCUMENT_GUIDELINES}
             addEditChecklistItemBelow(index) {
                 const workflow = this.allData.workflows.find(w => w.id === this.currentEditingWorkflowId);
                 if (!workflow) return;
+                this._commitFocusedEditChecklistInput();
 
                 if (!workflow.checklist) workflow.checklist = [];
 
@@ -12632,7 +12663,8 @@ ${GOVERNMENT_DOCUMENT_GUIDELINES}
             removeEditChecklistItem(index) {
                 const workflow = this.allData.workflows.find(w => w.id === this.currentEditingWorkflowId);
                 if (!workflow || !workflow.checklist) return;
-                
+                this._commitFocusedEditChecklistInput();
+
                 if (confirm('이 항목을 삭제하시겠습니까?')) {
                     workflow.checklist.splice(index, 1);
                     this.displayEditChecklist(workflow.checklist);
@@ -25257,7 +25289,10 @@ ${aiPartnerCitationFirstRules}
             escapeHtml(text) {
                 const div = document.createElement('div');
                 div.textContent = text;
-                return div.innerHTML;
+                // innerHTML은 텍스트 콘텐츠 직렬화 규칙상 큰따옴표(")는 이스케이프하지 않는다.
+                // 이 함수 결과가 value="${...}" 처럼 큰따옴표 속성값 안에 그대로 삽입되는 곳이 많아,
+                // "가 포함된 입력값(체크리스트 항목 등)이 속성을 조기 종료시켜 뒷부분이 사라지는 버그가 있었다.
+                return div.innerHTML.replace(/"/g, '&quot;');
             }
 
             // onclick="...('${str}')" 형태로 HTML 속성에 삽입되는 JS 문자열 리터럴 이스케이프.
