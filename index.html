@@ -1792,37 +1792,36 @@
         :root.dark-mode .ai-model-opt.active { background: rgba(37,99,235,0.18); }
         :root.dark-mode .ai-model-tag-muted { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.12); }
 
-        /* 절차/챗봇 전환 탭 */
-        .ai-panel-view-tabs {
-            flex-shrink: 0;
+        /* 절차/챗봇 전환 스위치 — 헤더 줄(보라색 그라디언트) 안에 아이콘만으로 작게 표시.
+           배지·닫기 버튼과 같은 "반투명 흰색 위에 얹힌" 톤으로 맞춰서 헤더와 한 덩어리로 보이게 한다. */
+        .ai-panel-view-switch {
             display: flex;
-            gap: 4px;
-            padding: 8px 14px 0;
-            background: var(--white);
+            gap: 2px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.18);
+            border-radius: 8px;
+            padding: 2px;
+            flex-shrink: 0;
         }
         .ai-panel-view-tab {
-            flex: 1;
-            padding: 7px 6px;
-            font-size: 0.76rem;
-            font-weight: 600;
+            width: 28px;
+            height: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            font-size: 0.82rem;
             font-family: inherit;
-            color: var(--text-muted);
-            background: var(--bg-light);
-            border: 1px solid transparent;
-            border-radius: 7px 7px 0 0;
+            color: rgba(255,255,255,0.6);
+            background: transparent;
+            border: none;
+            border-radius: 6px;
             cursor: pointer;
             transition: background 0.15s, color 0.15s;
         }
-        .ai-panel-view-tab:hover:not(.disabled):not(.active) { background: var(--border-subtle); }
-        .ai-panel-view-tab.active {
-            color: #8b5cf6;
-            background: var(--white);
-            border-color: var(--border-subtle);
-            border-bottom-color: var(--white);
-        }
-        .ai-panel-view-tab.disabled { color: var(--text-muted); opacity: 0.5; cursor: not-allowed; }
-        :root.dark-mode .ai-panel-view-tabs { background: var(--white); }
-        :root.dark-mode .ai-panel-view-tab.active { background: var(--white); }
+        .ai-panel-view-tab:hover:not(.disabled):not(.active) { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.85); }
+        .ai-panel-view-tab.active { background: white; }
+        .ai-panel-view-tab.disabled { opacity: 0.35; cursor: not-allowed; }
 
         /* 컨텍스트 토글 바 */
         .ai-context-bar {
@@ -4584,24 +4583,23 @@
             <!-- 기존 닫기 버튼 (CSS로 숨김, 호환성 유지) -->
             <button class="ai-panel-close-btn" onclick="app.toggleAiPanel()" title="패널 닫기">&times;</button>
 
-            <!-- ── 패널 헤더 ── -->
+            <!-- ── 패널 헤더 (절차/챗봇 전환 스위치를 헤더 줄에 통합 — 예전엔 제목·부제목·탭이 세 줄로
+                 쌓여있어 380px 폭 패널에서 세로 공간을 많이 잡아먹었다. 부제목은 정보량이 적어 빼고,
+                 탭은 아이콘만 남긴 작은 스위치로 줄여 한 줄에 합쳤다.) ── -->
             <div class="ai-panel-header">
                 <div class="ai-panel-title-row">
                     <div style="display:flex;align-items:center;gap:10px;min-width:0;">
                         <div class="ai-panel-id-badge" id="aiPanelIdBadge">AI</div>
-                        <div style="min-width:0;">
-                            <div class="ai-panel-title" id="aiPanelTitleText">업무 파트너</div>
-                            <div class="ai-panel-subtitle">행정 업무를 AI와 함께 처리하세요</div>
-                        </div>
+                        <div class="ai-panel-title" id="aiPanelTitleText">업무 파트너</div>
                     </div>
-                    <button class="ai-panel-header-close" onclick="app.toggleAiPanel()" title="패널 닫기">✕</button>
+                    <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+                        <div class="ai-panel-view-switch" id="aiPanelViewTabs">
+                            <button class="ai-panel-view-tab" id="aiPanelTabProcedure" onclick="app.setAiPanelView('procedure')" title="업무 절차">📋</button>
+                            <button class="ai-panel-view-tab" id="aiPanelTabChat" onclick="app.setAiPanelView('chat')" title="AI 업무파트너">💬</button>
+                        </div>
+                        <button class="ai-panel-header-close" onclick="app.toggleAiPanel()" title="패널 닫기">✕</button>
+                    </div>
                 </div>
-            </div>
-
-            <!-- ── 절차/챗봇 전환 탭 ── -->
-            <div class="ai-panel-view-tabs" id="aiPanelViewTabs">
-                <button class="ai-panel-view-tab" id="aiPanelTabProcedure" onclick="app.setAiPanelView('procedure')">📋 업무 절차</button>
-                <button class="ai-panel-view-tab" id="aiPanelTabChat" onclick="app.setAiPanelView('chat')">💬 AI 업무파트너</button>
             </div>
 
             <!-- ── 현재업무 컨텍스트 토글 ── -->
@@ -18740,15 +18738,11 @@ ${docScope === 'internal' ? `[내부결재 — 보고·검토·승인용]
                 }
                 const showChat = this.aiPanelViewMode === 'chat';
 
-                // 패널 배지·제목·부제 — 지금 보고 있는 화면(챗봇/절차)에 맞는 이름으로 전환
+                // 패널 배지·제목 — 지금 보고 있는 화면(챗봇/절차)에 맞는 이름으로 전환
                 const badge = document.getElementById('aiPanelIdBadge');
                 if (badge) badge.textContent = showChat ? 'AI' : '절차';
                 const titleEl = document.getElementById('aiPanelTitleText');
                 if (titleEl) titleEl.textContent = showChat ? '업무 파트너' : '업무 절차';
-                const subtitle = document.querySelector('.ai-panel-subtitle');
-                if (subtitle) {
-                    subtitle.textContent = showChat ? '행정 업무를 AI와 함께 처리하세요' : '지금 단계·필요 서식을 한눈에 확인하세요';
-                }
                 const toggleIcon = document.getElementById('aiPanelToggleIcon');
                 if (toggleIcon) toggleIcon.title = showChat ? 'AI 업무파트너 열기' : '업무 절차 열기';
 
