@@ -10293,9 +10293,6 @@
             // 심플 리스트: 포커스 모드 진입
             focusWorkflow(workflowId, editMode = false) {
                 this.acknowledgeUrgentSection();
-                // 실제로 변경된 게 있을 때만 닫을 때 "저장되었습니다"를 띄우기 위한 진입 시점 스냅샷
-                const entryWork = this.allData.workflows.find(w => w.id === workflowId);
-                this._focusEntrySnapshot = entryWork ? JSON.stringify(entryWork) : null;
                 this._layoutFade(() => {
                     this.selectProject(workflowId);
                     this.focusMode = true;
@@ -10305,6 +10302,12 @@
                     document.body.classList.add('focus-mode');
                     this.restoreAiPanelState();
                     this.displayWorkflows();
+                    // 실제로 변경된 게 있을 때만 닫을 때 "저장되었습니다"를 띄우기 위한 스냅샷.
+                    // displayWorkflows() 렌더링 과정에서 항목에 formats/result/tip 같은 기본 필드가
+                    // 없으면 자동으로 채워 넣는 정규화가 일어나므로(오래된 데이터일수록 흔함), 그 정규화가
+                    // 끝난 "직후" 상태를 기준으로 잡아야 아무것도 안 바꿨는데 "저장됨"으로 잘못 뜨는 걸 막는다.
+                    const entryWork = this.allData.workflows.find(w => w.id === workflowId);
+                    this._focusEntrySnapshot = entryWork ? JSON.stringify(entryWork) : null;
                     // 뒤로가기 처리: 히스토리 스택에 포커스 상태 추가
                     history.pushState({ focusMode: true, workflowId }, '');
                 });
