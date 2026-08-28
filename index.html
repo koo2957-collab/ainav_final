@@ -1419,8 +1419,12 @@
             border: 1px solid var(--border-subtle);
             box-shadow: 0 1px 4px rgba(17,31,53,0.06);
         }
-        @keyframes urgentSectionFlash { 0%, 100% { background: transparent; } 35% { background: rgba(239,68,68,0.12); } }
-        .urgent-section-flash { animation: urgentSectionFlash 0.9s ease; border-radius: 8px; }
+        @keyframes urgentSectionFlash { 0% { background: transparent; } 12% { background: rgba(239,68,68,0.14); } 55% { background: rgba(239,68,68,0.14); } 100% { background: transparent; } }
+        .urgent-section-flash { animation: urgentSectionFlash 1.8s ease; border-radius: 8px; }
+        /* 마감 임박 미확인 표시 — 애니메이션 없이 정적으로, 확인(카드 선택·배너 확인)하기 전까지 유지 */
+        .urgent-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: #ef4444; flex-shrink: 0; }
+        /* 알림센터 기록의 업무명(<b>) 강조 — 시작 배너와 동일한 색·굵기로 통일 */
+        .nc-body b { color: #ef4444; font-weight: 800; }
         .sidebar-overdue-alert { display: none; align-items: center; gap: 5px; width: fit-content; margin: 0 0 14px; padding: 4px 11px; background: #fef2f2; color: #ef4444; font-size: 0.73rem; font-weight: 700; border-radius: 999px; cursor: pointer; white-space: nowrap; transition: background 0.12s; }
         .sidebar-overdue-alert::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #ef4444; flex-shrink: 0; }
         .sidebar-overdue-alert:hover { background: #fee2e2; }
@@ -2764,6 +2768,30 @@
         .toast.info    { border-left: 3px solid var(--accent); }
         .toast-icon { display: flex; align-items: center; justify-content: center; padding: 0 2px 0 12px; flex-shrink: 0; }
         .toast-message { padding: 10px 14px 10px 8px; font-size: 0.81rem; font-weight: 500; color: var(--text-dark); line-height: 1.45; }
+
+        /* 마감 임박 시작 배너 — 프로그램을 열었을 때 뜨는 상세 알림 (사이드바 "마감 임박" 카드와 동일한 색선 규칙 사용) */
+        .deadline-banner { position: fixed; right: 22px; bottom: 22px; width: 340px; max-width: calc(100vw - 32px); background: var(--white); border: 1px solid var(--border-light); border-radius: 14px; box-shadow: 0 20px 44px rgba(17,31,53,0.18), 0 2px 8px rgba(17,31,53,0.08); z-index: var(--z-toast); display: none; overflow: hidden; }
+        .deadline-banner.show { display: block; animation: dbRise 0.28s cubic-bezier(0.2,0.8,0.2,1); }
+        @keyframes dbRise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .db-head { display: flex; align-items: flex-start; gap: 10px; padding: 14px 14px 12px; }
+        .db-icon { flex-shrink: 0; width: 30px; height: 30px; border-radius: 9px; background: #fef2f2; display: flex; align-items: center; justify-content: center; font-size: 15px; }
+        :root.dark-mode .db-icon { background: rgba(239,68,68,0.14); }
+        .db-msg { flex: 1; min-width: 0; font-size: 0.85rem; font-weight: 700; line-height: 1.5; color: var(--text-dark); }
+        .db-msg b { color: #ef4444; font-weight: 800; }
+        .db-close { flex-shrink: 0; width: 20px; height: 20px; border-radius: 6px; border: none; background: transparent; color: var(--text-muted); font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .db-close:hover { background: var(--bg-light); color: var(--text-dark); }
+        .db-items { display: flex; flex-direction: column; padding: 0 10px; gap: 5px; }
+        .db-row { display: flex; align-items: center; gap: 8px; padding: 7px 8px; border-radius: 8px; background: var(--bg-light); border-left: 3px solid var(--c, #ef4444); cursor: pointer; }
+        .db-row:hover { filter: brightness(0.97); }
+        .db-row-title { flex: 1; min-width: 0; font-size: 0.76rem; font-weight: 600; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .db-row-day { flex-shrink: 0; font-size: 0.68rem; font-weight: 800; color: var(--c, #ef4444); }
+        .db-more { text-align: center; padding: 4px 0 2px; font-size: 0.72rem; font-weight: 600; color: var(--text-muted); cursor: pointer; }
+        .db-more:hover { color: var(--accent); }
+        .db-actions { display: flex; gap: 8px; padding: 12px 14px 14px; }
+        .db-btn { flex: 1; text-align: center; padding: 8px 10px; border-radius: 8px; font-size: 0.78rem; font-weight: 700; cursor: pointer; border: 1px solid transparent; }
+        .db-btn-primary { background: var(--accent); color: #fff; }
+        .db-btn-ghost { background: transparent; color: var(--text-muted); border-color: var(--border-light); }
+        .db-btn-ghost:hover { background: var(--bg-light); }
         .empty-state { text-align: center; padding: 60px 30px; color: var(--text-gray); }
         .empty-state-icon { font-size: 4rem; margin-bottom: 20px; opacity: 0.5; }
         .empty-state-text { font-size: 1.1rem; }
@@ -4447,6 +4475,16 @@
 
             <!-- 우: 상태 -->
             <div class="header-right">
+                <!-- 알림센터: OS 알림이 안 뜨는 환경(file:// 등)에서도 항상 동작하는 인앱 알림 기록 -->
+                <div class="dropdown">
+                    <button id="notifyCenterBtn" class="btn btn-white" onclick="app.toggleNotifyCenter()" style="position:relative;padding:6px 8px;" title="알림센터">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                        <span id="notifyCenterBadge" style="display:none;position:absolute;top:2px;right:2px;min-width:15px;height:15px;padding:0 3px;border-radius:8px;background:#ef4444;color:#fff;font-size:0.62rem;font-weight:700;align-items:center;justify-content:center;line-height:1;"></span>
+                    </button>
+                    <div id="notifyCenterMenu" class="dropdown-menu" style="min-width:280px;max-width:320px;max-height:60vh;overflow-y:auto;">
+                        <div id="notifyCenterList" style="padding:0;border-bottom:none;cursor:default;"></div>
+                    </div>
+                </div>
                 <div class="api-status-badge" id="apiStatusBadge" style="display:none;">
                     <span id="apiStatusIcon">●</span>
                     <span id="apiStatusText">미연결</span>
@@ -4487,6 +4525,20 @@
             <div class="sidebar-nav-sep">
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                 마감 임박
+                <span id="urgentSectionBadge" class="urgent-badge-dot" style="display:none;" title="아직 확인하지 않은 마감 임박 업무가 있습니다"></span>
+                <div class="dropdown" style="display:inline-flex;margin-left:auto;">
+                    <button id="deadlineNotifyBtn" onclick="app.toggleDeadlineNotifyMenu()" title="마감일 알림 설정"
+                        style="background:none;border:none;cursor:pointer;padding:0;color:var(--text-muted);display:inline-flex;align-items:center;">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                    </button>
+                    <div id="deadlineNotifyMenu" class="dropdown-menu" style="text-transform:none;letter-spacing:normal;position:fixed;min-width:150px;max-width:calc(100vw - 32px);">
+                        <div onclick="app.setDeadlineNotifyMode('daily'); app.closeAllDropdowns();"><span id="dnMarkDaily"></span>하루에 한 번 알림</div>
+                        <div onclick="app.setDeadlineNotifyMode('always'); app.closeAllDropdowns();"><span id="dnMarkAlways"></span>열 때마다 알림</div>
+                        <div onclick="app.setDeadlineNotifyMode('off'); app.closeAllDropdowns();"><span id="dnMarkOff"></span>알림 끄기</div>
+                        <div class="menu-divider"></div>
+                        <div onclick="app.sendTestDeadlineNotification(); app.closeAllDropdowns();">🔔 테스트 알림 보내기</div>
+                    </div>
+                </div>
             </div>
             <div id="urgentWorksList" style="margin-bottom:4px;">
                 <div style="padding:16px;text-align:center;color:var(--text-muted);font-size:0.82rem;">임박한 업무가 없습니다</div>
@@ -4497,10 +4549,6 @@
             <div class="sidebar-nav-sep">
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
                 오늘 할 일
-                <button id="deadlineNotifyBtn" onclick="app.toggleDeadlineNotifications()" title="마감일 데스크톱 알림 꺼짐 (클릭하여 켜기)"
-                    style="background:none;border:none;cursor:pointer;padding:0;margin-left:1px;color:var(--text-muted);display:inline-flex;align-items:center;">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-                </button>
             </div>
             <div id="todayTasksList" style="margin-bottom:4px;">
                 <div style="padding:12px 4px;text-align:center;color:var(--text-muted);font-size:0.8rem;">지금 해야 할 업무가 없습니다</div>
@@ -5773,6 +5821,20 @@
         <span class="toast-message" id="toastMessage">성공!</span>
     </div>
 
+    <!-- 마감 임박 시작 배너 -->
+    <div class="deadline-banner" id="deadlineBanner">
+        <div class="db-head">
+            <div class="db-icon">🔥</div>
+            <div class="db-msg" id="dbMessage"></div>
+            <button class="db-close" onclick="app.hideDeadlineBanner()" aria-label="닫기">✕</button>
+        </div>
+        <div class="db-items" id="dbItems"></div>
+        <div class="db-actions">
+            <button class="db-btn db-btn-primary" onclick="app.focusUrgentSection(); app.hideDeadlineBanner();">지금 확인하기</button>
+            <button class="db-btn db-btn-ghost" onclick="app.hideDeadlineBanner()">닫기</button>
+        </div>
+    </div>
+
     <script>
         // IndexedDB 관리 클래스
         class IndexedDBManager {
@@ -6499,6 +6561,10 @@
                 this.apiEditMode = { gemini: false, chatgpt: false, claude: false };
                 // 프로바이더별 독립 연결 상태 — 전역 apiStatus와 달리 각 AI를 개별 추적
                 this.providerConnected = { gemini: false, chatgpt: false, claude: false };
+                // 알림센터: OS 알림 실패 환경(file:// 등)에서도 항상 동작하는 인앱 알림 기록
+                this.notifyLog = this.loadNotifyLog();
+                // 마감 임박 미확인 표시 — 카드 선택 등으로 확인하기 전까지 사이드바에 점으로 유지
+                this.urgentSectionAcknowledged = false;
                 this.currentCategory = 'all';
                 this.selectedReportType = null;
                 this.selectedPriority = 'normal';  // Phase 1.1: 우선순위 기본값
@@ -6625,9 +6691,11 @@
 
                 // 마감일 알림 버튼 상태 반영 + 마감일 알림·시작프로그램 안내·백업 리마인더 체크 (로딩 화면 표시 후 지연 실행)
                 this.updateDeadlineNotifyBtnUI();
+                this.renderNotifyCenter();
+                this.primeAudioOnFirstInteraction();
                 setTimeout(async () => {
                     await this.ensureDeadlineNotifyDefaultOn();
-                    if (localStorage.getItem('deadlineNotifyEnabled') === 'true') {
+                    if (localStorage.getItem('deadlineNotifyMode') !== 'off') {
                         this.checkDeadlineNotifications();
                     }
                     this.checkFirstRunStartupPrompt();
@@ -7331,9 +7399,11 @@
                     
                     console.log(`✅ 마이그레이션 완료! localStorage ${lsSizeKB} KB → IndexedDB`);
                     this.showToast('success', '✅', '데이터가 IndexedDB로 이동되었습니다 (용량 제한 해제)');
+                    this.notifyLogOnly('success', '데이터 저장 방식 자동 최적화', '데이터가 IndexedDB로 이동되어 저장 용량 제한이 해제되었습니다.');
                 } catch (error) {
                     console.error('마이그레이션 오류:', error);
                     this.showToast('error', '❌', '마이그레이션 중 오류 발생: ' + error.message);
+                    this.notifyLogOnly('error', '데이터 마이그레이션 오류', error.message || '알 수 없는 오류가 발생했습니다.');
                 }
             }
 
@@ -7641,11 +7711,10 @@
                 
                 projectsDiv.innerHTML = topProjects.map(item => {
                     const { workflow, progress } = item;
-                    const checklistCount = workflow.checklist ? workflow.checklist.length : 0;
-                    const completedCount = workflow.checklist ? workflow.checklist.filter(c => this.normalizeCompleted(c)).length : 0;
-                    
+                    const { completed: completedCount, total: checklistCount } = this.getChecklistStats(workflow);
+
                     return `
-                        <div onclick="app.showProjectDetail(${workflow.id})" 
+                        <div onclick="app.showProjectDetail(${workflow.id})"
                              style="padding: 12px; background: var(--bg-light); border-radius: 8px; cursor: pointer; transition: all 0.2s; border: 2px solid transparent;"
                              onmouseover="this.style.background='#e0f2fe'; this.style.borderColor='var(--accent)';"
                              onmouseout="this.style.background='var(--bg-light)'; this.style.borderColor='transparent';">
@@ -7737,11 +7806,12 @@
                 
                 // 체크리스트 렌더링
                 const progress = this.calculateProgress(workflow);
+                const { completed: __checklistDoneCount, total: __checklistTotalCount } = this.getChecklistStats(workflow);
                 const checklistHtml = workflow.checklist && workflow.checklist.length > 0 ? `
                     <div id="checklist-section-${workflow.id}" style="margin-top: 15px;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 10px; position: relative;">
                             <div style="display: flex; align-items: center; gap: 10px; flex: 1;">
-                                <div id="checklist-count-${workflow.id}" style="font-weight: 600;">체크리스트 (${workflow.checklist.filter(i => this.normalizeCompleted(i)).length}/${workflow.checklist.length})</div>
+                                <div id="checklist-count-${workflow.id}" style="font-weight: 600;">체크리스트 (${__checklistDoneCount}/${__checklistTotalCount})</div>
                                 <div id="checklist-pct-${workflow.id}" style="font-weight: 700; color: var(--accent);">${progress}%</div>
                             </div>
                             <div style="display: flex !important; gap: 8px; align-items: center; flex-shrink: 0;">
@@ -7955,22 +8025,19 @@
                 }
             }
 
-            // 업무 진행률 계산 (순수 함수 - 데이터 수정 없음)
-            calculateProgress(workflow) {
-                if (!workflow.checklist || workflow.checklist.length === 0) {
-                    return 0;
-                }
-                
-                // completed 속성을 boolean으로 변환하여 계산 (원본 데이터는 수정하지 않음)
+            // 체크리스트 완료/전체 개수 계산 (건너뛴 항목은 분자·분모 모두에서 제외 - 순수 함수)
+            getChecklistStats(workflow) {
+                const list = (workflow && workflow.checklist) || [];
                 let completed = 0;
-                for (let i = 0; i < workflow.checklist.length; i++) {
-                    const item = workflow.checklist[i];
-                    
-                    // 건너뛰기 항목도 완료된 것으로 간주하여 진행률에 포함
+                let total = 0;
+                for (let i = 0; i < list.length; i++) {
+                    const item = list[i];
+
+                    // 건너뛴 항목은 진행률 집계 대상에서 제외
                     if (item.skipped === true) {
-                        completed++;
                         continue;
                     }
+                    total++;
 
                     // boolean 값 직접 확인
                     if (item.completed === true) {
@@ -7982,9 +8049,22 @@
                         }
                     }
                 }
-                
-                const progress = Math.round((completed / workflow.checklist.length) * 100);
-                return progress;
+                return { completed, total };
+            }
+
+            // 업무 진행률 계산 (순수 함수 - 데이터 수정 없음)
+            calculateProgress(workflow) {
+                if (!workflow.checklist || workflow.checklist.length === 0) {
+                    return 0;
+                }
+
+                const { completed, total } = this.getChecklistStats(workflow);
+                // 전체 항목이 모두 건너뛰기 상태라면 더 진행할 항목이 없으므로 100%로 처리
+                if (total === 0) {
+                    return 100;
+                }
+
+                return Math.round((completed / total) * 100);
             }
 
             // 상세 통계 모달 열기
@@ -8246,7 +8326,7 @@
 
                     // 체크리스트 렌더링 (모드 분기)
                 const cl = workflow.checklist || [];
-                const doneCount = cl.filter(i => this.normalizeCompleted(i)).length;
+                const { completed: doneCount, total: checklistTotalCount } = this.getChecklistStats(workflow);
                 const isEditMode = this.focusEditMode;
                 const checklistHtml = `
                     <div style="margin-top: 15px;">
@@ -8254,7 +8334,7 @@
                         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
                             <div style="font-weight: 700; font-size: 0.88rem; color: var(--text-dark);">
                                 체크리스트
-                                <span id="checklist-count-${workflow.id}" style="color:var(--text-muted);font-weight:500;">(${doneCount}/${cl.length})</span>
+                                <span id="checklist-count-${workflow.id}" style="color:var(--text-muted);font-weight:500;">(${doneCount}/${checklistTotalCount})</span>
                             </div>
                             <div id="checklist-pct-${workflow.id}" style="font-weight: 800; color: var(--accent); font-size: 0.9rem;">${progress}%</div>
                         </div>
@@ -8307,8 +8387,7 @@
                             deadlineHtml = `<div class="fap-deadline-row"><div class="fap-deadline-input-line">마감일: <input class="focus-deadline-input" type="date" value="" onchange="app.saveFocusDeadline(${workflow.id}, this.value)" placeholder="마감일 설정"></div></div>`;
                         }
 
-                        const completedCount = workflow.checklist ? workflow.checklist.filter(i => this.normalizeCompleted(i)).length : 0;
-                        const totalCount = workflow.checklist ? workflow.checklist.length : 0;
+                        const { completed: completedCount, total: totalCount } = this.getChecklistStats(workflow);
 
                         focusActionPanel.innerHTML = isEditMode ? `
                             <div class="fap-meta-label">${isPackage ? '업무' : '진행 업무'}</div>
@@ -8640,8 +8719,7 @@
                     const effectiveDeadline = this.getEffectiveDeadlineInfo(workflow);
                     const daysLeft = effectiveDeadline.daysLeft;
                     const isCompleted = progress === 100;
-                    const checklistCount = workflow.checklist ? workflow.checklist.length : 0;
-                    const completedCount = workflow.checklist ? workflow.checklist.filter(c => this.normalizeCompleted(c)).length : 0;
+                    const { completed: completedCount, total: checklistCount } = this.getChecklistStats(workflow);
 
                     // 색상 인디케이터
                     let deadlineIcon = '🟢';
@@ -8971,14 +9049,14 @@
                 this.normalizeWorkflowChecklist(workflow);
                 
                 // calculateProgress 사용하여 일관성 유지
-                const completedCount = workflow.checklist.filter(item => this.normalizeCompleted(item)).length;
-                
+                const { completed: completedCount, total: checklistTotalCount } = this.getChecklistStats(workflow);
+
                 return `
                     <div style="padding: 20px 0;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; position: relative;">
                             <div style="display: flex; align-items: center; gap: 10px; flex: 1;">
                                 <div style="font-weight: 600; color: var(--text-dark);">
-                                    진행률: ${completedCount}/${workflow.checklist.length}
+                                    진행률: ${completedCount}/${checklistTotalCount}
                                 </div>
                                 <div style="font-weight: 700; font-size: 1.2rem; color: var(--primary);">
                                     ${progress}%
@@ -9242,8 +9320,7 @@
                 
                 container.innerHTML = sortedWorkflows.map(workflow => {
                     const progress = this.calculateProgress(workflow);
-                    const checklistCount = workflow.checklist ? workflow.checklist.length : 0;
-                    const completedCount = workflow.checklist ? workflow.checklist.filter(c => this.normalizeCompleted(c)).length : 0;
+                    const { completed: completedCount, total: checklistCount } = this.getChecklistStats(workflow);
                     const isSelected = this.selectedProjectId === workflow.id;
                     
                     return `
@@ -9497,11 +9574,8 @@
                 }
             }
 
-            // 마감일 임박 업무 표시 (기한 초과 포함, D-7 이내)
-            displayUrgentWorks() {
-                const container = document.getElementById('urgentWorksList');
-                if (!container) return;
-
+            // 마감일 임박 업무 목록 계산 (기한 초과 포함, D-7 이내) — 사이드바 카드·시작 배너가 공용으로 사용
+            getUrgentWorksList() {
                 const URGENT_THRESHOLD_DAYS = 7;
 
                 // 업무별 마감일 긴급 여부 수집 (기한 초과 포함, D-7 이내)
@@ -9547,31 +9621,44 @@
                     return a.daysLeft - b.daysLeft;
                 });
 
+                return urgentWorks.map(item => {
+                    let color, dayText;
+                    if (item.daysLeft < 0) {
+                        color = '#ef4444';
+                        dayText = `${Math.abs(item.daysLeft)}일 초과`;
+                    } else if (item.daysLeft === 0) {
+                        color = '#ef4444';
+                        dayText = 'D-Day';
+                    } else if (item.daysLeft <= 3) {
+                        color = '#f97316';
+                        dayText = `D-${item.daysLeft}`;
+                    } else {
+                        color = '#f59e0b';
+                        dayText = `D-${item.daysLeft}`;
+                    }
+                    const typeLabel = item.urgencyType === 'work' ? '업무' : '항목';
+                    return { ...item, color, dayText, typeLabel };
+                });
+            }
+
+            // 마감일 임박 업무 표시 (기한 초과 포함, D-7 이내)
+            displayUrgentWorks() {
+                const container = document.getElementById('urgentWorksList');
+                if (!container) return;
+
+                const urgentWorks = this.getUrgentWorksList();
+
                 if (urgentWorks.length === 0) {
                     container.innerHTML = `
                         <div style="padding:12px 4px;text-align:center;color:var(--text-muted);font-size:0.8rem;">
                             마감 임박 업무가 없습니다
                         </div>
                     `;
+                    this.updateUrgentSectionBadge();
                     return;
                 }
 
-                container.innerHTML = urgentWorks.map(({ work, progress, daysLeft, urgencyType, urgentChecklistItem }) => {
-                    let borderColor, dayText;
-                    if (daysLeft < 0) {
-                        borderColor = '#ef4444';
-                        dayText = `${Math.abs(daysLeft)}일 초과`;
-                    } else if (daysLeft === 0) {
-                        borderColor = '#ef4444';
-                        dayText = 'D-Day';
-                    } else if (daysLeft <= 3) {
-                        borderColor = '#f97316';
-                        dayText = `D-${daysLeft}`;
-                    } else {
-                        borderColor = '#f59e0b';
-                        dayText = `D-${daysLeft}`;
-                    }
-                    const typeLabel = urgencyType === 'work' ? '업무' : '항목';
+                container.innerHTML = urgentWorks.map(({ work, progress, daysLeft, color, dayText, typeLabel, urgentChecklistItem }) => {
                     const overdueLabel = daysLeft < 0 ? '<span style="font-size:0.68rem;background:#fef2f2;color:#ef4444;border-radius:3px;padding:0 4px;margin-left:3px;font-weight:700;">기한초과</span>' : '';
 
                     const checklistInfo = urgentChecklistItem
@@ -9579,19 +9666,20 @@
                         : '';
 
                     return `
-                        <div style="background:var(--white);border-radius:7px;border:1px solid var(--border-light);border-left:3px solid ${borderColor};padding:7px 10px;margin-bottom:5px;cursor:pointer;transition:background 0.12s;"
+                        <div style="background:var(--white);border-radius:7px;border:1px solid var(--border-light);border-left:3px solid ${color};padding:7px 10px;margin-bottom:5px;cursor:pointer;transition:background 0.12s;"
                              onclick="app.focusWorkflow(${work.id});"
                              onmouseover="this.style.background='var(--bg-light)'"
                              onmouseout="this.style.background='var(--white)'">
                             <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:2px;">
                                 <div style="font-size:0.81rem;font-weight:600;color:var(--text-dark);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0;">${this.escapeHtml(work.title)}${overdueLabel}</div>
-                                <span style="font-size:0.72rem;font-weight:700;color:${borderColor};white-space:nowrap;flex-shrink:0;">${dayText}</span>
+                                <span style="font-size:0.72rem;font-weight:700;color:${color};white-space:nowrap;flex-shrink:0;">${dayText}</span>
                             </div>
                             <div style="font-size:0.7rem;color:var(--text-muted);">${typeLabel} 마감 · 진행 ${progress}%</div>
                             ${checklistInfo}
                         </div>
                     `;
                 }).join('');
+                this.updateUrgentSectionBadge();
             }
 
             // 지연 업무 개수 (업무 자체 마감일 또는 미완료 체크리스트 항목 마감일이 초과된 업무)
@@ -9619,7 +9707,22 @@
                 target.classList.remove('urgent-section-flash');
                 void target.offsetWidth;
                 target.classList.add('urgent-section-flash');
-                setTimeout(() => target.classList.remove('urgent-section-flash'), 900);
+                setTimeout(() => target.classList.remove('urgent-section-flash'), 1800);
+                this.acknowledgeUrgentSection();
+            }
+
+            // 마감 임박 미확인 표시(점) 해제 — 배너/사이드바 확인, 혹은 아무 업무 카드 선택 시 호출
+            acknowledgeUrgentSection() {
+                if (this.urgentSectionAcknowledged) return;
+                this.urgentSectionAcknowledged = true;
+                this.updateUrgentSectionBadge();
+            }
+
+            updateUrgentSectionBadge() {
+                const badge = document.getElementById('urgentSectionBadge');
+                if (!badge) return;
+                const hasUrgent = this.getUrgentWorksList().length > 0;
+                badge.style.display = (hasUrgent && !this.urgentSectionAcknowledged) ? 'inline-block' : 'none';
             }
 
             // 마감일 계산 (D-X)
@@ -9683,81 +9786,356 @@
                 }).length;
             }
 
-            // 마감일·오늘 할 일 데스크톱 알림 표시 (하루 1회, 알림 권한이 허용된 경우만)
+            // 마감일·오늘 할 일 알림 표시
+            // 알림 빈도(deadlineNotifyMode): 'daily'(하루 1회) / 'always'(프로그램 열 때마다) / 'off'(끄기)
+            // OS 데스크톱 알림은 file:// 환경 등에서 신뢰할 수 없어 best-effort로만 시도하고,
+            // 항상 동작하는 인앱 알림센터(fireInAppNotification)를 기본 채널로 사용한다.
             checkDeadlineNotifications() {
-                if (!('Notification' in window) || Notification.permission !== 'granted') return;
+                const mode = localStorage.getItem('deadlineNotifyMode') || 'daily';
+                if (mode === 'off') return;
                 const todayStr = new Date().toISOString().slice(0, 10);
-                if (localStorage.getItem('lastDeadlineNotifyDate') === todayStr) return;
+                if (mode === 'daily' && localStorage.getItem('lastDeadlineNotifyDate') === todayStr) return;
 
                 const { overdue, dueToday, upcoming } = this.getUrgentDeadlineSummary();
                 const todayTaskCount = this.getTodayTaskCount();
                 if (overdue === 0 && dueToday === 0 && upcoming === 0 && todayTaskCount === 0) return;
-                localStorage.setItem('lastDeadlineNotifyDate', todayStr);
+                if (mode === 'daily') localStorage.setItem('lastDeadlineNotifyDate', todayStr);
 
-                const parts = [];
-                if (todayTaskCount > 0) parts.push(`오늘 할 일 ${todayTaskCount}건`);
-                if (overdue > 0) parts.push(`기한 초과 ${overdue}건`);
-                if (dueToday > 0) parts.push(`오늘 마감 ${dueToday}건`);
-                if (upcoming > 0) parts.push(`마감 임박(7일 이내) ${upcoming}건`);
+                const urgentList = this.getUrgentWorksList();
+                const { text: body, html: bodyHtml } = this.buildDeadlineHeadline(urgentList, todayTaskCount);
 
+                if ('Notification' in window && Notification.permission === 'granted') {
+                    try {
+                        const notif = new Notification('업무 내비게이터 — 오늘의 업무 알림', { body, tag: 'deadline-reminder' });
+                        notif.onclick = () => { window.focus(); this.focusUrgentSection(); notif.close(); };
+                    } catch (e) { console.error('네이티브 알림 표시 실패:', e); }
+                }
+
+                // 배너·OS 알림·알림센터 기록이 모두 같은 문장(실제 업무명 포함)을 쓰도록 통일 —
+                // 나중에 알림센터에서 기록을 다시 봐도 그때 배너에서 본 것과 같은 내용이 보이게 한다.
+                // bodyHtml에는 업무명이 <b>로 강조되어 있어 알림센터 목록에서도 굵게 표시된다.
+                this.fireInAppNotification('오늘의 업무 알림', body, { skipToast: true, bodyHtml });
+                this.showDeadlineBanner(urgentList, todayTaskCount);
+            }
+
+            // 마감 임박 알림 문장 생성 — 배너(html)·OS 알림/알림센터 기록(text)이 공용으로 쓴다
+            buildDeadlineHeadline(urgentList, todayTaskCount) {
+                const top = urgentList.slice(0, 3);
+                if (top.length > 0) {
+                    const rawTitle = top[0].work.title;
+                    const safeTitle = this.escapeHtml(rawTitle);
+                    return urgentList.length > 1
+                        ? {
+                            text: `오늘은 「${rawTitle}」 등 마감이 임박한 업무가 ${urgentList.length}건 있습니다. 가장 급한 업무부터 처리해보세요.`,
+                            html: `오늘은 <b>「${safeTitle}」</b> 등 마감이 임박한 업무가 ${urgentList.length}건 있습니다. 가장 급한 업무부터 처리해보세요.`
+                        }
+                        : {
+                            text: `오늘은 「${rawTitle}」의 마감이 임박했습니다. 지금 처리해보세요.`,
+                            html: `오늘은 <b>「${safeTitle}」</b>의 마감이 임박했습니다. 지금 처리해보세요.`
+                        };
+                }
+                return {
+                    text: `오늘 처리해야 할 업무가 ${todayTaskCount}건 있습니다. 확인해보세요.`,
+                    html: `오늘 처리해야 할 업무가 <b>${todayTaskCount}건</b> 있습니다. 확인해보세요.`
+                };
+            }
+
+            // 마감 임박 시작 배너 — 사이드바 "마감 임박" 카드와 같은 색선 규칙으로 급한 업무 최대 3건을 문장과 함께 보여준다
+            showDeadlineBanner(urgentList, todayTaskCount) {
+                const banner = document.getElementById('deadlineBanner');
+                const msgEl = document.getElementById('dbMessage');
+                const itemsEl = document.getElementById('dbItems');
+                if (!banner || !msgEl || !itemsEl) return;
+
+                const top = urgentList.slice(0, 3);
+                msgEl.innerHTML = this.buildDeadlineHeadline(urgentList, todayTaskCount).html;
+
+                if (top.length > 0) {
+                    itemsEl.style.display = '';
+                    itemsEl.innerHTML = top.map(({ work, color, dayText }) => `
+                        <div class="db-row" style="--c:${color};" onclick="app.focusWorkflow(${work.id}); app.hideDeadlineBanner();">
+                            <div class="db-row-title">${this.escapeHtml(work.title)}</div>
+                            <div class="db-row-day">${dayText}</div>
+                        </div>
+                    `).join('') + (urgentList.length > 3
+                        ? `<div class="db-more" onclick="app.focusUrgentSection(); app.hideDeadlineBanner();">+${urgentList.length - 3}건 더보기</div>`
+                        : '');
+                } else {
+                    itemsEl.style.display = 'none';
+                    itemsEl.innerHTML = '';
+                }
+
+                banner.classList.add('show');
+            }
+
+            hideDeadlineBanner() {
+                document.getElementById('deadlineBanner')?.classList.remove('show');
+            }
+
+            // ── 알림센터 (인앱) ──────────────────────────────────────────
+            // OS 알림이 file:// 환경 등에서 화면에 안 뜨는 문제와 무관하게 항상 동작하는
+            // 자체 알림 채널. 헤더의 종 아이콘에 기록이 쌓이고, 소리·토스트로 즉시 알려준다.
+            loadNotifyLog() {
                 try {
-                    const notif = new Notification('업무 내비게이터 — 오늘의 업무 알림', {
-                        body: parts.join(' · '),
-                        tag: 'deadline-reminder'
-                    });
-                    notif.onclick = () => {
-                        window.focus();
-                        this.focusUrgentSection();
-                        notif.close();
+                    const raw = localStorage.getItem('notifyCenterLog');
+                    return raw ? JSON.parse(raw) : [];
+                } catch (e) { return []; }
+            }
+
+            saveNotifyLog() {
+                try { localStorage.setItem('notifyCenterLog', JSON.stringify(this.notifyLog.slice(0, 50))); } catch (e) {}
+            }
+
+            // 브라우저 자동재생 정책상, 페이지 로드 후 사용자가 한 번도 클릭/키입력을 안 한 상태에서는
+            // 오디오를 절대 재생할 수 없다(어떤 코드로도 우회 불가 — Chrome이 의도적으로 막는 보안 정책).
+            // 그래서 페이지 첫 클릭/키입력 시점에 미리 오디오 컨텍스트를 깨워둬서, 그 이후에 자동으로
+            // 뜨는 알림음은 확실히 재생되도록 한다. (열자마자 1.5초 뒤 뜨는 최초 알림음만은 어쩔 수 없이
+            // 무음일 수 있음 — 시각적 배너·배지는 이 정책과 무관하게 항상 정상 표시됨)
+            primeAudioOnFirstInteraction() {
+                const prime = () => {
+                    try {
+                        if (!this._audioCtx) {
+                            this._audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                        }
+                        if (this._audioCtx.state === 'suspended') this._audioCtx.resume().catch(() => {});
+                    } catch (e) { /* 무시 — 다음 알림 시 playNotifySound가 다시 시도함 */ }
+                };
+                document.addEventListener('click', prime, { once: true, passive: true });
+                document.addEventListener('keydown', prime, { once: true, passive: true });
+            }
+
+            // 알림 도착 시 짧은 2음 차임벨 재생 (Web Audio로 생성 — 파일 없이 동작)
+            // 자동재생 정책상 사용자가 페이지와 상호작용하기 전에는 소리가 나지 않을 수 있음
+            // 컨텍스트를 매번 새로 만들면 브라우저 정책상 suspended 상태로 뜬 채 소리가 안 날 수 있어
+            // 하나만 만들어 재사용하고, 재생 직전 매번 resume()으로 깨운다.
+            playNotifySound() {
+                try {
+                    if (!this._audioCtx) {
+                        this._audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                    }
+                    const ctx = this._audioCtx;
+                    const play = () => {
+                        // 순음(사인파) 하나만 쓰면 장난감 같은 "삑" 소리가 나서, 배음을 옅게 섞어
+                        // 종소리에 가까운 울림을 내고, 감쇠를 길게 늘여 "띵~동"처럼 여운이 남게 한다.
+                        const chime = (freq, start, duration, peak) => {
+                            [[freq, 1], [freq * 2.005, 0.16], [freq * 3.01, 0.06]].forEach(([f, mix]) => {
+                                const o = ctx.createOscillator();
+                                const g = ctx.createGain();
+                                o.type = 'sine';
+                                o.frequency.value = f;
+                                g.gain.setValueAtTime(0.0001, start);
+                                g.gain.exponentialRampToValueAtTime(Math.max(peak * mix, 0.0001), start + 0.04);
+                                g.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+                                o.connect(g); g.connect(ctx.destination);
+                                o.start(start); o.stop(start + duration + 0.05);
+                            });
+                        };
+                        const now = ctx.currentTime;
+                        chime(987.77, now, 1.0, 0.19);        // 띵 (B5)
+                        chime(659.25, now + 0.34, 1.5, 0.21); // ~동 (E5, 더 낮고 여운이 길게)
                     };
-                } catch (e) { console.error('마감일 알림 표시 실패:', e); }
+                    if (ctx.state === 'suspended') {
+                        ctx.resume().then(play).catch(e => console.warn('알림음: 오디오 컨텍스트를 재개하지 못했습니다', e));
+                    } else {
+                        play();
+                    }
+                } catch (e) { console.warn('알림음 재생 실패:', e); }
+            }
+
+            // 인앱 알림 발송 — 기록 추가 + 소리 + 토스트를 한 번에 처리
+            // opts.skipToast: true면 토스트는 생략 (호출자가 더 상세한 배너 등을 별도로 띄울 때 사용)
+            // opts.bodyHtml: 알림센터 기록에서 본문을 더 풍부하게(예: 업무명 굵게) 보여주고 싶을 때 전달
+            // opts.type: 'success'|'error'|'warning'|'info'(기본) — 알림센터 목록에서 좌측 색선으로 표시됨
+            fireInAppNotification(title, body, opts = {}) {
+                this.notifyLog.unshift({
+                    id: `${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+                    ts: new Date().toISOString(),
+                    title, body, bodyHtml: opts.bodyHtml || null, type: opts.type || 'info', read: false
+                });
+                this.notifyLog = this.notifyLog.slice(0, 50);
+                this.saveNotifyLog();
+                this.renderNotifyCenter();
+                // 성공/정보성 기록까지 매번 소리를 내면 시끄러워지므로, 기본은 실패·경고일 때만 소리 냄
+                const sound = opts.sound !== undefined ? opts.sound : (opts.type === 'error' || opts.type === 'warning' || !opts.type);
+                if (sound) this.playNotifySound();
+                if (!opts.skipToast) {
+                    this.showToast('info', '🔔', body, 10000, {
+                        actionLabel: '확인',
+                        onAction: () => this.focusUrgentSection()
+                    });
+                }
+            }
+
+            // 배경 작업(AI 생성·자료실 임베딩·가져오기 등) 완료/실패를 알림센터에 조용히 기록만 할 때 쓰는 헬퍼.
+            // 해당 지점의 기존 showToast 호출은 그대로 두고, 이 함수는 그 결과를 알림센터 기록에도 남기는 용도로 병행 호출한다.
+            // 사용자가 그 자리에서 바로 확인하는 저장/삭제 같은 즉시성 이벤트에는 쓰지 않는다.
+            notifyLogOnly(type, title, body, opts = {}) {
+                this.fireInAppNotification(title, body, { ...opts, type, skipToast: true, sound: opts.sound !== undefined ? opts.sound : (type === 'error' || type === 'warning') });
+            }
+
+            // AI(Gemini/ChatGPT/Claude) 중 하나라도 연결되어 있는지 — 연결 안 된 사용자에게 AI 관련 알림이 뜨지 않게 하는 가드
+            isAiConnected() {
+                return Object.values(this.providerConnected || {}).some(Boolean);
+            }
+
+            toggleNotifyCenter() {
+                this.toggleDropdown('notifyCenterMenu');
+                if (document.getElementById('notifyCenterMenu')?.classList.contains('show')) {
+                    this.notifyLog.forEach(n => { n.read = true; });
+                    this.saveNotifyLog();
+                    this.updateNotifyBadge();
+                }
+            }
+
+            clearNotifyCenter() {
+                this.notifyLog = [];
+                this.saveNotifyLog();
+                this.renderNotifyCenter();
+            }
+
+            updateNotifyBadge() {
+                const badge = document.getElementById('notifyCenterBadge');
+                if (!badge) return;
+                const unread = this.notifyLog.filter(n => !n.read).length;
+                if (unread > 0) {
+                    badge.textContent = unread > 9 ? '9+' : String(unread);
+                    badge.style.display = 'flex';
+                } else {
+                    badge.style.display = 'none';
+                }
+            }
+
+            renderNotifyCenter() {
+                this.updateNotifyBadge();
+                const list = document.getElementById('notifyCenterList');
+                if (!list) return;
+                if (this.notifyLog.length === 0) {
+                    list.innerHTML = `<div style="padding:24px 14px;text-align:center;color:var(--text-muted);font-size:0.82rem;">알림 기록이 없습니다</div>`;
+                    return;
+                }
+                const typeColors = { success: '#10b981', error: '#ef4444', warning: '#f59e0b', info: 'var(--accent)' };
+                list.innerHTML = this.notifyLog.map(n => {
+                    const d = new Date(n.ts);
+                    const timeStr = `${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+                    const barColor = typeColors[n.type] || typeColors.info;
+                    return `<div style="padding:9px 14px 9px 11px;border-bottom:1px solid var(--border-subtle);border-left:3px solid ${barColor};${n.read ? '' : 'background:color-mix(in srgb, var(--accent) 8%, var(--white));'}">
+                        <div style="display:flex;align-items:center;gap:6px;font-size:0.82rem;font-weight:700;color:var(--text-dark);">${n.read ? '' : '<span style="width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;"></span>'}${this.escapeHtml(n.title)}</div>
+                        <div class="nc-body" style="font-size:0.78rem;color:var(--text-dark);opacity:0.75;margin-top:2px;">${n.bodyHtml || this.escapeHtml(n.body)}</div>
+                        <div style="font-size:0.68rem;color:var(--text-muted);font-weight:600;margin-top:3px;">${timeStr}</div>
+                    </div>`;
+                }).join('') + `<div style="padding:8px 14px;text-align:center;cursor:pointer;color:var(--text-muted);font-size:0.78rem;font-weight:600;" onclick="app.clearNotifyCenter()">기록 지우기</div>`;
             }
 
             // 최초 실행 시 사용자가 따로 클릭하지 않아도 마감일 알림을 자동으로 켬(권한 요청 포함).
-            // 사용자가 이미 종 아이콘으로 켜거나 끈 적이 있으면(값이 저장돼 있으면) 그 선택을 그대로 존중한다.
+            // 사용자가 이미 종 아이콘으로 설정한 적이 있으면(값이 저장돼 있으면) 그 선택을 그대로 존중한다.
             async ensureDeadlineNotifyDefaultOn() {
-                if (localStorage.getItem('deadlineNotifyEnabled') !== null) return;
+                if (localStorage.getItem('deadlineNotifyMode') !== null) return;
+                // 구버전(온/오프 스위치) 설정을 새 빈도 설정으로 이관
+                const legacy = localStorage.getItem('deadlineNotifyEnabled');
+                if (legacy !== null) {
+                    localStorage.setItem('deadlineNotifyMode', legacy === 'true' ? 'daily' : 'off');
+                    this.updateDeadlineNotifyBtnUI();
+                    return;
+                }
                 if (!('Notification' in window)) return;
                 if (Notification.permission === 'denied') return; // 이미 차단됨 — 자동 재요청 불가
                 try {
                     const perm = Notification.permission === 'granted' ? 'granted' : await Notification.requestPermission();
-                    localStorage.setItem('deadlineNotifyEnabled', perm === 'granted' ? 'true' : 'false');
+                    localStorage.setItem('deadlineNotifyMode', perm === 'granted' ? 'daily' : 'off');
                     this.updateDeadlineNotifyBtnUI();
                 } catch (e) { /* 권한 요청 실패 시 무시 — 종 아이콘으로 수동 설정 가능 */ }
             }
 
-            // 마감일 데스크톱 알림 켜기/끄기 (사이드바 종 아이콘)
-            async toggleDeadlineNotifications() {
-                const enabled = localStorage.getItem('deadlineNotifyEnabled') === 'true';
-                if (enabled) {
-                    localStorage.setItem('deadlineNotifyEnabled', 'false');
-                    this.showToast('info', '🔕', '마감일 알림을 껐습니다');
-                    this.updateDeadlineNotifyBtnUI();
-                    return;
-                }
-                if (!('Notification' in window)) {
-                    this.showToast('error', '❌', '이 브라우저는 데스크톱 알림을 지원하지 않습니다');
-                    return;
-                }
-                const perm = await Notification.requestPermission();
-                if (perm !== 'granted') {
-                    this.showToast('warning', '⚠️', '브라우저 알림 권한이 허용되지 않았습니다');
-                    return;
-                }
-                localStorage.setItem('deadlineNotifyEnabled', 'true');
-                localStorage.removeItem('lastDeadlineNotifyDate');
-                this.showToast('success', '🔔', '알림을 켰습니다 — 오늘 할 일·마감 임박 업무가 있으면 알려드립니다');
-                this.updateDeadlineNotifyBtnUI();
-                this.checkDeadlineNotifications();
+            // 마감일 알림 메뉴 열기/닫기 — 사이드바 폭이 좁아 일반 드롭다운(버튼 우측 정렬)은 화면 밖으로 잘리므로,
+            // position:fixed로 뷰포트 기준 좌표를 직접 계산해 사이드바 폭 중앙에 뜨도록 한다.
+            toggleDeadlineNotifyMenu() {
+                const menu = document.getElementById('deadlineNotifyMenu');
+                const btn = document.getElementById('deadlineNotifyBtn');
+                if (!menu || !btn) return;
+                const wasShown = menu.classList.contains('show');
+                document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('show'));
+                if (wasShown) return;
+
+                const sidebar = document.getElementById('sidebar');
+                const sbRect = (sidebar || btn.parentElement).getBoundingClientRect();
+                const btnRect = btn.getBoundingClientRect();
+                menu.style.right = 'auto';
+                menu.classList.add('show');
+                const menuWidth = menu.offsetWidth || 150;
+                const centerX = sbRect.left + sbRect.width / 2;
+                const margin = 8;
+                const left = Math.max(margin, Math.min(centerX - menuWidth / 2, window.innerWidth - menuWidth - margin));
+                menu.style.left = `${left}px`;
+                menu.style.top = `${btnRect.bottom + 6}px`;
             }
 
-            // 사이드바 종 아이콘 on/off 색상 반영
+            // 테스트 알림 — 인앱 알림센터(항상 동작)와 OS 데스크톱 알림(best-effort)을 함께 확인
+            // 버튼 클릭(사용자 제스처) 안에서 실행되므로, OS 권한이 아직 결정 전(default)이면 여기서 바로 재요청한다.
+            async sendTestDeadlineNotification() {
+                // 인앱 알림센터는 브라우저/OS 설정과 무관하게 항상 동작 — 우선 발송
+                this.fireInAppNotification('테스트 알림', '이 알림이 보이면 인앱 알림센터는 정상 작동 중입니다 (헤더 종 아이콘 확인).');
+
+                if (!('Notification' in window)) return;
+                let perm = Notification.permission;
+                if (perm === 'default') {
+                    perm = await Notification.requestPermission();
+                }
+                if (perm !== 'granted') {
+                    this.showToast('warning', '⚠️', perm === 'denied'
+                        ? 'OS 데스크톱 알림은 브라우저에서 차단되어 있습니다 (인앱 알림센터는 정상 작동합니다)'
+                        : 'OS 데스크톱 알림 권한이 허용되지 않았습니다 (인앱 알림센터는 정상 작동합니다)');
+                    return;
+                }
+                try {
+                    new Notification('업무 내비게이터 — 테스트 알림', {
+                        body: '이 알림이 보이면 OS 데스크톱 알림도 정상 작동 중입니다.',
+                        tag: 'deadline-test'
+                    });
+                } catch (e) {
+                    console.error('OS 알림 전송 실패:', e);
+                }
+            }
+
+            // 마감일 데스크톱 알림 빈도 설정 (사이드바 종 아이콘 드롭다운): 'daily' / 'always' / 'off'
+            async setDeadlineNotifyMode(mode) {
+                if (mode !== 'off') {
+                    if (!('Notification' in window)) {
+                        this.showToast('error', '❌', '이 브라우저는 데스크톱 알림을 지원하지 않습니다');
+                        return;
+                    }
+                    const perm = Notification.permission === 'granted' ? 'granted' : await Notification.requestPermission();
+                    if (perm !== 'granted') {
+                        this.showToast('warning', '⚠️', '브라우저 알림 권한이 허용되지 않았습니다');
+                        return;
+                    }
+                }
+                localStorage.setItem('deadlineNotifyMode', mode);
+                localStorage.removeItem('lastDeadlineNotifyDate');
+                this.updateDeadlineNotifyBtnUI();
+                if (mode === 'off') {
+                    this.showToast('info', '🔕', '마감일 알림을 껐습니다');
+                } else {
+                    const msg = mode === 'daily'
+                        ? '알림을 하루에 한 번만 받도록 설정했습니다'
+                        : '프로그램을 열 때마다 알림을 받도록 설정했습니다';
+                    this.showToast('success', '🔔', msg);
+                    this.checkDeadlineNotifications();
+                }
+            }
+
+            // 사이드바 종 아이콘 색상 및 드롭다운 체크 표시 반영
             updateDeadlineNotifyBtnUI() {
                 const btn = document.getElementById('deadlineNotifyBtn');
                 if (!btn) return;
-                const enabled = localStorage.getItem('deadlineNotifyEnabled') === 'true';
-                btn.style.color = enabled ? 'var(--accent)' : 'var(--text-muted)';
-                btn.title = enabled ? '마감일 데스크톱 알림 켜짐 (클릭하여 끄기)' : '마감일 데스크톱 알림 꺼짐 (클릭하여 켜기)';
+                const mode = localStorage.getItem('deadlineNotifyMode') || 'daily';
+                const labels = { daily: '하루에 한 번', always: '열 때마다', off: '꺼짐' };
+                btn.style.color = mode === 'off' ? 'var(--text-muted)' : 'var(--accent)';
+                btn.title = `마감일 알림: ${labels[mode]} (클릭하여 변경)`;
+                const marks = { daily: 'dnMarkDaily', always: 'dnMarkAlways', off: 'dnMarkOff' };
+                Object.entries(marks).forEach(([m, id]) => {
+                    const el = document.getElementById(id);
+                    if (el) el.textContent = (m === mode) ? '✓ ' : '';
+                });
             }
 
             // 정기 백업 리마인더 — 최근 7일간 백업이 없으면 하루 1회 안내
@@ -9779,6 +10157,7 @@
                     actionLabel: '지금 백업',
                     onAction: () => this._backupFull({})
                 });
+                this.notifyLogOnly('warning', '백업 리마인더', msg);
             }
 
             // 컴퓨터 시작 시 자동 실행 파일(.bat) 다운로드 안내.
@@ -9913,6 +10292,10 @@
 
             // 심플 리스트: 포커스 모드 진입
             focusWorkflow(workflowId, editMode = false) {
+                this.acknowledgeUrgentSection();
+                // 실제로 변경된 게 있을 때만 닫을 때 "저장되었습니다"를 띄우기 위한 진입 시점 스냅샷
+                const entryWork = this.allData.workflows.find(w => w.id === workflowId);
+                this._focusEntrySnapshot = entryWork ? JSON.stringify(entryWork) : null;
                 this._layoutFade(() => {
                     this.selectProject(workflowId);
                     this.focusMode = true;
@@ -9998,6 +10381,17 @@
                 const returnToWFM = this._returnToWFMOnExit;
                 this._returnToWFMOnExit = false;
 
+                // 체크박스 토글·항목 편집은 이미 매번 자동저장되지만 저장 버튼이 없어 확인할 길이 없다는
+                // 피드백이 있어서, 매번 저장할 때마다 알리는 대신 "업무 카드를 닫는 시점" 한 번으로 모아
+                // "저장되었습니다"를 알려준다. 단, 열었다 그냥 닫기만 한 경우(변경 없음)까지 "저장됨"이라고
+                // 하면 어색하므로, 진입 시점 스냅샷과 비교해 실제로 바뀐 경우에만 표시한다.
+                const closedWorkflow = this.focusMode
+                    ? this.allData.workflows.find(w => w.id === this.focusedWorkflowId)
+                    : null;
+                const hasActualChange = closedWorkflow && this._focusEntrySnapshot !== null
+                    && JSON.stringify(closedWorkflow) !== this._focusEntrySnapshot;
+                this._focusEntrySnapshot = null;
+
                 this._layoutFade(() => {
                     // 포커스 액션 패널 초기화
                     const focusActionPanel = document.getElementById('focusActionPanel');
@@ -10044,6 +10438,11 @@
                         setTimeout(() => this.openWorkflowManager(), 50);
                     }
                 });
+
+                if (hasActualChange) {
+                    this.showToast('success', '💾', `「${closedWorkflow.title}」 저장되었습니다`, 2500);
+                    this.notifyLogOnly('success', '업무 저장됨', `「${closedWorkflow.title}」의 변경사항이 저장되었습니다.`, { sound: false });
+                }
             }
 
             // ── 포커스모드 Always-Editable 체크리스트 렌더러 ──
@@ -10241,7 +10640,7 @@
 
                 this.normalizeWorkflowChecklist(workflow);
                 const cl = workflow.checklist || [];
-                const doneCount = cl.filter(i => this.normalizeCompleted(i)).length;
+                const { completed: doneCount, total: checklistTotalCount } = this.getChecklistStats(workflow);
                 const progress = this.calculateProgress(workflow);
                 if (this.focusEditMode) {
                     container.innerHTML =
@@ -10255,14 +10654,14 @@
                 }
                 // 헤더 카운트·퍼센트 업데이트
                 const countEl = document.getElementById(`checklist-count-${workflow.id}`);
-                if (countEl) countEl.textContent = `(${doneCount}/${cl.length})`;
+                if (countEl) countEl.textContent = `(${doneCount}/${checklistTotalCount})`;
                 const pctEl = document.getElementById(`checklist-pct-${workflow.id}`);
                 if (pctEl) pctEl.textContent = `${progress}%`;
                 // 액션 패널 진행률 업데이트
                 const fapProg = document.querySelector('.fap-progress-bar-fill');
                 if (fapProg) fapProg.style.width = progress + '%';
                 const fapText = document.querySelector('.fap-progress-text');
-                if (fapText) fapText.textContent = `${progress}% 완료 · ${doneCount}/${cl.length} 항목`;
+                if (fapText) fapText.textContent = `${progress}% 완료 · ${doneCount}/${checklistTotalCount} 항목`;
 
                 // 레이아웃 완료 후 스크롤 위치 복원
                 if (scrollEl) {
@@ -10344,6 +10743,8 @@
                 this.hasUnsavedChanges = true;
                 this.saveData();
                 this.displayWorkflows();
+                this.displayUrgentWorks();
+                this.updateStats();
             }
 
             focusDragStart(index) {
@@ -11315,6 +11716,7 @@ ${writtenSection}${docSection}
                     });
                     this.updateChecklistNumbers();
                     this.showToast('success', '✅', `체크리스트 ${items.length}개 항목 생성 완료 · 수정 후 저장하세요`);
+                    if (this.isAiConnected()) this.notifyLogOnly('success', 'AI 체크리스트 생성 완료', `${items.length}개 항목이 생성되었습니다.`);
 
                     // AI 섹션 자동 닫기 → 체크리스트 공간 확보
                     const aiSection = document.getElementById('manualAiSection');
@@ -11332,6 +11734,7 @@ ${writtenSection}${docSection}
                 } catch (error) {
                     console.error('AI 생성 오류:', error);
                     this.showToast('error', '❌', 'AI 생성 실패: ' + error.message);
+                    if (this.isAiConnected()) this.notifyLogOnly('error', 'AI 체크리스트 생성 실패', error.message || '알 수 없는 오류가 발생했습니다.');
                 } finally {
                     if (fillBtn) {
                         fillBtn.disabled = false;
@@ -12340,9 +12743,11 @@ ${GOVERNMENT_DOCUMENT_GUIDELINES}
                     this.displayWorkflows();
                     this.closeModal('reportModal');
                     this.showToast('success', '✅', '보고서가 생성되었습니다. 문서 관리 > 보고서 관리에서 확인하세요.');
+                    if (this.isAiConnected()) this.notifyLogOnly('success', 'AI 보고서 생성 완료', `「${report.title}」 보고서가 생성되었습니다.`);
                 } catch (error) {
                     console.error('보고서 생성 오류:', error);
                     this.showToast('error', '❌', '보고서 생성 실패: ' + error.message);
+                    if (this.isAiConnected()) this.notifyLogOnly('error', 'AI 보고서 생성 실패', error.message || '알 수 없는 오류가 발생했습니다.');
                 } finally {
                     if (reportBtn) { reportBtn.disabled = false; reportBtn.textContent = reportBtnOrigText; }
                 }
@@ -14123,10 +14528,9 @@ ${item.result.text}
                     return;
                 }
                 
-                const total = workflow.checklist.length;
-                const completed = workflow.checklist.filter(item => this.normalizeCompleted(item)).length;
-                const progress = total > 0 ? Math.round((completed / total) * 100) : 0;
-                
+                const { completed, total } = this.getChecklistStats(workflow);
+                const progress = this.calculateProgress(workflow);
+
                 progressText.textContent = `${progress}% (${completed}/${total} 완료)`;
                 progressFill.style.width = `${progress}%`;
             }
@@ -21654,6 +22058,7 @@ ${aiPartnerCitationFirstRules}
                                 // 3회 초과 시 해당 파일 건너뜀 — 오늘 날짜를 DB에 저장하여 내일 자동 재시도
                                 console.warn(`[임베딩 큐] ID ${fileId} 429 ${retries}회 반복 → 오늘 건너뜀, 내일 재시도`);
                                 this.showToast('info', '⏭️', `임베딩 한도 반복 초과 — 내일 자동 재시도`, 6000);
+                                if (this.providerConnected?.gemini) this.notifyLogOnly('warning', '자료실 임베딩 한도 초과', '오늘 임베딩 한도를 초과해 나머지 파일은 내일 자동으로 이어서 처리됩니다.');
                                 try {
                                     const failedFile = await this._getLibraryFileById(fileId);
                                     if (failedFile) {
@@ -21691,6 +22096,7 @@ ${aiPartnerCitationFirstRules}
                 if (!this._bgEmbQueue || this._bgEmbQueue.length === 0) {
                     if (done > 0) {
                         this.showToast('success', '✅', `임베딩 완료 — ${done}개 파일 처리됨 (Gemini Embedding 2)`, 8000);
+                        if (this.providerConnected?.gemini) this.notifyLogOnly('success', '자료실 임베딩 완료', `${done}개 파일의 임베딩이 백그라운드에서 완료되어 의미 검색이 활성화되었습니다.`);
                     } else if (skipped > 0) {
                         this.showToast('info', '⚠️', `임베딩 처리 불가 파일 ${skipped}개 — 파일이 손상되었거나 텍스트 추출 불가`, 8000);
                     }
@@ -24625,9 +25031,11 @@ ${aiPartnerCitationFirstRules}
                     const libCount = packageData.lawLibraryData?.files?.length || 0;
                     const libMsg = libCount > 0 ? ` · 법령·매뉴얼 ${libCount}개` : '';
                     this.showToast('success', '✅', `업무 ${importedCount}개, 파일 ${fileCount}개${libMsg} 가져오기 완료`);
+                    this.notifyLogOnly('success', '패키지 가져오기 완료', `업무 ${importedCount}개, 파일 ${fileCount}개${libMsg}를 가져왔습니다.`);
                 } catch (error) {
                     console.error('패키지 가져오기 오류:', error);
                     this.showToast('error', '❌', '패키지 가져오기 실패: ' + error.message);
+                    this.notifyLogOnly('error', '패키지 가져오기 실패', error.message || '알 수 없는 오류가 발생했습니다.');
                     
                     // 에러 발생 시에도 body 스타일 복원
                     const errorModals = document.querySelectorAll('.modal.show');
@@ -25923,13 +26331,13 @@ ${aiPartnerCitationFirstRules}
                 const savedScrollTop = scrollEl ? scrollEl.scrollTop : 0;
 
                 const progress = this.calculateProgress(workflow);
-                const completedCount = workflow.checklist.filter(i => this.normalizeCompleted(i)).length;
+                const { completed: completedCount, total: checklistTotalCount } = this.getChecklistStats(workflow);
 
                 // 진행률 텍스트/바 업데이트
                 const countEl = document.getElementById(`checklist-count-${workflowId}`);
                 const pctEl   = document.getElementById(`checklist-pct-${workflowId}`);
                 const barEl   = document.getElementById(`checklist-bar-${workflowId}`);
-                if (countEl) countEl.textContent = `체크리스트 (${completedCount}/${workflow.checklist.length})`;
+                if (countEl) countEl.textContent = `체크리스트 (${completedCount}/${checklistTotalCount})`;
                 if (pctEl)   pctEl.textContent   = `${progress}%`;
                 if (barEl)   barEl.style.width   = `${progress}%`;
 
@@ -26650,6 +27058,7 @@ ${aiPartnerCitationFirstRules}
                 this.saveData();
                 this.displayWorkflows();
                 this.displayUrgentWorks();
+                this.updateStats();
                 if (value) {
                     const daysLeft = this.calculateDaysLeft(value);
                     const msg = daysLeft < 0 ? `${Math.abs(daysLeft)}일 지연` : daysLeft === 0 ? '오늘 마감' : `${daysLeft}일 남음`;
@@ -26696,6 +27105,7 @@ ${aiPartnerCitationFirstRules}
 
                 // 마감일 임박 목록 업데이트
                 this.displayUrgentWorks();
+                this.updateStats();
 
                 if (deadline) {
                     const daysLeft = this.calculateDaysLeft(deadline);
@@ -33516,7 +33926,7 @@ ${pdfContent.length > 100000 ? pdfContent.substring(0, 100000) + '\n\n[중략: �
             
             // 진행률 계산
             const progress = this.calculateProgress(workflow);
-            const completedCount = workflow.checklist.filter(item => this.normalizeCompleted(item)).length;
+            const { completed: completedCount, total: checklistTotalCount } = this.getChecklistStats(workflow);
             
             // 현재 항목 완료 상태 안내
             let currentItemStatus = '';
@@ -33532,7 +33942,7 @@ ${pdfContent.length > 100000 ? pdfContent.substring(0, 100000) + '\n\n[중략: �
             const prompt = `
 [현재 상황]
 - 업무: ${workflow.title}
-- 진행률: ${progress}% (${completedCount}/${workflow.checklist.length} 완료)
+- 진행률: ${progress}% (${completedCount}/${checklistTotalCount} 완료)
 - 현재 항목: ${currentItem.text}${currentStatusMark}
 ${nextItem ? `- 다음 항목: ${nextItem.text} ${skipGuidance}` : '- 모든 항목이 완료되었습니다!'}${currentItemStatus}
 ${priorityTipInfo ? `\n${priorityTipInfo}` : ''}
@@ -33863,9 +34273,11 @@ ${formatList}`;
                 // 배경 클릭 시 닫기 기능 제거 - X / 확인 버튼으로만 닫기 가능
                 
                 this.showToast('success', '✅', aiAvailable ? '가이드가 생성되었습니다' : '저장된 업무 정보를 불러왔습니다');
+                if (aiAvailable) this.notifyLogOnly('success', 'AI 길잡이 가이드 생성 완료', '새 가이드가 생성되었습니다.');
             } catch (error) {
                 this.hideAILoadingIndicator();
                 this.showToast('error', '❌', (aiAvailable ? 'AI 호출 실패: ' : '정보 조회 실패: ') + error.message);
+                if (aiAvailable) this.notifyLogOnly('error', 'AI 길잡이 가이드 생성 실패', error.message || '알 수 없는 오류가 발생했습니다.');
             }
         };
 
