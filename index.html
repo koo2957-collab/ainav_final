@@ -4497,7 +4497,7 @@
                 <div class="dropdown" style="display:inline-flex;margin-left:auto;">
                     <button id="deadlineNotifyBtn" onclick="app.toggleDeadlineNotifyMenu()" title="마감일 알림 설정"
                         style="background:none;border:none;cursor:pointer;padding:0;color:var(--text-muted);display:inline-flex;align-items:center;">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
                     </button>
                     <div id="deadlineNotifyMenu" class="dropdown-menu" style="text-transform:none;letter-spacing:normal;position:fixed;min-width:150px;max-width:calc(100vw - 32px);">
                         <div onclick="app.setDeadlineNotifyMode('daily'); app.closeAllDropdowns();"><span id="dnMarkDaily"></span>하루에 한 번 알림</div>
@@ -4588,7 +4588,11 @@
             <div class="workflow-list" id="workflowList">
                 <div class="empty-state">
                     <div class="empty-state-icon">📭</div>
-                    <div class="empty-state-text">아직 생성된 업무가 없습니다.<br>좌측 메뉴에서 새 업무 만들기를 눌러 시작하세요!</div>
+                    <div class="empty-state-text">아직 생성된 업무가 없습니다.<br>첫 업무를 만들어 시작해보세요.</div>
+                    <button class="btn btn-primary" style="margin-top:16px;" onclick="app.openModal('manualModal')">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="vertical-align:-2px;margin-right:4px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        새 업무 만들기
+                    </button>
                 </div>
             </div>
         </div>
@@ -8690,7 +8694,20 @@
                 }
 
                 if (orderedWorkflows.length === 0) {
-                    container.innerHTML = `
+                    // 필터·탭 때문에 0건인 것과, 애초에 업무를 하나도 만든 적 없는 최초 사용을 구분한다.
+                    // 전자는 "새 업무 만들기"를 눌러도 지금 보는 화면이 채워지지 않으므로 버튼을 보여줄
+                    // 이유가 없지만, 후자는 Notion·Trello처럼 바로 누를 수 있는 시작 버튼이 있어야 한다.
+                    const isFirstEverUse = this.allData.workflows.filter(w => !w.isDeleted && w.type !== 'report').length === 0;
+                    container.innerHTML = isFirstEverUse ? `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📭</div>
+                            <div class="empty-state-text">아직 생성된 업무가 없습니다.<br>첫 업무를 만들어 시작해보세요.</div>
+                            <button class="btn btn-primary" style="margin-top:16px;" onclick="app.openModal('manualModal')">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="vertical-align:-2px;margin-right:4px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                새 업무 만들기
+                            </button>
+                        </div>
+                    ` : `
                         <div class="empty-state">
                             <div class="empty-state-icon">📭</div>
                             <div class="empty-state-text">업무가 없습니다.</div>
@@ -9994,6 +10011,13 @@
                 this.renderNotifyCenter();
             }
 
+            // 알림 항목 하나만 지우기 (Gmail·Slack처럼 개별 삭제 가능하도록)
+            dismissNotifyLogItem(id) {
+                this.notifyLog = this.notifyLog.filter(n => n.id !== id);
+                this.saveNotifyLog();
+                this.renderNotifyCenter();
+            }
+
             updateNotifyBadge() {
                 const badge = document.getElementById('notifyCenterBadge');
                 if (!badge) return;
@@ -10019,12 +10043,14 @@
                     const d = new Date(n.ts);
                     const timeStr = `${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
                     const barColor = typeColors[n.type] || typeColors.info;
-                    return `<div style="padding:9px 14px 9px 11px;border-bottom:1px solid var(--border-subtle);border-left:3px solid ${barColor};${n.read ? '' : 'background:color-mix(in srgb, var(--accent) 8%, var(--white));'}">
+                    return `<div style="position:relative;padding:9px 28px 9px 11px;border-bottom:1px solid var(--border-subtle);border-left:3px solid ${barColor};${n.read ? '' : 'background:color-mix(in srgb, var(--accent) 8%, var(--white));'}">
+                        <button onclick="event.stopPropagation();app.dismissNotifyLogItem('${n.id}')" title="이 알림 지우기"
+                                style="position:absolute;top:7px;right:7px;width:18px;height:18px;border:none;background:transparent;color:var(--text-muted);cursor:pointer;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:0.85rem;line-height:1;">&times;</button>
                         <div style="display:flex;align-items:center;gap:6px;font-size:0.82rem;font-weight:700;color:var(--text-dark);">${n.read ? '' : '<span style="width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;"></span>'}${this.escapeHtml(n.title)}</div>
                         <div class="nc-body" style="font-size:0.78rem;color:var(--text-dark);opacity:0.75;margin-top:2px;">${n.bodyHtml || this.escapeHtml(n.body)}</div>
                         <div style="font-size:0.68rem;color:var(--text-muted);font-weight:600;margin-top:3px;">${timeStr}</div>
                     </div>`;
-                }).join('') + `<div style="padding:8px 14px;text-align:center;cursor:pointer;color:var(--text-muted);font-size:0.78rem;font-weight:600;" onclick="app.clearNotifyCenter()">기록 지우기</div>`;
+                }).join('') + `<div style="padding:8px 14px;text-align:center;cursor:pointer;color:var(--text-muted);font-size:0.78rem;font-weight:600;" onclick="app.clearNotifyCenter()">전체 기록 지우기</div>`;
             }
 
             // 최초 실행 시 사용자가 따로 클릭하지 않아도 마감일 알림을 자동으로 켬(권한 요청 포함).
@@ -15238,7 +15264,8 @@ ${incompleteInfo}
                                 <input type="checkbox" class="share-folder-chk" data-folder="${ep}"
                                     onchange="app._shareToggleFolder('${ep}', this.checked)"
                                     style="width:14px;height:14px;accent-color:var(--accent);cursor:pointer;flex-shrink:0;">
-                                📁 ${this.escapeHtml(node.name)}
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" style="flex-shrink:0;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                                ${this.escapeHtml(node.name)}
                             </label>
                             ${directWfs.map(w => `<label style="display:flex;align-items:center;gap:6px;padding:2px 0 2px ${wi}px;cursor:pointer;font-size:0.84rem;color:var(--text-dark);">
                                 <input type="checkbox" class="share-wf-chk" value="${w.id}" data-folder="${ep}"
@@ -15257,7 +15284,8 @@ ${incompleteInfo}
                             <input type="checkbox" class="share-folder-chk" data-folder="__none__"
                                 onchange="app._shareToggleFolder('__none__', this.checked)"
                                 style="width:14px;height:14px;accent-color:var(--accent);cursor:pointer;flex-shrink:0;">
-                            📋 미분류
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                            미분류
                         </label>
                         ${noneWfs.map(w => `<label style="display:flex;align-items:center;gap:6px;padding:2px 0 2px 18px;cursor:pointer;font-size:0.84rem;color:var(--text-dark);">
                             <input type="checkbox" class="share-wf-chk" value="${w.id}" data-folder="__none__"
@@ -16397,18 +16425,21 @@ ${incompleteInfo}
                     month: 'long',
                     day: 'numeric'
                 });
-                
+
                 // 마크다운을 HTML로 변환
                 const formattedContent = this.formatAIResponse(doc.content);
-                
+
                 // 새 창 열기
                 const newWin = window.open('', '_blank', 'width=1000,height=800');
-                
+
                 if (!newWin) {
-                    this.showToast('error', '⚠️', '팝업이 차단되었습니다');
+                    this.showToast('error', '⚠️', '팝업이 차단되어 창을 열지 못했습니다. 브라우저 주소창의 팝업 차단 아이콘에서 허용한 뒤 다시 시도하세요.', 10000, {
+                        actionLabel: '다시 시도',
+                        onAction: () => this.openSavedDocInNewWindow(workflowId, docIndex)
+                    });
                     return;
                 }
-                
+
                 // HTML 작성
                 newWin.document.open();
                 newWin.document.write('<!DOCTYPE html>');
@@ -18298,7 +18329,10 @@ ${incompleteInfo}
                 const formattedContent = this.formatAIResponse(contentToFormat);
                 const newWin = window.open('', '_blank');
                 if (!newWin) {
-                    this.showToast('error', '❌', '팝업이 차단되었습니다. 팝업 차단을 해제해주세요.');
+                    this.showToast('error', '❌', '팝업이 차단되어 창을 열지 못했습니다. 브라우저 주소창의 팝업 차단 아이콘에서 허용한 뒤 다시 시도하세요.', 10000, {
+                        actionLabel: '다시 시도',
+                        onAction: () => this.openReportInNewWindow(reportId)
+                    });
                     return;
                 }
                 
@@ -18684,15 +18718,18 @@ ${docScope === 'internal' ? `[내부결재 — 보고·검토·승인용]
                 
                 // 마크다운을 HTML로 변환
                 const formattedContent = this.formatAIResponse(docContent);
-                
+
                 // 새 창 열기
                 const newWin = window.open('', '_blank', 'width=1000,height=800');
-                
+
                 if (!newWin) {
-                    this.showToast('error', '⚠️', '팝업이 차단되었습니다');
+                    this.showToast('error', '⚠️', '팝업이 차단되어 창을 열지 못했습니다. 브라우저 주소창의 팝업 차단 아이콘에서 허용한 뒤 다시 시도하세요.', 10000, {
+                        actionLabel: '다시 시도',
+                        onAction: () => this.openDocumentInNewWindow()
+                    });
                     return;
                 }
-                
+
                 // HTML 작성
                 newWin.document.open();
                 newWin.document.write('<!DOCTYPE html>');
@@ -30670,7 +30707,12 @@ ${originalContent}`;
                     document.body.style.width = '100%';
                 }
                 
-                // 작성자 정보 입력 팝업창 생성
+                // 작성자 정보 입력 팝업창 생성 — 이전에 입력한 값을 기억해두었다가 자동으로 채워준다
+                const savedAuthorInfo = (() => {
+                    try {
+                        return JSON.parse(localStorage.getItem('pdfAuthorInfo')) || { department: '', rank: '', name: '' };
+                    } catch (e) { return { department: '', rank: '', name: '' }; }
+                })();
                 const modal = document.createElement('div');
                 modal.className = 'modal show pdf-author-modal';
                 const wfTitle = workflow?.title ? this.escapeHtml(workflow.title) : '';
@@ -30693,15 +30735,15 @@ ${originalContent}`;
                             <div style="display:flex;flex-direction:column;gap:12px;">
                                 <div>
                                     <label style="display:block;font-size:0.78rem;font-weight:600;color:var(--text-dark);margin-bottom:5px;letter-spacing:-0.01em;">소속</label>
-                                    <input type="text" id="authorDepartment" class="form-input" placeholder="예: 기획예산과" style="font-size:0.88rem;">
+                                    <input type="text" id="authorDepartment" class="form-input" placeholder="예: 기획예산과" style="font-size:0.88rem;" value="${this.escapeHtml(savedAuthorInfo.department)}">
                                 </div>
                                 <div>
                                     <label style="display:block;font-size:0.78rem;font-weight:600;color:var(--text-dark);margin-bottom:5px;letter-spacing:-0.01em;">직급(계급)</label>
-                                    <input type="text" id="authorRank" class="form-input" placeholder="예: 주무관" style="font-size:0.88rem;">
+                                    <input type="text" id="authorRank" class="form-input" placeholder="예: 주무관" style="font-size:0.88rem;" value="${this.escapeHtml(savedAuthorInfo.rank)}">
                                 </div>
                                 <div>
                                     <label style="display:block;font-size:0.78rem;font-weight:600;color:var(--text-dark);margin-bottom:5px;letter-spacing:-0.01em;">이름</label>
-                                    <input type="text" id="authorName" class="form-input" placeholder="예: 홍길동" style="font-size:0.88rem;">
+                                    <input type="text" id="authorName" class="form-input" placeholder="예: 홍길동" style="font-size:0.88rem;" value="${this.escapeHtml(savedAuthorInfo.name)}">
                                 </div>
                             </div>
                             <!-- 안내 -->
@@ -30752,7 +30794,10 @@ ${originalContent}`;
                     rank: document.getElementById('authorRank')?.value?.trim() || '',
                     name: document.getElementById('authorName')?.value?.trim() || ''
                 };
-                
+
+                // 다음 출력 때 다시 입력하지 않도록 기억해둔다
+                try { localStorage.setItem('pdfAuthorInfo', JSON.stringify(authorInfo)); } catch (e) {}
+
                 // 모달 닫기
                 this.closePDFModal();
                 
@@ -30767,23 +30812,30 @@ ${originalContent}`;
                 const left = Math.round((screenWidth - windowWidth) / 2);
                 const top = Math.round((screenHeight - windowHeight) / 2);
                 
-                // 새 창에서 인쇄 페이지 열기 (화면 중앙에 위치)
-                const printWindow = window.open('', '_blank', `width=${windowWidth},height=${windowHeight},left=${left},top=${top}`);
-                if (!printWindow) {
-                    this.showToast('error', '❌', '팝업이 차단되었습니다. 팝업 차단을 해제해주세요.');
-                    return;
-                }
-                
-                printWindow.document.open();
-                printWindow.document.write(printContent);
-                printWindow.document.close();
-                
-                // 새 창이 로드된 후 인쇄 실행
-                printWindow.onload = () => {
-                    setTimeout(() => {
-                        printWindow.print();
-                    }, 250);
+                // 새 창에서 인쇄 페이지 열기 (화면 중앙에 위치) — 팝업이 차단되면 "다시 시도" 버튼으로
+                // 같은 시도를 다시 할 수 있게 한다 (버튼 클릭 자체가 사용자 제스처라 차단을 우회할 수 있음)
+                const attemptOpenPrintWindow = () => {
+                    const printWindow = window.open('', '_blank', `width=${windowWidth},height=${windowHeight},left=${left},top=${top}`);
+                    if (!printWindow) {
+                        this.showToast('error', '❌', '팝업이 차단되어 창을 열지 못했습니다. 브라우저 주소창의 팝업 차단 아이콘에서 허용한 뒤 다시 시도하세요.', 10000, {
+                            actionLabel: '다시 시도',
+                            onAction: attemptOpenPrintWindow
+                        });
+                        return;
+                    }
+
+                    printWindow.document.open();
+                    printWindow.document.write(printContent);
+                    printWindow.document.close();
+
+                    // 새 창이 로드된 후 인쇄 실행
+                    printWindow.onload = () => {
+                        setTimeout(() => {
+                            printWindow.print();
+                        }, 250);
+                    };
                 };
+                attemptOpenPrintWindow();
             }
 
             // Phase 1.2 마감일 관리
