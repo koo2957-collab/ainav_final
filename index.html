@@ -14885,7 +14885,8 @@ ${item.result.text}
                         formsData: allFormsData,
                         attachmentsData: allAttachmentsData,
                         lawLibraryData: allLawLibraryData,
-                        repoDocumentsData: allRepoDocumentsData
+                        repoDocumentsData: allRepoDocumentsData,
+                        docSummaries: await this._collectDocSummaries(workflows.map(w => w.id))  // 첨부파일 AI 요약(받는 쪽에서 다시 만들지 않게)
                     };
 
                     const jsonStr = JSON.stringify(packageData, null, 2);
@@ -15050,7 +15051,8 @@ ${item.result.text}
                         lawLibraryData,
                         repoDocumentsData,
                         folders: this.allData.folders || [],
-                        settings: this._collectPortableSettings()  // 다크모드·알림 빈도·자동읽기·알림센터 기록 (AI 키는 제외)
+                        settings: this._collectPortableSettings(),  // 다크모드·알림 빈도·자동읽기·알림센터 기록 (AI 키는 제외)
+                        docSummaries: await this._collectDocSummaries((safeData.workflows || []).map(w => w.id))  // 첨부파일 AI 요약
                     };
                     const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
                     const url = URL.createObjectURL(blob);
@@ -15103,7 +15105,7 @@ ${item.result.text}
                             const choice = confirm('전체 백업을 복원합니다.\n\n확인: 기존 데이터에 병합 추가\n취소: 취소');
                             if (!choice) return;
                             await this._processImportedPackage(imported.data
-                                ? { type: 'workflow_package', isBackupRestore: true, workflows: imported.data.workflows || [], formsData: imported.formsData || {}, attachmentsData: imported.attachmentsData || {}, checklistDetailsMap: imported.checklistDetails || {}, lawLibraryData: imported.lawLibraryData || null, repoDocumentsData: imported.repoDocumentsData || null, folders: imported.folders || imported.data.folders || [], templates: imported.data.templates || [] }
+                                ? { type: 'workflow_package', isBackupRestore: true, workflows: imported.data.workflows || [], formsData: imported.formsData || {}, attachmentsData: imported.attachmentsData || {}, checklistDetailsMap: imported.checklistDetails || {}, lawLibraryData: imported.lawLibraryData || null, repoDocumentsData: imported.repoDocumentsData || null, folders: imported.folders || imported.data.folders || [], templates: imported.data.templates || [], docSummaries: imported.docSummaries || {} }
                                 : imported);
                             this._applyPortableSettings(imported.settings, imported.data);
                             if (imported.exportDate) localStorage.setItem('lastRestoredBackupExportDate', imported.exportDate);
@@ -18707,7 +18709,8 @@ ${docScope === 'internal' ? `[내부결재 — 보고·검토·승인용]
                     }
                     // 첨부자료 복원
                     if (Object.keys(attachmentsData).length > 0) {
-                        await this._importAttachmentsData(attachmentsData, checklistDetails, idRemap, null, { oldId: wf.id, newId });
+                        await this._importAttachmentsData(attachmentsData, checklistDetails, idRemap, null,
+                            { oldId: wf.id, newId, summaries: (imported.docSummaries || {})[wf.id] || {} });
                     }
 
                     // workflow.checklist[i].formats를 복원된 새 ID로 동기화
@@ -24129,7 +24132,44 @@ ${aiPartnerCitationFirstRules}
                 return await this.dbManager.saveFile(storeName, { ...fileData, refCount: 1 });
             }
 
-            // owner = { oldId, newId }: 지금 복원 중인 업무. 파일 안의 첨부 목록은 모든 업무 것이 한데 들어 있어,
+            // 백업·업무 파일에 담을 첨부파일 AI 요약 { 업무id: { 파일명: 요약 } } — 본문 분석은 PC 안에서 다시 하면 되지만
+            // 요약은 AI 호출(한도·비용)이 들어 다시 만들지 않도록 함께 담는다.
+            async _collectDocSummaries(workflowIds) {
+                const out = {};
+                for (const id of workflowIds || []) {
+                    try {
+                        const docs = await getProjectDocs(id);
+                        const m = {};
+                        (docs || []).forEach(d => { if (d.filename && d.summary) m[d.filename] = d.summary; });
+                        if (Object.keys(m).length) out[id] = m;
+                    } catch (e) { /* 요약이 없어도 백업은 계속 */ }
+                }
+                return out;
+            }
+
+            // 복원·가져오기로 들어온 업무 첨부파일의 본문을 PC 안에서 다시 분석해 저장(AI 호출 없음).
+            // 백업에 AI 요약이 있으면 함께 붙인다.
+            async _reparseRestoredAttachment(workflowId, name, type, blob, summary) {
+                try {
+                    const fn = (name || '').toLowerCase();
+                    const isPdf = type === 'application/pdf' || fn.endsWith('.pdf');
+                    const isTxt = type === 'text/plain' || fn.endsWith('.txt') || fn.endsWith('.md');
+                    const isDocx = fn.endsWith('.docx') || type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+                    if (!workflowId || !(isPdf || isTxt || isDocx)) return;
+                    const file = new File([blob], name, { type: type || blob.type || '' });
+                    let doc;
+                    if (isPdf) { const pageCount = await getPdfPageCount(file); doc = await pdfToText(file); doc.pageCount = pageCount; }
+                    else if (isDocx) { doc = await docxToText(file); }
+                    else { doc = await txtToText(file); }
+                    doc.filename = name;
+                    if (summary) doc.summary = summary;
+                    await saveProjectDoc(workflowId, doc);
+                } catch (e) {
+                    console.warn('복원한 첨부파일 본문 분석 실패(파일은 정상 복원됨):', name, e);
+                }
+            }
+
+            // owner = { oldId, newId, summaries }: 지금 복원 중인 업무. 파일 안의 첨부 목록은 모든 업무 것이 한데 들어 있어,
             // 이 업무에 속한 것만 새 번호로 옮긴다(예전엔 다른 업무의 첨부가 예전 번호로 남아 주인 없는 기록이 생겼다).
             async _importAttachmentsData(attachmentsData, checklistDetails, idRemap, onProgress = null, owner = null) {
                 if (!attachmentsData || !this.dbReady) return;
@@ -24165,6 +24205,12 @@ ${aiPartnerCitationFirstRules}
                                 size: attachment.size, uploadDate: attachment.uploadDate,
                                 inIndexedDB: true, storeName: 'projectFiles'
                             });
+                            // 업무 전체 첨부는 올릴 때처럼 본문을 다시 분석해 둔다 — 분석 결과는 백업에 담기지 않아,
+                            // 예전엔 복원·가져오기 후 업무파트너·길잡이가 첨부 내용을 전혀 참고하지 못했다.
+                            if (newKey.startsWith('project-')) {
+                                await this._reparseRestoredAttachment(parseInt(newKey.slice(8), 10), attachment.name, attachment.type, blob,
+                                    owner?.summaries?.[attachment.name] || null);
+                            }
                         } catch (e) { console.warn('첨부자료 복원 실패:', attachment.name, e); }
                         done++;
                         if (onProgress) onProgress(done, totalCount);
@@ -24310,6 +24356,22 @@ ${aiPartnerCitationFirstRules}
                         if (existing) {
                             libFileIdRemap[fileData.originalId] = existing.id;
                             dupCount++;
+                            // 이미 있는 파일에는 임베딩이 없는데 백업 쪽에는 완성된 임베딩이 있으면 그것을 쓴다
+                            // (예전엔 백업의 임베딩을 버려, 업무 파일로 먼저 들어온 파일이 있으면 복원 후에도 다시 임베딩해야 했다)
+                            const backupHasEmb = Array.isArray(fileData.chunkEmbeddings) && fileData.chunkEmbeddings.length > 0
+                                && fileData.embeddingModel === EMB_MODEL && fileData.embeddingDims === EMB_DIMS && fileData.embeddedAt;
+                            if (backupHasEmb) {
+                                const cur = await this.dbManager.getFile('lawLibrary', existing.id).catch(() => null);
+                                const curNeeds = !cur || !cur.embeddingModel || cur.embeddingModel !== EMB_MODEL || cur.embeddingDims !== EMB_DIMS || !cur.embeddedAt;
+                                if (cur && curNeeds) {
+                                    Object.assign(cur, {
+                                        chunkEmbeddings: fileData.chunkEmbeddings, embeddedAt: fileData.embeddedAt,
+                                        embeddedChunkCount: fileData.embeddedChunkCount, totalChunkCount: fileData.totalChunkCount,
+                                        embeddingModel: fileData.embeddingModel, embeddingDims: fileData.embeddingDims, embeddingError: null
+                                    });
+                                    await this.dbManager.saveFile('lawLibrary', cur);
+                                }
+                            }
                         } else {
                             const newGroupId = fileData.groupId != null
                                 ? (groupIdRemap[fileData.groupId] ?? null)
