@@ -18590,6 +18590,7 @@ ${docScope === 'internal' ? `[내부결재 — 보고·검토·승인용]
                             if (item.branchOnly) delete item.branchOnly;
                             if (item.skipped) { delete item.skipped; delete item.skipReason; delete item.skipActionId; }
                             delete item.skipReason;  // 건너뛰지 않은 항목에 남은 예전 사유도 정리
+                            delete item.deadline;    // 항목 마감일도 원본 날짜가 남지 않게 정리 (업무 마감일처럼 새로 지정)
                         });
                     }
                     if (isBackupRestore && newWorkflow.folderPath && !this._folderPathExists(newWorkflow.folderPath)) {
@@ -24895,6 +24896,9 @@ ${aiPartnerCitationFirstRules}
                                         delete item.skipped;
                                         delete item.skipReason;
                                     }
+
+                                    // 항목 마감일 초기화 (원본의 지난 날짜가 기한 초과로 뜨지 않게)
+                                    delete item.deadline;
                                 });
                             }
                         } else {
@@ -31180,6 +31184,8 @@ ${originalContent}`;
                                 delete item.skipped;
                                 delete item.skipReason;
                             }
+                            // 항목 마감일 초기화 — 원본의 지난 날짜가 남으면 새 업무가 시작하자마자 기한 초과로 표시됨
+                            delete item.deadline;
                             // formats 배열 초기화 (서식파일은 아래에서 새로 복사됨)
                             item.formats = [];
                         });
