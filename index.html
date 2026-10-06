@@ -15049,7 +15049,8 @@ ${item.result.text}
                         attachmentsData,
                         lawLibraryData,
                         repoDocumentsData,
-                        folders: this.allData.folders || []
+                        folders: this.allData.folders || [],
+                        settings: this._collectPortableSettings()  // 다크모드·알림 빈도·자동읽기·알림센터 기록 (AI 키는 제외)
                     };
                     const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
                     const url = URL.createObjectURL(blob);
@@ -15104,6 +15105,7 @@ ${item.result.text}
                             await this._processImportedPackage(imported.data
                                 ? { type: 'workflow_package', isBackupRestore: true, workflows: imported.data.workflows || [], formsData: imported.formsData || {}, attachmentsData: imported.attachmentsData || {}, checklistDetailsMap: imported.checklistDetails || {}, lawLibraryData: imported.lawLibraryData || null, repoDocumentsData: imported.repoDocumentsData || null, folders: imported.folders || imported.data.folders || [], templates: imported.data.templates || [] }
                                 : imported);
+                            this._applyPortableSettings(imported.settings, imported.data);
                             if (imported.exportDate) localStorage.setItem('lastRestoredBackupExportDate', imported.exportDate);
                         } else if (imported.type === 'workflow_package' && Array.isArray(imported.workflows) && imported.workflows.length > 0) {
                             // 업무 파일: 그대로 가져오기 / 복사하여 시작 선택
@@ -18651,7 +18653,9 @@ ${docScope === 'internal' ? `[내부결재 — 보고·검토·승인용]
                     const newWorkflow = {
                         ...wf,
                         id: newId,
-                        isDeleted: false,
+                        // 전체 백업 복원은 휴지통 상태도 그대로 되살린다(지운 업무가 목록에 다시 나타나지 않게).
+                        // 업무 파일 가져오기는 받는 쪽에서 새로 쓰는 업무이므로 항상 휴지통 밖으로.
+                        isDeleted: isBackupRestore ? !!wf.isDeleted : false,
                         // 공유·인수인계용 업무 파일은 항상 미분류·진행중으로 착지.
                         // 받는 사람 입장에서는 참고만 하고 넘기는 자료가 아니라 지금 새로 시작하는 활성 업무이므로,
                         // 원본이 레퍼런스로 표시되어 있었어도 가져오면 레퍼런스 표시를 해제한다.
@@ -18703,7 +18707,7 @@ ${docScope === 'internal' ? `[내부결재 — 보고·검토·승인용]
                     }
                     // 첨부자료 복원
                     if (Object.keys(attachmentsData).length > 0) {
-                        await this._importAttachmentsData(attachmentsData, checklistDetails, idRemap);
+                        await this._importAttachmentsData(attachmentsData, checklistDetails, idRemap, null, { oldId: wf.id, newId });
                     }
 
                     // workflow.checklist[i].formats를 복원된 새 ID로 동기화
@@ -24125,13 +24129,22 @@ ${aiPartnerCitationFirstRules}
                 return await this.dbManager.saveFile(storeName, { ...fileData, refCount: 1 });
             }
 
-            async _importAttachmentsData(attachmentsData, checklistDetails, idRemap, onProgress = null) {
+            // owner = { oldId, newId }: 지금 복원 중인 업무. 파일 안의 첨부 목록은 모든 업무 것이 한데 들어 있어,
+            // 이 업무에 속한 것만 새 번호로 옮긴다(예전엔 다른 업무의 첨부가 예전 번호로 남아 주인 없는 기록이 생겼다).
+            async _importAttachmentsData(attachmentsData, checklistDetails, idRemap, onProgress = null, owner = null) {
                 if (!attachmentsData || !this.dbReady) return;
                 const totalCount = Object.values(attachmentsData).reduce((s, a) => s + (Array.isArray(a) ? a.length : 0), 0);
                 let done = 0;
                 for (const [oldKey, attachments] of Object.entries(attachmentsData)) {
                     if (!Array.isArray(attachments) || attachments.length === 0) continue;
-                    const newKey = idRemap[oldKey] || oldKey;
+                    let newKey = idRemap[oldKey];
+                    if (!newKey && owner) {
+                        const o = String(owner.oldId);
+                        if (oldKey === `project-${o}`) newKey = `project-${owner.newId}`;
+                        else if (oldKey.startsWith(`${o}-`)) newKey = `${owner.newId}-${oldKey.slice(o.length + 1)}`;
+                        else continue;  // 다른 업무의 첨부 — 그 업무를 복원할 때 처리
+                    }
+                    if (!newKey) newKey = oldKey;
                     if (!checklistDetails[newKey]) checklistDetails[newKey] = { attachments: [] };
                     if (!checklistDetails[newKey].attachments) checklistDetails[newKey].attachments = [];
                     const restoredAttachments = [];
@@ -29134,6 +29147,49 @@ ${originalContent}`;
             // ===== v6.0 신규 메서드 =====
 
             // 백업/내보내기용: API Key 등 민감 정보를 제거한 데이터 사본 생성
+            // 전체 백업에 함께 담는 화면·알림 설정 (PC를 바꿔도 이어 쓰도록). AI·법제처 키는 보안상 담지 않는다.
+            _collectPortableSettings() {
+                const ls = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+                return {
+                    darkMode: ls('darkMode'),
+                    deadlineNotifyMode: ls('deadlineNotifyMode'),
+                    deadlineNotifyUserChoice: ls('deadlineNotifyUserChoice'),
+                    ttsAuto: this.allData.ttsAuto || null,
+                    notifyCenterLog: (this.notifyLog || []).slice(0, 50)
+                };
+            }
+
+            // 전체 백업 복원 시 설정 되살리기 — 예전 백업(settings 없음)은 data 안의 자동읽기 설정만 반영
+            _applyPortableSettings(settings, data) {
+                const s = settings || {};
+                const set = (k, v) => { try { if (v === null || v === undefined) return; localStorage.setItem(k, v); } catch (e) {} };
+                const ttsAuto = s.ttsAuto || data?.ttsAuto;
+                if (ttsAuto && typeof ttsAuto === 'object') {
+                    this.allData.ttsAuto = { chat: !!ttsAuto.chat, procedure: !!ttsAuto.procedure, guide: !!ttsAuto.guide };
+                    this.saveData();
+                    this.updateTTSAutoUI?.();
+                }
+                if (s.darkMode !== null && s.darkMode !== undefined) {
+                    set('darkMode', s.darkMode);
+                    document.documentElement.classList.toggle('dark-mode', s.darkMode === 'true');
+                }
+                if (s.deadlineNotifyMode) {
+                    set('deadlineNotifyMode', s.deadlineNotifyMode);
+                    set('deadlineNotifyUserChoice', s.deadlineNotifyUserChoice);
+                    this.updateDeadlineNotifyBtnUI();
+                }
+                if (Array.isArray(s.notifyCenterLog) && s.notifyCenterLog.length) {
+                    // 지금 PC의 기록과 합쳐 최신순 50건 (같은 기록은 한 번만)
+                    const seen = new Set();
+                    this.notifyLog = [...(this.notifyLog || []), ...s.notifyCenterLog]
+                        .filter(n => n && n.id && !seen.has(n.id) && seen.add(n.id))
+                        .sort((a, b) => String(b.ts).localeCompare(String(a.ts)))
+                        .slice(0, 50);
+                    this.saveNotifyLog();
+                    this.renderNotifyCenter();
+                }
+            }
+
             getSafeAllData() {
                 const data = JSON.parse(JSON.stringify(this.allData));
                 // API 키 제거 (법제처 OC 인증키 포함 — 백업/내보내기 파일에 유출되지 않도록)
