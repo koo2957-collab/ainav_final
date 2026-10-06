@@ -4204,6 +4204,8 @@
                         <div onclick="app.openStorageManagementModal(); app.closeAllDropdowns();">백업 · 용량 관리</div>
                         <div class="menu-divider"></div>
                         <div onclick="app.toggleDarkMode(); app.closeAllDropdowns();">다크 / 라이트 모드</div>
+                        <div class="menu-divider"></div>
+                        <div id="appVersionMenuItem" onclick="app.showReleaseNotes(); app.closeAllDropdowns();" title="바뀐 점 보기" style="font-size:0.76rem;color:var(--text-muted);">버전 정보</div>
                     </div>
                 </div>
             </div>
@@ -5619,6 +5621,30 @@
         const WEEKDAYS_KO = ['일', '월', '화', '수', '목', '금', '토'];
         const pad2 = n => String(n).padStart(2, '0');
 
+        // ── 프로그램 버전 ──────────────────────────────────────────
+        // 새 버전을 배포할 때는 아래 세 가지(번호·배포일·바뀐 점)만 고친다.
+        // 번호 규칙: 기능 추가는 가운데 숫자(1.1.0), 오류 수정만은 끝 숫자(1.0.1)를 올린다.
+        // 업무 자료는 프로그램 파일이 아니라 브라우저 저장 공간에 있어, 파일만 바꿔도 그대로 남는다.
+        const APP_VERSION = '1.0.0';
+        const APP_RELEASE_DATE = '2026-10-06';
+        const APP_RELEASE_NOTES = [
+            { version: '1.0.0', date: '2026-10-06', notes: [
+                '프로그램 버전 표시(설정 메뉴), 새 버전 안내, 예전 버전 파일 경고 추가',
+                'AI 음성안내를 앞부분부터 바로 재생하도록 개선(첫 소리까지 대기 시간 단축)',
+                '복사하여 시작할 때 원본의 항목별 마감일이 남던 문제 수정',
+                '브라우저 알림 권한이 없어도 시작 알림 배너·알림센터가 동작하도록 수정'
+            ] }
+        ];
+        // '1.10.0' > '1.9.0' 처럼 자리별 숫자로 비교 (a가 크면 양수)
+        function compareVersion(a, b) {
+            const pa = String(a || '0').split('.').map(n => parseInt(n, 10) || 0);
+            const pb = String(b || '0').split('.').map(n => parseInt(n, 10) || 0);
+            for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+                if ((pa[i] || 0) !== (pb[i] || 0)) return (pa[i] || 0) - (pb[i] || 0);
+            }
+            return 0;
+        }
+
         // 한국 시간 기준 'YYYY-MM-DD'
         function localDateStr(d = new Date()) {
             return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
@@ -6548,6 +6574,8 @@
                 this.updateDeadlineNotifyBtnUI();
                 this.renderNotifyCenter();
                 this.primeAudioOnFirstInteraction();
+                this.updateVersionLabel();
+                setTimeout(() => this.checkAppVersion(), 800);  // 새 버전 안내 / 예전 버전 파일 경고
                 setTimeout(async () => {
                     await this.ensureDeadlineNotifyDefaultOn();
                     if (localStorage.getItem('deadlineNotifyMode') !== 'off') {
@@ -10151,6 +10179,72 @@
                     console.error('시작프로그램 안내 실패:', e);
                     this.showToast('error', '❌', '자동 실행 파일 생성에 실패했습니다');
                 }
+            }
+
+            // ── 프로그램 버전 ──
+            updateVersionLabel() {
+                const el = document.getElementById('appVersionMenuItem');
+                if (el) el.textContent = `업무 내비게이터 v${APP_VERSION} (${APP_RELEASE_DATE.replace(/-/g, '. ')}.)`;
+            }
+
+            // 프로그램을 열 때 한 번: 이 PC에서 쓰인 가장 새 버전보다 예전 파일이면 경고하고,
+            // 새 버전을 처음 열었으면 바뀐 점을 보여준다(처음 설치해 자료가 없을 때는 조용히 넘어감).
+            checkAppVersion() {
+                let seen = null, latest = null;
+                try { seen = localStorage.getItem('appVersionSeen'); latest = localStorage.getItem('appVersionLatest'); } catch (e) { return; }
+                if (latest && compareVersion(APP_VERSION, latest) < 0) {
+                    this._showVersionModal('⚠️ 예전 버전 파일입니다', `
+                        <p style="margin:0 0 10px;">지금 연 파일은 <b>v${APP_VERSION}</b>인데, 이 PC에서는 이미 <b>v${this.escapeHtml(latest)}</b>을 사용했습니다.</p>
+                        <p style="margin:0 0 10px;">업무 자료는 모든 버전이 함께 쓰므로, 예전 파일로 계속 쓰면 최근에 고친 기능이 빠진 상태로 같은 자료를 다루게 됩니다.</p>
+                        <p style="margin:0;color:var(--text-muted);font-size:0.85rem;">최신 버전 파일로 열어 주세요. 예전 파일은 지워 두는 것이 안전합니다.</p>`);
+                    return;
+                }
+                try {
+                    if (!latest || compareVersion(APP_VERSION, latest) > 0) localStorage.setItem('appVersionLatest', APP_VERSION);
+                    if (seen === APP_VERSION) return;
+                    localStorage.setItem('appVersionSeen', APP_VERSION);
+                } catch (e) { return; }
+                const hasData = (this.allData.workflows || []).some(w => !w.isDeleted);
+                if (seen || hasData) this.showReleaseNotes(true);  // 업데이트한 사용자에게만
+            }
+
+            // 바뀐 점 보기 (설정 메뉴의 버전 정보, 또는 새 버전을 처음 열었을 때)
+            showReleaseNotes(isUpdate = false) {
+                const esc = s => this.escapeHtml(s);
+                const list = APP_RELEASE_NOTES.map(r => `
+                    <div style="margin-bottom:14px;">
+                        <div style="font-weight:700;margin-bottom:4px;">v${esc(r.version)} <span style="font-weight:400;color:var(--text-muted);font-size:0.82rem;">${esc(r.date.replace(/-/g, '. '))}.</span></div>
+                        <ul style="margin:0;padding-left:18px;line-height:1.7;">${r.notes.map(n => `<li>${esc(n)}</li>`).join('')}</ul>
+                    </div>`).join('');
+                const head = isUpdate
+                    ? `<p style="margin:0 0 14px;">업무 내비게이터가 <b>v${APP_VERSION}</b>(으)로 업데이트되었습니다. 저장된 업무 자료는 그대로입니다.</p>`
+                    : `<p style="margin:0 0 14px;">현재 버전은 <b>v${APP_VERSION}</b>입니다.</p>`;
+                this._showVersionModal(isUpdate ? '🎉 새 버전 안내' : 'ℹ️ 버전 정보', head + list);
+            }
+
+            _showVersionModal(title, bodyHtml) {
+                document.getElementById('appVersionModal')?.remove();
+                const modal = document.createElement('div');
+                modal.id = 'appVersionModal';
+                modal.className = 'modal show';
+                modal.innerHTML = `
+                    <div class="modal-content" style="max-width:480px;">
+                        <div class="modal-header">
+                            <div class="modal-title">${title}</div>
+                            <button class="close-btn" type="button" aria-label="닫기">&times;</button>
+                        </div>
+                        <div class="modal-body" style="font-size:0.92rem;line-height:1.6;">
+                            ${bodyHtml}
+                            <div style="display:flex;justify-content:flex-end;margin-top:16px;">
+                                <button class="btn btn-primary" type="button" data-close>확인</button>
+                            </div>
+                        </div>
+                    </div>`;
+                const close = () => modal.remove();
+                modal.querySelector('.close-btn').onclick = close;
+                modal.querySelector('[data-close]').onclick = close;
+                modal.addEventListener('click', e => { if (e.target === modal) close(); });
+                document.body.appendChild(modal);
             }
 
             // 최초 실행 시 1회, 시작프로그램 자동 등록을 안내하는 토스트를 띄움
@@ -14783,6 +14877,7 @@ ${item.result.text}
 
                     const packageData = {
                         version: '6.5',
+                        appVersion: APP_VERSION,  // 업무 파일을 만든 프로그램 버전
                         exportDate: new Date().toISOString(),
                         type: 'workflow_package',
                         workflows,
@@ -14945,6 +15040,7 @@ ${item.result.text}
                     this._showProgress('백업 파일 생성 중...');
                     const backup = {
                         version: '6.5',
+                        appVersion: APP_VERSION,  // 백업을 만든 프로그램 버전
                         exportDate: new Date().toISOString(),
                         type: 'full_backup',
                         data: safeData,
@@ -14960,7 +15056,7 @@ ${item.result.text}
                     const a = document.createElement('a');
                     a.href = url;
                     document.body.appendChild(a);
-                    a.download = `전체백업_${new Date().toISOString().slice(0,10)}.json`;
+                    a.download = `전체백업_${localDateStr()}_v${APP_VERSION}.json`;
                     a.click();
                     document.body.removeChild(a);
                     setTimeout(() => URL.revokeObjectURL(url), 1000);
@@ -30059,6 +30155,7 @@ ${originalContent}`;
             async exportYearlyBackup(year, workflows) {
                 const packageData = {
                     version: '6.3',
+                    appVersion: APP_VERSION,  // 백업을 만든 프로그램 버전
                     exportDate: new Date().toISOString(),
                     type: 'yearly-backup',
                     year: year,
@@ -30188,7 +30285,7 @@ ${originalContent}`;
                 const a = document.createElement('a');
                 const dateStr = localDateStr();
                 a.href = url;
-                a.download = `AI_업무_네비게이터_백업_${year}년_${dateStr}.json`;
+                a.download = `AI_업무_네비게이터_백업_${year}년_${dateStr}_v${APP_VERSION}.json`;
                 a.click();
                 URL.revokeObjectURL(url);
             }
