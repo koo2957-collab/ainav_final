@@ -19090,6 +19090,10 @@ ${docScope === 'internal' ? `[내부결재 — 보고·검토·승인용]
                 // → 행 전체가 아니라 "제목" 요소만 기준으로 block:'start' 정렬해서, 업무팁이 아무리
                 // 길어도 제목만큼은 항상 패널 상단 근처에 고정되도록 한다.
                 this._prevProcStepIdx[workflowId] = currentStepIdxPreview;
+                // 진행중 단계가 바뀌면(체크·체크 취소 모두) 이전 단계 업무팁 읽기는 끝낸다.
+                // 다시 그리면서 재생 중이던 듣기 버튼이 화면에서 사라져, 그대로 두면 패널을 닫아도 멈출 수 없었다.
+                if (prevStepIdxForTransition !== undefined && prevStepIdxForTransition !== currentStepIdxPreview
+                    && this._ttsKey?.startsWith('proc:')) this.ttsStop();
                 this._ttsRebind(container);
                 if (!isTransitioning) this._ttsProcAuto(workflowId, currentStepIdxPreview);
                 if (isTransitioning) {
@@ -19736,7 +19740,8 @@ ${docScope === 'internal' ? `[내부결재 — 보고·검토·승인용]
 
             // 특정 영역(패널·모달) 안의 버튼이 재생 중이면 정지 (화면 닫기·전환 시)
             _ttsStopWithin(root) {
-                if (this._ttsBtn && root && root.contains(this._ttsBtn)) this.ttsStop();
+                // 화면이 다시 그려져 재생 중이던 버튼이 문서에서 떨어져 나간 경우도 정지 대상
+                if (this._ttsBtn && root && (root.contains(this._ttsBtn) || !this._ttsBtn.isConnected)) this.ttsStop();
             }
 
             ttsStop() {
