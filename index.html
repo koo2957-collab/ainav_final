@@ -9523,7 +9523,7 @@
                     if (progress === 100) return null; // 완료 업무 제외
 
                     const workDaysLeft = this.calculateDaysLeft(work.deadline);
-                    // 기한 초과(음수) 또는 D-3 이내만 표시 (마감일 없으면 999)
+                    // 기한 초과(음수) 또는 D-7 이내만 표시 (마감일 없으면 999)
                     const isWorkDeadlineUrgent = workDaysLeft !== 999 && workDaysLeft <= URGENT_THRESHOLD_DAYS;
 
                     // 체크리스트 항목 중 미완료 항목의 마감일 확인
@@ -9973,9 +9973,23 @@
                 }).join('') + `<div style="padding:8px 14px;text-align:center;cursor:pointer;color:var(--text-muted);font-size:0.78rem;font-weight:600;" onclick="app.clearNotifyCenter()">전체 기록 지우기</div>`;
             }
 
-            // 최초 실행 시 사용자가 따로 클릭하지 않아도 마감일 알림을 자동으로 켬(권한 요청 포함).
+            // 최초 실행 시 사용자가 따로 클릭하지 않아도 마감일 알림을 자동으로 켬.
+            // 시작 배너·알림센터는 OS 알림 권한과 무관하게 동작하므로 기본값은 항상 '하루에 한 번'이고,
+            // OS 데스크톱 알림 권한은 보조로만 물어본다(거부·차단돼도 배너·알림센터는 그대로 동작).
             // 사용자가 이미 종 아이콘으로 설정한 적이 있으면(값이 저장돼 있으면) 그 선택을 그대로 존중한다.
             async ensureDeadlineNotifyDefaultOn() {
+                // 이전 버전은 OS 알림 권한이 없으면 'off'로 저장해 시작 배너·알림센터까지 꺼졌다 —
+                // 사용자가 직접 끈 설정이 아니면 한 번만 '하루에 한 번'으로 되돌린다.
+                if (!localStorage.getItem('deadlineNotifyPermFix')) {
+                    localStorage.setItem('deadlineNotifyPermFix', '1');
+                    if (localStorage.getItem('deadlineNotifyMode') === 'off'
+                        && !localStorage.getItem('deadlineNotifyUserChoice')
+                        && localStorage.getItem('deadlineNotifyEnabled') !== 'false'
+                        && !('Notification' in window && Notification.permission === 'granted')) {
+                        localStorage.setItem('deadlineNotifyMode', 'daily');
+                        this.updateDeadlineNotifyBtnUI();
+                    }
+                }
                 if (localStorage.getItem('deadlineNotifyMode') !== null) return;
                 // 구버전(온/오프 스위치) 설정을 새 빈도 설정으로 이관
                 const legacy = localStorage.getItem('deadlineNotifyEnabled');
@@ -9984,13 +9998,12 @@
                     this.updateDeadlineNotifyBtnUI();
                     return;
                 }
-                if (!('Notification' in window)) return;
-                if (Notification.permission === 'denied') return; // 이미 차단됨 — 자동 재요청 불가
-                try {
-                    const perm = Notification.permission === 'granted' ? 'granted' : await Notification.requestPermission();
-                    localStorage.setItem('deadlineNotifyMode', perm === 'granted' ? 'daily' : 'off');
-                    this.updateDeadlineNotifyBtnUI();
-                } catch (e) { /* 권한 요청 실패 시 무시 — 종 아이콘으로 수동 설정 가능 */ }
+                localStorage.setItem('deadlineNotifyMode', 'daily');
+                this.updateDeadlineNotifyBtnUI();
+                // 응답을 기다리지 않음 — 권한 창이 떠 있는 동안에도 시작 배너는 바로 표시
+                if ('Notification' in window && Notification.permission === 'default') {
+                    Notification.requestPermission().catch(() => {});
+                }
             }
 
             // 마감일 알림 메뉴 열기/닫기 — 사이드바 폭이 좁아 일반 드롭다운(버튼 우측 정렬)은 화면 밖으로 잘리므로,
@@ -10043,30 +10056,25 @@
                 }
             }
 
-            // 마감일 데스크톱 알림 빈도 설정 (사이드바 종 아이콘 드롭다운): 'daily' / 'always' / 'off'
+            // 마감일 알림 빈도 설정 (사이드바 종 아이콘 드롭다운): 'daily' / 'always' / 'off'
+            // 시작 배너·알림센터는 OS 알림 권한이 없어도 동작하므로 권한 여부로 설정을 막지 않는다.
             async setDeadlineNotifyMode(mode) {
-                if (mode !== 'off') {
-                    if (!('Notification' in window)) {
-                        this.showToast('error', '❌', '이 브라우저는 데스크톱 알림을 지원하지 않습니다');
-                        return;
-                    }
-                    const perm = Notification.permission === 'granted' ? 'granted' : await Notification.requestPermission();
-                    if (perm !== 'granted') {
-                        this.showToast('warning', '⚠️', '브라우저 알림 권한이 허용되지 않았습니다');
-                        return;
-                    }
-                }
                 localStorage.setItem('deadlineNotifyMode', mode);
+                localStorage.setItem('deadlineNotifyUserChoice', '1');
                 localStorage.removeItem('lastDeadlineNotifyDate');
                 this.updateDeadlineNotifyBtnUI();
                 if (mode === 'off') {
                     this.showToast('info', '🔕', '마감일 알림을 껐습니다');
-                } else {
-                    const msg = mode === 'daily'
-                        ? '알림을 하루에 한 번만 받도록 설정했습니다'
-                        : '프로그램을 열 때마다 알림을 받도록 설정했습니다';
-                    this.showToast('success', '🔔', msg);
-                    this.checkDeadlineNotifications();
+                    return;
+                }
+                const msg = mode === 'daily'
+                    ? '알림을 하루에 한 번만 받도록 설정했습니다'
+                    : '프로그램을 열 때마다 알림을 받도록 설정했습니다';
+                this.showToast('success', '🔔', msg);
+                this.checkDeadlineNotifications();
+                // OS 데스크톱 알림은 보조 채널 — 메뉴 클릭(사용자 동작) 안이므로 여기서 권한을 물어본다
+                if ('Notification' in window && Notification.permission === 'default') {
+                    try { await Notification.requestPermission(); } catch (e) { /* 거부돼도 배너·알림센터는 그대로 동작 */ }
                 }
             }
 
