@@ -940,7 +940,34 @@
         :root.dark-mode .wfm-header { background: #26272c; border-bottom-color: var(--border-light); }
         :root.dark-mode .wfm-sidebar { background: #1e1f23; border-right-color: var(--border-light); }
         :root.dark-mode .wfm-toolbar { background: #2a2b30; border-bottom-color: var(--border-light); }
+        :root.dark-mode .wfm-search-input,
+        :root.dark-mode .wfm-select { background: var(--bg-input); color: var(--text-dark); border-color: var(--border-light); }
+        :root.dark-mode .wfm-search-input:focus { background: var(--bg-card); }
+        :root.dark-mode .wfm-table thead th { background: #26272c; border-bottom-color: var(--border-light); color: var(--text-muted); }
+        :root.dark-mode .wfm-table tbody tr { border-bottom-color: var(--border-subtle); }
+        :root.dark-mode .wfm-table tbody tr:hover { background: var(--bg-hover); }
+        :root.dark-mode .wfm-table tbody tr.wfm-row-selected { background: rgba(77,142,245,0.14); }
+        :root.dark-mode .wfm-row-action-btn { background: transparent; color: var(--text-muted); border-color: var(--border-light); }
+        :root.dark-mode .wfm-row-action-btn:hover { background: var(--bg-hover); color: var(--accent); border-color: var(--accent); }
+        :root.dark-mode .wfm-stats-bar { background: #1e1f23; border-top-color: var(--border-light); color: var(--text-muted); }
+        :root.dark-mode .wfm-bulk-toolbar { background: rgba(77,142,245,0.10); border-bottom-color: rgba(77,142,245,0.25); }
+        :root.dark-mode .wfm-bulk-btn { background: var(--bg-card); color: var(--text-dark); border-color: var(--border-light); }
+        :root.dark-mode .wfm-folder-item:hover { background: var(--bg-hover); }
+        :root.dark-mode .wfm-tabs { background: var(--bg-card); border-bottom-color: var(--border-light); }
+        :root.dark-mode #wfmTotalBadge { background: var(--bg-subtle) !important; color: var(--text-gray) !important; }
 
+        /* 업무관리 상태 탭 (메인 화면 탭과 같은 기준) */
+        .wfm-tabs { display: flex; gap: 2px; padding: 0 16px; border-bottom: 1px solid var(--border-light); background: var(--white); flex-shrink: 0; overflow-x: auto; }
+        .wfm-tab { display: inline-flex; align-items: center; gap: 6px; padding: 9px 14px 8px; border: none; border-bottom: 2px solid transparent; background: transparent; color: var(--text-gray); font: inherit; font-size: 0.84rem; font-weight: 600; cursor: pointer; white-space: nowrap; }
+        .wfm-tab:hover { color: var(--text-dark); background: var(--bg-subtle); }
+        .wfm-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+        .wfm-tab .ref-ico { color: #d97706; }
+        .wfm-title-cell .wfm-title-text { flex: 0 1 auto; }  /* 상태 표시가 제목 바로 뒤에 붙도록 (긴 제목은 그대로 말줄임) */
+        .wfm-state-tag { display: inline-block; flex-shrink: 0; margin-left: 6px; padding: 0 6px; border-radius: 4px; font-size: 0.66rem; font-weight: 700; line-height: 1.6; white-space: nowrap; }
+        .wfm-state-tag.done { color: #059669; background: rgba(16,185,129,0.10); border: 1px solid rgba(16,185,129,0.28); }
+        :root.dark-mode .wfm-state-tag.done { color: #34d399; background: rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.3); }
+        .wfm-tab-count { font-size: 0.7rem; font-weight: 700; padding: 0 6px; border-radius: 9px; background: var(--bg-subtle); color: var(--text-muted); line-height: 1.6; }
+        .wfm-tab.active .wfm-tab-count { background: var(--bg-info, rgba(37,99,235,0.1)); color: var(--accent); }
         .wfm-body {
             display: grid;
             grid-template-columns: 220px 1fr;
@@ -5054,6 +5081,9 @@
                 </div>
             </div>
 
+            <!-- 상태 탭 (메인 화면과 같은 탭 — 위쪽은 상태, 왼쪽은 폴더) -->
+            <div class="wfm-tabs" id="wfmTabs" role="tablist"></div>
+
             <!-- 바디: 사이드바 + 메인 -->
             <div class="wfm-body">
                 <!-- 왼쪽: 폴더 트리 사이드바 -->
@@ -5068,9 +5098,9 @@
                             <input type="text" class="wfm-search-input" id="workflowSearchInput" placeholder="업무명 검색..." oninput="app.debouncedFilterWorkflowTree()">
                         </div>
                         <select class="wfm-select" id="wfmStatusFilter" onchange="app.filterWorkflowTree()">
-                            <option value="all">전체 상태</option>
-                            <option value="inprogress">진행중</option>
-                            <option value="completed">완료</option>
+                            <option value="all">모든 일정</option>
+                            <option value="inprogress">진행 중 (일정)</option>
+                            <option value="completed">100% 완료</option>
                             <option value="delayed">지연</option>
                             <option value="soon">기한 임박</option>
                             <option value="notstarted">미시작</option>
@@ -9009,7 +9039,7 @@
                     const _topBadge = isPackage ? (() => {
                         const fp = (workflow.folderPath || '').split('/');
                         const fname = fp[fp.length - 1] || '패키지';
-                        return `<button onclick="event.stopPropagation();app.moveWorkflowToFolder(${workflow.id});" title="폴더: ${this.escapeHtml(workflow.folderPath)}"
+                        return `<button onclick="event.stopPropagation();app.openWorkflowManager({ folder: '${this.escapeHtml((workflow.folderPath || '').replace(/'/g, "\\'"))}' });" title="폴더: ${this.escapeHtml(workflow.folderPath)} — 누르면 업무관리에서 이 폴더를 엽니다"
                             style="display:flex;align-items:center;gap:4px;background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.3);border-radius:5px;padding:2px 7px;cursor:pointer;max-width:68%;overflow:hidden;">
                             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#c2410c" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
                             <span style="color:#c2410c;font-size:0.7rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:90px;">${this.escapeHtml(fname)}</span>
@@ -16713,8 +16743,52 @@ ${item.result.text}
             }
 
             // 업무 관리 모달 열기
-            openWorkflowManager() {
-                if (!this.wfmSelectedFolder) this.wfmSelectedFolder = '__all__';
+            // 업무관리 탭: 전체 / 진행중 / 레퍼런스 / 처리완료 / 보관함 (기준은 메인 화면 탭과 같음).
+            // 업무관리는 "정리하는 화면"이라 탐색기·구글 드라이브처럼 전체를 맨 앞에 두고 기본으로 연다
+            // (메인 화면은 "일하는 화면"이라 진행중이 기본).
+            _wfmTabs() {
+                return [
+                    { mode: 'all', name: '전체' },
+                    { mode: 'inProgress', name: '진행중' },
+                    { mode: 'reference', name: '레퍼런스' },
+                    { mode: 'done', name: '처리완료' },
+                    { mode: 'archived', name: '보관함' },
+                ];
+            }
+
+            _wfmInTab(w, tab) {
+                if (!w || w.type === 'report' || w.isDeleted) return false;
+                if (tab === 'archived') return !!w.isArchived;
+                if (w.isArchived) return false;
+                if (tab === 'reference') return !!w.isReference;
+                if (tab === 'done') return !!w.completedProcessed && !w.isReference;
+                if (tab === 'inProgress') return !w.completedProcessed && !w.isReference;
+                return true;  // all (보관함 제외 — 메인 화면 "전체"와 같음)
+            }
+
+            wfmSetTab(tab) {
+                this.wfmTab = tab;
+                this._wfmSelectedIds?.clear();
+                this.renderWorkflowTree();
+            }
+
+            _wfmRenderTabs() {
+                const box = document.getElementById('wfmTabs');
+                if (!box) return;
+                const all = this.allData.workflows;
+                box.innerHTML = this._wfmTabs().map(t => {
+                    const n = all.filter(w => this._wfmInTab(w, t.mode)).length;
+                    const on = this.wfmTab === t.mode;
+                    return `<button type="button" class="wfm-tab${on ? ' active' : ''}" role="tab" aria-selected="${on}" data-tab="${t.mode}" onclick="app.wfmSetTab('${t.mode}')">${t.mode === 'reference' ? this._refIco(12) : ''}${t.name}<span class="wfm-tab-count">${n}</span></button>`;
+                }).join('');
+            }
+
+            // 업무관리 열기 — 열 때마다 전체 탭 + 모든 폴더로 시작 (업무가 없는 것처럼 보이지 않게).
+            // opts.tab(특정 탭), opts.folder(폴더 경로, ''=미분류)로 지정해 열 수 있다.
+            openWorkflowManager(opts = {}) {
+                if (!opts || typeof opts !== 'object' || opts instanceof Event) opts = {};
+                this.wfmTab = opts.tab || 'all';
+                this.wfmSelectedFolder = opts.folder !== undefined ? (opts.folder || '__none__') : '__all__';
                 this.openModal('workflowManagerModal');
                 this.renderWorkflowTree();
                 // 지난번 접힘/펼침 상태 복원
@@ -17015,36 +17089,16 @@ ${item.result.text}
                     <div class="wfm-dnd-hint">업무를 끌어 폴더에 놓으면 옮겨집니다</div>
                     <div class="wfm-folder-item${sel === '__all__' ? ' active' : ''}" onclick="app.wfmSelectFolder('__all__')">
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="${sel === '__all__' ? '#2563eb' : '#9ca3af'}" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                        <span style="flex:1;">전체 업무</span>
+                        <span style="flex:1;">모든 폴더</span>
                         <span class="wfm-folder-count">${totalCount}</span>
                     </div>
-                    ${folderTree.length > 0 ? `<div class="wfm-folder-divider"></div><div class="wfm-sidebar-label" style="padding-top:4px;">폴더</div>${renderNode(folderTree, 0)}` : ''}
+                    ${folderTree.length > 0 ? `<div class="wfm-folder-divider"></div>${renderNode(folderTree, 0)}` : ''}
                     ${true ? `<div class="wfm-folder-divider"></div>
                     <div class="wfm-folder-item${sel === '__none__' ? ' active' : ''}" onclick="app.wfmSelectFolder('__none__')" data-drop-folder="" ondragover="app._wfmFolderDragOver(event, this)" ondragleave="app._wfmFolderDragLeave(this)" ondrop="app._wfmFolderDrop(event, this)" title="폴더에 넣지 않은 업무 — 업무를 여기에 끌어다 놓으면 폴더에서 뺍니다">
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="${sel === '__none__' ? '#2563eb' : '#9ca3af'}" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                         <span style="flex:1;">미분류</span>
                         <span class="wfm-folder-count">${noneCount}</span>
                     </div>` : ''}
-                    ${(() => {
-                        const archivedItems = this.allData.workflows.filter(w => w.type !== 'report' && w.isArchived && !w.isDeleted);
-                        if (archivedItems.length === 0) return '';
-                        return `<div class="wfm-folder-divider"></div>
-                        <div class="wfm-folder-item${sel === '__archived__' ? ' active' : ''}" onclick="app.wfmSelectFolder('__archived__')">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="${sel === '__archived__' ? '#2563eb' : '#9ca3af'}" stroke-width="2"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
-                            <span style="flex:1;">보관함</span>
-                            <span class="wfm-folder-count">${archivedItems.length}</span>
-                        </div>`;
-                    })()}
-                    ${(() => {
-                        const doneItems = this.allData.workflows.filter(w => w.type !== 'report' && !w.isDeleted && !w.isArchived && w.completedProcessed);
-                        if (doneItems.length === 0) return '';
-                        return `<div class="wfm-folder-divider"></div>
-                        <div class="wfm-folder-item${sel === '__done__' ? ' active' : ''}" onclick="app.wfmSelectFolder('__done__')">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="${sel === '__done__' ? '#2563eb' : '#9ca3af'}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                            <span style="flex:1;">처리완료</span>
-                            <span class="wfm-folder-count">${doneItems.length}</span>
-                        </div>`;
-                    })()}
                 `;
             }
 
@@ -17106,6 +17160,7 @@ ${item.result.text}
                             <td class="wfm-col-title">
                                 <div class="wfm-title-cell">
                                     <span class="wfm-title-text" title="${this.escapeHtml(workflow.title)}">${this.escapeHtml(workflow.title)}</span>
+                                    ${(this.wfmTab === 'all' || this.wfmTab === 'reference') && workflow.completedProcessed && !workflow.isReference ? '<span class="wfm-state-tag done" title="처리완료한 업무">처리완료</span>' : ''}
                                 </div>
                                 ${mixedFolderView && workflow.folderPath ? `<div style="font-size:0.7rem;color:var(--text-muted);margin-top:2px;">📁 ${this.escapeHtml(workflow.folderPath)}</div>` : ''}
                             </td>
@@ -17427,28 +17482,23 @@ ${item.result.text}
                 const statusFilter = document.getElementById('wfmStatusFilter')?.value || 'all';
                 const sortType = document.getElementById('workflowSortSelect')?.value || 'newest';
 
-                // 전체 업무 (보고서, 아카이브, 삭제, 완료됨 제외)
-                let allWorkflows = this.allData.workflows.filter(w => w.type !== 'report' && !w.isArchived && !w.isDeleted && !w.completedProcessed);
+                // 위쪽 탭(상태) × 왼쪽 폴더(분류)로 거른다. 예전의 "보관함·처리완료" 폴더 항목은 탭으로 옮김
+                if (!this.wfmTab) this.wfmTab = 'all';
+                if (this.wfmSelectedFolder === '__archived__') { this.wfmTab = 'archived'; this.wfmSelectedFolder = '__all__'; }
+                if (this.wfmSelectedFolder === '__done__') { this.wfmTab = 'done'; this.wfmSelectedFolder = '__all__'; }
+                this._wfmRenderTabs();
+                let allWorkflows = this.allData.workflows.filter(w => this._wfmInTab(w, this.wfmTab));
 
-                // 사이드바는 전체 기준으로 렌더 (아카이브 포함하여 보관함 카운트 표시)
+                // 폴더 목록의 숫자는 지금 탭 기준
                 this.wfmRenderSidebar(allWorkflows);
 
                 // 폴더 필터
-                let filtered;
-                if (this.wfmSelectedFolder === '__archived__') {
-                    filtered = this.allData.workflows.filter(w => w.type !== 'report' && w.isArchived && !w.isDeleted)
-                        .sort((a, b) => b.id - a.id);
-                } else if (this.wfmSelectedFolder === '__done__') {
-                    filtered = this.allData.workflows.filter(w => w.type !== 'report' && !w.isDeleted && !w.isArchived && w.completedProcessed)
-                        .sort((a, b) => dateMs(b.completedAt) - dateMs(a.completedAt));
-                } else {
-                    filtered = allWorkflows;
-                    if (this.wfmSelectedFolder === '__none__') {
-                        filtered = filtered.filter(w => !w.folderPath || w.folderPath.trim() === '');
-                    } else if (this.wfmSelectedFolder !== '__all__') {
-                        const sel = this.wfmSelectedFolder;
-                        filtered = filtered.filter(w => w.folderPath && (w.folderPath === sel || w.folderPath.startsWith(sel + '/')));
-                    }
+                let filtered = allWorkflows;
+                if (this.wfmSelectedFolder === '__none__') {
+                    filtered = filtered.filter(w => !w.folderPath || w.folderPath.trim() === '');
+                } else if (this.wfmSelectedFolder !== '__all__') {
+                    const sel = this.wfmSelectedFolder;
+                    filtered = filtered.filter(w => w.folderPath && (w.folderPath === sel || w.folderPath.startsWith(sel + '/')));
                 }
 
                 // 검색 필터
