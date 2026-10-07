@@ -968,6 +968,25 @@
         :root.dark-mode .wfm-state-tag.done { color: #34d399; background: rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.3); }
         .wfm-tab-count { font-size: 0.7rem; font-weight: 700; padding: 0 6px; border-radius: 9px; background: var(--bg-subtle); color: var(--text-muted); line-height: 1.6; }
         .wfm-tab.active .wfm-tab-count { background: var(--bg-info, rgba(37,99,235,0.1)); color: var(--accent); }
+        /* HWPX 미리보기: 문서처럼 흰 종이에 글·표 (다크모드에서도 종이는 밝게) */
+        .hwpx-view { width: 100%; max-height: 80vh; overflow: auto; text-align: left; }
+        .hwpx-note { font-size: 0.76rem; color: var(--text-muted); background: var(--bg-subtle); border-radius: 6px; padding: 7px 10px; margin-bottom: 10px; }
+        .hwpx-first { margin-bottom: 12px; text-align: center; }
+        .hwpx-first img { max-width: 100%; max-height: 50vh; border: 1px solid #d1d5db; box-shadow: 0 2px 8px rgba(0,0,0,0.12); background: #fff; }
+        .hwpx-label { font-size: 0.72rem; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; }
+        .hwpx-page { background: #fff; color: #1f2937; border: 1px solid #e5e7eb; border-radius: 6px; padding: 28px 32px; font-size: 0.9rem; line-height: 1.7; box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+        .hwpx-page p { margin: 0 0 2px; white-space: pre-wrap; word-break: break-word; }
+        .hwpx-page .hwpx-empty { height: 0.9em; }
+        .hwpx-table { border-collapse: collapse; width: 100%; margin: 6px 0 10px; font-size: 0.84rem; }
+        .hwpx-table td { border: 1px solid #9ca3af; padding: 4px 7px; vertical-align: top; }
+        .hwpx-table td p { margin: 0; }
+        .hwpx-img { display: block; max-width: 100%; max-height: 360px; margin: 6px auto; }
+        .hwpx-prvtext { white-space: pre-wrap; font-family: inherit; margin: 0; }
+        .hwpx-muted { color: #9ca3af; text-align: center; }
+        .hwpx-actions { display: flex; gap: 8px; justify-content: center; margin-top: 14px; }
+        .hwpx-notice { text-align: center; padding: 36px 20px; }
+        .hwpx-notice-title { font-size: 1.02rem; font-weight: 700; color: var(--text-dark); margin-bottom: 10px; }
+        .hwpx-notice-body { font-size: 0.86rem; color: var(--text-gray); line-height: 1.7; max-width: 520px; margin: 0 auto 6px; }
         .wfm-body {
             display: grid;
             grid-template-columns: 220px 1fr;
@@ -11727,7 +11746,7 @@
                                    onmouseout="this.style.borderColor='var(--border-light)';this.style.color='var(--text-muted)'">
                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                                 파일 새로 첨부
-                                <input type="file" accept=".hwp,.doc,.docx,.pdf,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png" onchange="app.addMainChecklistFormatFromInput(${workflowId},${index},this)" multiple style="display:none;">
+                                <input type="file" accept=".hwpx,.doc,.docx,.pdf,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png" onchange="app.addMainChecklistFormatFromInput(${workflowId},${index},this)" multiple style="display:none;">
                             </label>
                             <button type="button" onclick="app.openDocumentPicker(${workflowId},${index})" style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:7px 12px;border:1px dashed var(--border-light);border-radius:7px;cursor:pointer;font-size:0.78rem;color:var(--text-muted);transition:border-color 0.15s,color 0.15s;font-family:inherit;background:transparent;"
                                     onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'"
@@ -12750,6 +12769,38 @@ ${writtenSection}${docSection}
             get _FILE_MAX_COUNT()     { return 20; }
 
             // 파일 단건 유효성 검사 (크기·타입). 실패 시 toast 표시 후 false 반환
+            // ── 한글 서식: HWPX만 받는다 ──
+            // HWPX는 미리보기(글·표)가 되지만 HWP는 한컴 고유 이진 형식이라 미리보기를 할 수 없어, 서식에는 HWPX만 넣는다.
+            // 이름만 .hwpx로 바꾼 HWP 파일도 많아 파일 앞부분(서명)으로 판단한다: ZIP(PK..) = HWPX, OLE(D0 CF 11 E0) = HWP.
+            // 그 밖의 서명은 문서보안(DRM) 등으로 암호화된 파일 — 보안 프로그램이 있는 PC의 한글로는 열리므로 넣는 것은 허용.
+            async _sniffFileKind(blob) {
+                try {
+                    const b = new Uint8Array(await blob.slice(0, 8).arrayBuffer());
+                    const hex = [...b].map(x => x.toString(16).padStart(2, '0')).join('');
+                    if (hex.startsWith('504b0304')) return 'zip';
+                    if (hex.startsWith('d0cf11e0a1b11ae1')) return 'ole';
+                    return 'other';
+                } catch (e) { return 'other'; }
+            }
+
+            // 서식으로 넣어도 되는지: { ok:true } 또는 { ok:false, kind:'hwp'|'renamed' }
+            async _checkHangulFormFile(file) {
+                const name = (file?.name || '').toLowerCase();
+                if (name.endsWith('.hwp')) return { ok: false, kind: 'hwp' };
+                if (name.endsWith('.hwpx') && (await this._sniffFileKind(file)) === 'ole') return { ok: false, kind: 'renamed' };
+                return { ok: true };
+            }
+
+            // HWP를 넣으려 할 때 안내 (HWPX로 변환하는 방법)
+            _showHwpBlocked(blocked) {
+                if (!blocked || !blocked.length) return;
+                const list = blocked.slice(0, 5).map(b => `· ${b.name}${b.kind === 'renamed' ? '  (이름은 .hwpx지만 실제로는 HWP 형식)' : ''}`).join('\n')
+                    + (blocked.length > 5 ? `\n· 외 ${blocked.length - 5}개` : '');
+                this._showChoiceDialog('한글(HWP) 파일은 서식으로 넣을 수 없습니다',
+                    `${list}\n\n서식에는 한글 파일 중 HWPX 형식만 넣을 수 있습니다 (미리보기 지원).\n한글에서 파일을 열고 [파일] → [다른 이름으로 저장하기] → 파일 형식을 "한글 문서 (*.hwpx)"로 골라 저장한 뒤 다시 넣어 주세요.`,
+                    [], undefined, '확인');
+            }
+
             _validateFile(file, { checkType = false } = {}) {
                 if (file.size > this._FILE_MAX_SIZE) {
                     this.showToast('error', '⚠️', `${this.escapeHtml(file.name)}은(는) 50MB를 초과합니다`);
@@ -14691,7 +14742,7 @@ ${GOVERNMENT_DOCUMENT_GUIDELINES}
             async addChecklistFormat(index) {
                 const input = document.createElement('input');
                 input.type = 'file';
-                input.accept = '.hwp,.doc,.docx,.pdf,.xls,.xlsx,.jpg,.jpeg,.png';
+                input.accept = '.hwpx,.doc,.docx,.pdf,.xls,.xlsx,.jpg,.jpeg,.png';
                 input.multiple = true;
                 input.onchange = async (e) => {
                     const files = e.target.files;
@@ -14822,12 +14873,159 @@ ${GOVERNMENT_DOCUMENT_GUIDELINES}
                     type === 'text/html' || type.startsWith('text/') ||
                     type.includes('wordprocessingml')) return true;
                 return ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.pdf',
-                        '.txt', '.md', '.html', '.htm', '.docx',
+                        '.txt', '.md', '.html', '.htm', '.docx', '.hwpx', '.hwp',
                         '.mp4', '.webm', '.mp3', '.wav'].some(ext => type.endsWith(ext));
             }
 
             // 파일 형식별 미리보기 콘텐츠 렌더링 (서식 미리보기 · 문서저장소 미리보기 공용)
             // 반환값: 새로 만든 objectURL (모달 닫을 때 해제용, 없으면 null)
+            // ── HWPX 미리보기 ──
+            // HWPX는 ZIP 안에 XML(OWPML)이 든 형식. 브라우저 내장 압축 해제(DecompressionStream)로 읽어 외부 라이브러리 없이 처리.
+            async _readZip(bytes) {
+                const dv = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+                let e = bytes.length - 22;
+                while (e >= 0 && dv.getUint32(e, true) !== 0x06054b50) e--;
+                if (e < 0) throw new Error('ZIP 목록을 찾지 못함');
+                const count = dv.getUint16(e + 10, true), cd = dv.getUint32(e + 16, true);
+                const dec = new TextDecoder();
+                const entries = new Map();
+                let p = cd;
+                for (let i = 0; i < count; i++) {
+                    if (dv.getUint32(p, true) !== 0x02014b50) break;
+                    const method = dv.getUint16(p + 10, true), csize = dv.getUint32(p + 20, true);
+                    const nl = dv.getUint16(p + 28, true), xl = dv.getUint16(p + 30, true), cl = dv.getUint16(p + 32, true);
+                    const lho = dv.getUint32(p + 42, true);
+                    entries.set(dec.decode(bytes.subarray(p + 46, p + 46 + nl)), { method, csize, lho });
+                    p += 46 + nl + xl + cl;
+                }
+                const get = async (name) => {
+                    const en = entries.get(name);
+                    if (!en) return null;
+                    const start = en.lho + 30 + dv.getUint16(en.lho + 26, true) + dv.getUint16(en.lho + 28, true);
+                    const raw = bytes.subarray(start, start + en.csize);
+                    if (en.method === 0) return raw;
+                    if (en.method !== 8) throw new Error('지원하지 않는 압축 방식');
+                    const out = await new Response(new Blob([raw]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer();
+                    return new Uint8Array(out);
+                };
+                return { names: [...entries.keys()], get };
+            }
+
+            // HWPX 본문(section XML) → 단순화한 HTML (글·표·그림). 글꼴·정렬·여백 같은 모양은 반영하지 않는다.
+            _hwpxSectionHtml(xmlText, imageUrlOf) {
+                const doc = new DOMParser().parseFromString(xmlText, 'application/xml');
+                const kids = (el, name) => [...el.children].filter(c => c.localName === name);
+                const textOf = (tEl) => {
+                    let out = '';
+                    tEl.childNodes.forEach(n => {
+                        if (n.nodeType === 3) out += this.escapeHtml(n.nodeValue);
+                        else if (n.localName === 'tab') out += '&emsp;';
+                        else if (n.localName === 'lineBreak') out += '<br>';
+                        else if (n.localName === 'fwSpace' || n.localName === 'nbSpace') out += '&nbsp;';
+                    });
+                    return out;
+                };
+                const tableHtml = (tbl) => {
+                    let h = '<table class="hwpx-table">';
+                    kids(tbl, 'tr').forEach(tr => {
+                        h += '<tr>';
+                        kids(tr, 'tc').forEach(tc => {
+                            const span = kids(tc, 'cellSpan')[0];
+                            const cs = +(span?.getAttribute('colSpan') || 1), rs = +(span?.getAttribute('rowSpan') || 1);
+                            const sub = kids(tc, 'subList')[0] || tc;
+                            h += `<td${cs > 1 ? ` colspan="${cs}"` : ''}${rs > 1 ? ` rowspan="${rs}"` : ''}>${kids(sub, 'p').map(paraHtml).join('') || '&nbsp;'}</td>`;
+                        });
+                        h += '</tr>';
+                    });
+                    return h + '</table>';
+                };
+                const paraHtml = (p) => {
+                    let text = '', blocks = '';
+                    kids(p, 'run').forEach(run => {
+                        [...run.children].forEach(c => {
+                            if (c.localName === 't') text += textOf(c);
+                            else if (c.localName === 'tbl') blocks += tableHtml(c);
+                            else if (c.localName === 'pic') {
+                                const img = c.querySelector('*|img') || [...c.getElementsByTagName('*')].find(x => x.localName === 'img');
+                                const url = img && imageUrlOf(img.getAttribute('binaryItemIDRef'));
+                                if (url) blocks += `<img class="hwpx-img" src="${url}" alt="">`;
+                            }
+                        });
+                    });
+                    return (text.trim() ? `<p>${text}</p>` : (blocks ? '' : '<p class="hwpx-empty">&nbsp;</p>')) + blocks;
+                };
+                const root = doc.documentElement;
+                if (!root || root.localName === 'parsererror') return '';
+                return kids(root, 'p').map(paraHtml).join('').replace(/(<p class="hwpx-empty">&nbsp;<\/p>){2,}/g, '<p class="hwpx-empty">&nbsp;</p>');
+            }
+
+            async _renderHwpxPreview(previewContent, fileBlob, fileName, fallbackButtonsHtml) {
+                (this._hwpxUrls || []).forEach(u => URL.revokeObjectURL(u));
+                this._hwpxUrls = [];
+                const notice = (title, body) => {
+                    previewContent.innerHTML = `<div class="hwpx-notice"><div class="hwpx-notice-title">${title}</div><div class="hwpx-notice-body">${body}</div><div class="hwpx-actions">${fallbackButtonsHtml}</div></div>`;
+                };
+                const kind = await this._sniffFileKind(fileBlob);
+                if (kind === 'ole') {
+                    notice('HWP 형식이라 미리보기를 할 수 없습니다',
+                        '한글에서 파일을 열고 [파일] → [다른 이름으로 저장하기] → 파일 형식을 "한글 문서 (*.hwpx)"로 골라 저장한 뒤 다시 넣어 주세요.<br>지금 파일은 내려받아 한글에서 열 수 있습니다.');
+                    return;
+                }
+                if (kind !== 'zip') {
+                    notice('암호화된 파일이라 미리보기를 할 수 없습니다',
+                        '문서보안(DRM) 등으로 암호화된 파일로 보입니다. 내려받아 한글에서 열어 확인해 주세요.');
+                    return;
+                }
+                try {
+                    const zip = await this._readZip(new Uint8Array(await fileBlob.arrayBuffer()));
+                    const dec = new TextDecoder();
+                    const mime = n => /\.png$/i.test(n) ? 'image/png' : /\.(jpe?g)$/i.test(n) ? 'image/jpeg' : /\.gif$/i.test(n) ? 'image/gif' : /\.bmp$/i.test(n) ? 'image/bmp' : 'application/octet-stream';
+                    const urlFor = async (name) => {
+                        const data = name && await zip.get(name);
+                        if (!data) return null;
+                        const u = URL.createObjectURL(new Blob([data], { type: mime(name) }));
+                        this._hwpxUrls.push(u);
+                        return u;
+                    };
+                    // 첫 쪽 미리보기 그림 (한글로 저장할 때 들어가는 그림 — 없는 파일도 많음)
+                    const prvName = zip.names.find(n => /^Preview\/PrvImage\./i.test(n));
+                    const prvUrl = await urlFor(prvName);
+                    // 본문에 쓰인 그림: content.hpf 목록의 id → 파일
+                    const imgById = {};
+                    const hpf = await zip.get('Contents/content.hpf');
+                    if (hpf) {
+                        const m = new DOMParser().parseFromString(dec.decode(hpf), 'application/xml');
+                        for (const it of m.getElementsByTagName('*')) {
+                            if (it.localName === 'item' && /^image\//.test(it.getAttribute('media-type') || '')) imgById[it.getAttribute('id')] = it.getAttribute('href');
+                        }
+                    }
+                    const imgUrls = {};
+                    for (const [id, href] of Object.entries(imgById)) imgUrls[id] = await urlFor(href);
+                    // 본문 (구역 순서대로)
+                    const sections = zip.names.filter(n => /^Contents\/section\d+\.xml$/i.test(n))
+                        .sort((a, b) => (+a.match(/(\d+)\.xml$/i)[1]) - (+b.match(/(\d+)\.xml$/i)[1]));
+                    let body = '';
+                    for (const sec of sections) {
+                        const data = await zip.get(sec);
+                        if (data) body += this._hwpxSectionHtml(dec.decode(data), id => imgUrls[id] || null);
+                    }
+                    if (!body.replace(/<p class="hwpx-empty">&nbsp;<\/p>/g, '').trim()) {
+                        const prvText = await zip.get('Preview/PrvText.txt');
+                        if (prvText) body = `<pre class="hwpx-prvtext">${this.escapeHtml(dec.decode(prvText))}</pre>`;
+                    }
+                    previewContent.innerHTML = `
+                        <div class="hwpx-view">
+                            <div class="hwpx-note">HWPX 미리보기 — 글과 표를 단순화해 보여 줍니다. 정확한 모양(글꼴·정렬·여백)은 한글에서 확인하세요.</div>
+                            ${prvUrl ? `<div class="hwpx-first"><div class="hwpx-label">첫 쪽 미리보기</div><img src="${prvUrl}" alt="첫 쪽 미리보기"></div>` : ''}
+                            <div class="hwpx-page">${body || '<p class="hwpx-muted">본문 내용을 찾지 못했습니다.</p>'}</div>
+                            <div class="hwpx-actions">${fallbackButtonsHtml}</div>
+                        </div>`;
+                } catch (err) {
+                    console.warn('HWPX 미리보기 실패:', err);
+                    notice('미리보기를 만들지 못했습니다', '파일이 손상되었거나 지원하지 않는 형식일 수 있습니다. 내려받아 한글에서 열어 확인해 주세요.');
+                }
+            }
+
             async _renderFilePreview(previewContent, fileBlob, fileName, fileType, fallbackButtonsHtml) {
                 const type = (fileType || '').toLowerCase();
                 const lowerName = (fileName || '').toLowerCase();
@@ -14843,6 +15041,8 @@ ${GOVERNMENT_DOCUMENT_GUIDELINES}
                     previewContent.innerHTML = `<video src="${makeUrl()}" controls style="max-width:100%;max-height:80vh;border-radius:8px;"></video>`;
                 } else if (type.startsWith('audio/') || ['.mp3', '.wav'].includes(ext)) {
                     previewContent.innerHTML = `<audio src="${makeUrl()}" controls style="width:100%;"></audio>`;
+                } else if (ext === '.hwpx' || ext === '.hwp') {
+                    await this._renderHwpxPreview(previewContent, fileBlob, fileName, fallbackButtonsHtml);
                 } else if (type.includes('wordprocessingml') || ext === '.docx') {
                     try {
                         const arrayBuffer = await fileBlob.arrayBuffer();
@@ -23833,10 +24033,12 @@ ${aiPartnerCitationFirstRules}
                 // 걸릴 수 있는데, 예전엔 시작 시점부터 아무 표시가 없어 화면이 멈춘 것처럼 보였다.
                 this._showProgress('서식·문서함에 파일 업로드 중...');
                 let added = 0, replaced = 0;
+                const blockedHwp = [];
                 for (let i = 0; i < files.length; i++) {
                     const file = files[i];
                     this._updateProgress('서식·문서함에 파일 업로드 중', i + 1, files.length);
                     if (!this._validateFile(file)) continue;
+                    { const chk = await this._checkHangulFormFile(file); if (!chk.ok) { blockedHwp.push({ name: file.name, kind: chk.kind }); continue; } }
                     const hash = await this.computeFileHash(file);
                     const existing = await this.findDuplicateRepoDocument(file, hash);
                     const now = new Date().toISOString();
@@ -23860,7 +24062,8 @@ ${aiPartnerCitationFirstRules}
                 await this._loadRepoDocMetaCache();
                 await this._renderDocumentRepoList();
                 const note = `${added > 0 ? `${added}개 추가` : ''}${replaced > 0 ? ` ${replaced}개 교체` : ''}`;
-                this.showToast('success', '✅', `서식·문서함 ${note} 완료`);
+                if (added + replaced > 0) this.showToast('success', '✅', `서식·문서함 ${note} 완료`);
+                this._showHwpBlocked(blockedHwp);
             }
 
             async deleteRepoDocument(id) {
@@ -24563,6 +24766,7 @@ ${aiPartnerCitationFirstRules}
                 const workflow = this.allData.workflows.find(w => w.id === this.currentEditingWorkflowId);
                 if (!workflow?.checklist?.[index]) return;
                 if (!this._validateFile(file)) return;
+                { const chk = await this._checkHangulFormFile(file); if (!chk.ok) { this._showHwpBlocked([{ name: file.name, kind: chk.kind }]); return; } }
                 const item = workflow.checklist[index];
                 if (!item.linkedDocs) item.linkedDocs = [];
 
@@ -24598,6 +24802,7 @@ ${aiPartnerCitationFirstRules}
                 const workflow = this.allData.workflows.find(w => w.id === workflowId);
                 if (!workflow?.checklist?.[index]) return;
                 if (!this._validateFile(file)) return;
+                { const chk = await this._checkHangulFormFile(file); if (!chk.ok) { this._showHwpBlocked([{ name: file.name, kind: chk.kind }]); return; } }
                 const item = workflow.checklist[index];
                 if (!item.linkedDocs) item.linkedDocs = [];
 
@@ -28753,7 +28958,7 @@ ${aiPartnerCitationFirstRules}
             async addMainChecklistFormat(workflowId, index) {
                 const input = document.createElement('input');
                 input.type = 'file';
-                input.accept = '.hwp,.doc,.docx,.pdf,.xls,.xlsx,.jpg,.jpeg,.png';
+                input.accept = '.hwpx,.doc,.docx,.pdf,.xls,.xlsx,.jpg,.jpeg,.png';
                 input.multiple = true;
                 input.onchange = async (e) => {
                     const files = e.target.files;
