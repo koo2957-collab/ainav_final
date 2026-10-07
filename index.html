@@ -2558,6 +2558,27 @@
             box-shadow: 0 4px 18px rgba(59,130,246,0.16);
             background: linear-gradient(to right, #eff6ff 0%, #ffffff 55%);
         }
+        /* 건너뛰기 버튼(일할 때 누름)·규칙 표시(레퍼런스)·편집 화면 표시·해당 없음 */
+        .branch-run-btn { display: inline-flex; align-items: center; padding: 3px 9px; font-size: 0.75rem; font-weight: 600; font-family: inherit; color: var(--text-gray); background: transparent; border: 1px solid var(--border-light); border-radius: 5px; cursor: pointer; white-space: nowrap; transition: background 0.15s, color 0.15s, border-color 0.15s; }
+        .branch-run-btn:hover { color: var(--accent); border-color: var(--accent); background: rgba(37,99,235,0.05); }
+        .branch-rule-chip { display: inline-flex; align-items: center; padding: 2px 8px; font-size: 0.72rem; font-weight: 600; color: var(--text-muted); background: var(--bg-light); border: 1px dashed var(--border-light); border-radius: 5px; white-space: nowrap; cursor: help; }
+        .fci-branch-chip { flex-shrink: 0; display: inline-flex; align-items: center; gap: 3px; padding: 1px 7px; font-size: 0.7rem; font-weight: 600; line-height: 1.6; font-family: inherit; color: var(--text-gray); background: var(--bg-light); border: 1px solid var(--border-light); border-radius: 5px; cursor: pointer; white-space: nowrap; }
+        .fci-branch-chip:hover { color: var(--accent); border-color: var(--accent); }
+        .fci-branch-chip.target { cursor: help; border-style: dashed; color: var(--text-muted); }
+        .fci-branch-chip.target:hover { color: var(--text-muted); border-color: var(--border-light); }
+        .na-restore-btn { flex-shrink: 0; padding: 2px 7px; font-size: 0.73rem; font-weight: 600; font-family: inherit; color: var(--accent); background: transparent; border: 1px solid rgba(37,99,235,0.3); border-radius: 5px; cursor: pointer; }
+        .na-pick-btn { margin-left: auto; padding: 3px 10px; font-size: 0.74rem; font-weight: 600; font-family: inherit; color: var(--text-gray); background: transparent; border: 1px solid var(--border-light); border-radius: 6px; cursor: pointer; white-space: nowrap; }
+        .na-pick-btn:hover, .cim-na-btn:hover { color: var(--accent); border-color: var(--accent); }
+        .cim-na-btn { flex-shrink: 0; margin-right: 4px; padding: 4px 10px; font-size: 0.76rem; font-weight: 600; font-family: inherit; color: var(--text-gray); background: transparent; border: 1px solid var(--border-light); border-radius: 6px; cursor: pointer; white-space: nowrap; }
+        .ci-menu { position: fixed; z-index: 10005; min-width: 210px; padding: 4px; background: var(--white); border: 1px solid var(--border-light); border-radius: 8px; box-shadow: 0 8px 28px rgba(17,31,53,0.18); }
+        .ci-menu button { display: block; width: 100%; text-align: left; padding: 8px 12px; font-size: 0.84rem; font-family: inherit; color: var(--text-dark); background: transparent; border: none; border-radius: 6px; cursor: pointer; }
+        .ci-menu button:hover { background: var(--bg-light); }
+        .branch-opt-card { background: var(--white); border: 1px solid var(--border-light); border-radius: 7px; padding: 9px 10px; margin-bottom: 6px; }
+        .branch-label-input { flex: 1; min-width: 0; padding: 4px 7px; font-size: 0.82rem; font-family: inherit; font-weight: 500; color: var(--text-dark); background: var(--white); border: 1px solid var(--border-light); border-radius: 5px; }
+        .branch-target-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 10px; background: var(--bg-light); border: 1px solid var(--border-subtle); border-radius: 6px; }
+        .branch-pick-btn { flex-shrink: 0; padding: 4px 11px; font-size: 0.74rem; font-weight: 600; font-family: inherit; color: var(--accent); background: var(--white); border: 1px solid rgba(37,99,235,0.3); border-radius: 5px; cursor: pointer; }
+        .branch-del-btn { width: 24px; height: 24px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: var(--text-muted); background: transparent; border: none; border-radius: 5px; cursor: pointer; }
+        .branch-del-btn:hover { background: rgba(220,38,38,0.08); color: #dc2626; }
         .checklist-card.skipped {
             border-left-color: #94a3b8;
             opacity: 0.62;
@@ -5843,6 +5864,8 @@
             { version: '1.1.0', date: '2026-10-07', notes: [
                 '체크리스트를 「단계 + 할 일」 구조로 개선(단계는 순서대로, 할 일은 순서 없이 · 단계별 「할 일 n/m」 표시)',
                 '체크리스트 편집은 [저장]을 눌러야 반영(닫거나 포커스 모드에서 나올 때 저장 여부 확인)',
+                '「해당 없음」 추가 — 설정 없이 필요 없는 항목을 그 자리에서 빼고 [되살리기]로 되돌림(오른쪽 클릭·[해당 없음 고르기])',
+                '건너뛰기 설정 간소화([확인]으로 바로 적용, 뒤쪽 항목만 선택), 편집 화면에 건너뛰기·조건부 표시',
                 '업무 카드에 시작일(처음 체크한 날)·최근 진행 일시 표시',
                 '레퍼런스 등록은 체크를 비운 깨끗한 사본으로 만들고 제목에 「(레퍼런스)」 표시, 아이콘을 펼친 책으로 통일',
                 '새로 만든·복사한 업무는 들어간 탭의 맨 위에 「신규」 표시와 함께 보이도록 개선',
@@ -8603,6 +8626,7 @@
                                 <span id="checklist-count-${workflow.id}" style="color:var(--text-muted);font-weight:500;">(${doneCount}/${checklistTotalCount})</span>
                             </div>
                             <div id="checklist-pct-${workflow.id}" style="font-weight: 800; color: var(--accent); font-size: 0.9rem;">${progress}%</div>
+                            ${!workflow.isReference && !workflow.completedProcessed ? `<button class="na-pick-btn" onclick="app.openNotApplicablePicker(${workflow.id})" title="이번 업무에서 할 필요가 없는 항목을 골라 뺍니다 (예: 피의자가 1명이면 피의자2·3 신문). 항목을 마우스 오른쪽으로 눌러도 됩니다">해당 없음 고르기</button>` : ''}
                         </div>
                         <div style="width:100%;background:#e5e7eb;height:6px;border-radius:3px;overflow:hidden;margin-bottom:12px;">
                             <div id="checklist-bar-${workflow.id}" style="width:${progress}%;height:100%;background:var(--accent);transition:width 0.3s;"></div>
@@ -10931,8 +10955,18 @@
             // 저장소에는 편집 전 체크리스트가 저장된다(_persistableProject — 저장 전에 브라우저가 닫혀도 편집 전 상태 유지).
             // [저장]이면 반영, 저장하지 않고 나가면(편집 취소·X·Esc·뒤로가기) 바뀐 게 있을 때 저장할지 묻는다.
             // 업무 수행 화면(체크·마감일 등)은 상용 업무관리 프로그램처럼 바로 저장한다.
+            // 편집 중 "바뀐 게 있나" 비교 기준: 항목 이름·순서·들여쓰기뿐 아니라, 편집 중에 항목 창에서 고친
+            // 건너뛰기 버튼·업무팁·서식·조치결과도 포함한다 (빠뜨리면 저장 여부를 묻지 않고 편집 전으로 되돌아가 사라짐)
             _editSignature(checklist) {
-                return JSON.stringify((checklist || []).map(i => [i.itemId || '', (i.text || '').trim(), i.indent || 0]));
+                return JSON.stringify((checklist || []).map(i => [
+                    i.itemId || '', (i.text || '').trim(), i.indent || 0,
+                    (i.branchOptions || []).filter(o => this.isBranchOptionConfigured(o))
+                        .map(o => [o.label || '', !!o.selfSkip, o.targetItemIds || [], o.action || '']),
+                    (i.tip && i.tip.content) || '',
+                    i.linkedDocs || [],
+                    (i.formats || []).map(f => (f && (f.id || f.name)) || f),
+                    (i.result && i.result.text) || '', (i.result && i.result.summary) || '',
+                ]));
             }
 
             _beginFocusEditDraft() {
@@ -11169,6 +11203,14 @@
                     }
                 })() : '';
 
+                // 건너뛰기 표시: 버튼이 달린 항목은 "건너뛰기 n"(누르면 설정 창), 건너뛰어질 수 있는 항목은 "조건부"
+                const branchCount = (item.branchOptions || []).filter(o => this.isBranchOptionConfigured(o)).length;
+                const targetOf = !isSkipped ? this._branchTargetMap(workflow).get(this.ensureChecklistItemId(item)) : null;
+                const branchChipsInner = (branchCount && !isSkipped
+                        ? `<button class="fci-branch-chip" onclick="event.stopPropagation();app.showChecklistItemModal(${workflow.id},${index},'branch')" title="건너뛰기 버튼 ${branchCount}개 — 눌러서 설정">${this._skipIco()}건너뛰기 ${branchCount}</button>` : '')
+                    + (targetOf ? `<span class="fci-branch-chip target" title="${this.escapeHtml(targetOf.map(t => t + ' 버튼을 누르면 건너뜀').join('\n'))}">${this._skipIco()}조건부</span>` : '');
+                const branchChips = branchChipsInner ? `<span style="display:inline-flex;align-items:center;gap:4px;margin-left:auto;flex-shrink:0;">${branchChipsInner}</span>` : '';
+
                 const cardClass = `checklist-card${isSub ? ' sub-item' : ''}${isSkipped ? ' skipped' : ''}`;
                 const cardStyle = isSkipped ? 'opacity:0.55;' : '';
 
@@ -11186,6 +11228,7 @@
                                   ondragend="app.focusDragEnd()">⠿</span>
                             ${subIcon}
                             ${titleHtml}
+                            ${branchChips}
                             ${detailBtn}
                             ${!isSkipped ? `<button class="fci-insert-btn" onclick="event.stopPropagation();app.focusAddItemAfterLive(${workflow.id},${index})" title="아래에 항목 추가">＋</button>` : ''}
                             ${!isSkipped ? `<button class="fci-del" onclick="event.stopPropagation();app.focusDeleteItemLive(${workflow.id},${index})" title="항목 삭제">✕</button>` : ''}
@@ -11560,13 +11603,16 @@
             }
 
             // 체크리스트 항목 상세 모달 열기
-            showChecklistItemModal(workflowId, index) {
+            // initialTab: 처음 보여 줄 탭 ('formats' | 'tip' | 'result' | 'branch')
+            showChecklistItemModal(workflowId, index, initialTab = '') {
                 this.saveData();
                 const workflow = this.allData.workflows.find(w => w.id === workflowId);
                 if (!workflow || !workflow.checklist) return;
                 const item = workflow.checklist[index];
                 if (!item) return;
                 const locked = this.isReferenceLocked(workflow);
+                const editing = this._branchEditingNow(workflowId);   // 체크리스트 편집 중 ([저장]해야 반영)
+                const setupOnly = this._branchSetupOnly(workflow);    // 편집 중·레퍼런스: 건너뛰기는 설정만, 실행은 안 함
 
                 // 건너뛰기 항목 선택기의 임시 선택 상태 초기화 (모달을 새로 열 때마다 새 세션으로 취급)
                 this._branchPendingSelections = {};
@@ -11600,21 +11646,17 @@
                     }
                 }
 
-                // 분기 처리 버튼 (잠긴 레퍼런스에서는 실행 버튼을 숨겨 상태 변경을 막는다)
-                let branchBtnsHtml = '';
-                if (!locked && item.branchOptions && !isSkipped && !isCompleted && !item.branchActionTaken) {
-                    const valids = item.branchOptions
-                        .map((o, optIdx) => ({ o, optIdx }))
-                        .filter(({ o }) => this.isBranchOptionConfigured(o));
-                    if (valids.length > 0) {
-                        branchBtnsHtml = `<div style="padding:10px 12px;background:var(--bg-light);border-radius:8px;border:1px solid var(--border-subtle);margin-bottom:12px;">
-                            <div style="font-size:0.69rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:7px;">항목 건너뛰기 실행</div>
-                            <div style="display:flex;gap:6px;flex-wrap:wrap;">
-                                ${valids.map(({ o, optIdx }) => `<button onclick="app.handleBranchOption(${workflowId},${index},${optIdx})" style="padding:5px 13px;font-size:0.8rem;background:transparent;color:${o.color||'var(--accent)'};border:1px solid ${o.color||'rgba(37,99,235,0.3)'};border-radius:5px;cursor:pointer;font-weight:600;font-family:inherit;transition:background 0.15s;" onmouseover="this.style.background='rgba(0,0,0,0.04)'" onmouseout="this.style.background='transparent'">${this.escapeHtml(o.label)}</button>`).join('')}
-                            </div>
-                        </div>`;
-                    }
-                }
+                // 건너뛰기 실행 버튼 — 일하는 화면에서만 (편집 중·레퍼런스에서는 설정만)
+                const branchBtnsHtml = locked ? '' : this._branchExecHtml(workflow, index);
+
+                // 해당 없음 / 되살리기 (일하는 화면에서만)
+                const canNA = !locked && !setupOnly && !workflow.completedProcessed;
+                const naBtnHtml = !canNA ? ''
+                    : (isSkipped && item.skipManual)
+                        ? `<button class="cim-na-btn" onclick="app.closeChecklistItemModal();app.restoreNotApplicable(${workflowId},${index})" title="해당 없음을 풀고 다시 할 항목으로 되돌립니다">되살리기</button>`
+                        : (!isSkipped && !isCompleted)
+                            ? `<button class="cim-na-btn" onclick="app.closeChecklistItemModal();app.markNotApplicable(${workflowId},[${index}])" title="이번 업무에서는 할 필요가 없는 항목으로 뺍니다 (되살릴 수 있음)">해당 없음</button>`
+                            : '';
 
                 // 조치결과 탭 내용 (아코디언: 요약 있으면 원본 접힘)
                 const _hasSummary = !!(item.result?.summary);
@@ -11791,6 +11833,7 @@
                                         ${item.completedAt ? `<span style="font-size:0.7rem;color:var(--text-muted);letter-spacing:0.01em;">${fmtDateTime(item.completedAt, { short: true, weekday: true }) || item.completedAt}</span>` : ''}
                                     </div>
                                 </div>
+                                ${naBtnHtml}
                                 <button onclick="app.closeChecklistItemModal()" class="close-btn">✕</button>
                             </div>
                         </div>
@@ -11800,13 +11843,16 @@
                             <span style="flex:1;">레퍼런스(본보기)는 보기 전용입니다. 고치려면 [편집]을 누르세요.</span>
                             <button onclick="event.stopPropagation();app.closeChecklistItemModal();app.editReference(${workflowId});" style="padding:3px 10px;font-size:0.76rem;background:#d97706;color:#fff;border:none;border-radius:5px;font-weight:600;cursor:pointer;font-family:inherit;flex-shrink:0;">편집</button>
                         </div>` : ''}
+                        ${editing ? `<div style="padding:8px 18px;background:rgba(37,99,235,0.06);border-bottom:1px solid rgba(37,99,235,0.18);flex-shrink:0;font-size:0.78rem;color:var(--text-gray);">
+                            <b style="color:var(--accent);">편집 중</b> — 여기서 바꾼 건너뛰기·업무팁·서식은 체크리스트 편집의 <b>[저장]</b>을 눌러야 반영됩니다.
+                        </div>` : ''}
                         <!-- 탭 -->
                         <div style="padding:0 16px;background:var(--white);border-bottom:1px solid var(--border-light);flex-shrink:0;">
                             <div style="display:flex;gap:0;">
                                 <button id="checklist-tab-formats-${workflowId}-${index}" class="cim-tab cim-tab-active" style="display:flex;align-items:center;gap:4px;" onclick="app.switchChecklistItemTab(${workflowId},${index},'formats')"><span style="width:5px;height:5px;border-radius:50%;background:#10b981;display:inline-block;flex-shrink:0;"></span>서식</button>
                                 <button id="checklist-tab-tip-${workflowId}-${index}" class="cim-tab" style="display:flex;align-items:center;gap:4px;" onclick="app.switchChecklistItemTab(${workflowId},${index},'tip')"><span style="width:5px;height:5px;border-radius:50%;background:#f59e0b;display:inline-block;flex-shrink:0;"></span>업무팁</button>
                                 <button id="checklist-tab-result-${workflowId}-${index}" class="cim-tab" style="display:flex;align-items:center;gap:4px;" onclick="app.switchChecklistItemTab(${workflowId},${index},'result')"><span style="width:5px;height:5px;border-radius:50%;background:#8b5cf6;display:inline-block;flex-shrink:0;"></span>조치결과</button>
-                                <button id="checklist-tab-branch-${workflowId}-${index}" class="cim-tab" style="display:flex;align-items:center;gap:4px;" onclick="app.switchChecklistItemTab(${workflowId},${index},'branch')"><span style="width:5px;height:5px;border-radius:50%;background:#64748b;display:inline-block;flex-shrink:0;"></span>건너뛰기${item.branchOptions?.length > 0 ? `<span style="background:rgba(139,92,246,0.12);color:#8b5cf6;font-size:0.63rem;padding:1px 5px;border-radius:5px;font-weight:700;margin-left:2px;">${item.branchOptions.length}</span>` : ''}</button>
+                                <button id="checklist-tab-branch-${workflowId}-${index}" class="cim-tab" style="display:flex;align-items:center;gap:4px;" onclick="app.switchChecklistItemTab(${workflowId},${index},'branch')"><span style="width:5px;height:5px;border-radius:50%;background:#64748b;display:inline-block;flex-shrink:0;"></span>건너뛰기${this._branchTabBadge(item)}</button>
                             </div>
                         </div>
 
@@ -11824,7 +11870,10 @@
                             <div id="checklist-panel-branch-${workflowId}-${index}" style="display:none;flex:1;overflow-y:auto;padding:14px 18px;">
                                 ${locked ? `<div style="text-align:center;padding:28px 20px;color:var(--text-muted);font-size:0.87rem;background:var(--bg-light);border-radius:8px;border:1px dashed var(--border-light);">레퍼런스(본보기)에서는 건너뛰기 설정을 바꿀 수 없습니다. [편집] 중에는 바꿀 수 있습니다.</div>` : `
                                 <div id="branch-execute-${workflowId}-${index}">${branchBtnsHtml}</div>
-                                <div style="font-size:0.76rem;color:var(--text-muted);margin-bottom:10px;line-height:1.5;">조건에 따라 특정 항목을 건너뛰는 버튼을 추가합니다.</div>
+                                <div style="font-size:0.76rem;color:var(--text-muted);margin-bottom:10px;line-height:1.6;">
+                                    자주 생기는 갈림길(예: 불출석이면 신문 단계 생략)에 버튼을 만들어 두면, 일할 때 버튼 한 번으로 정한 항목을 건너뜁니다.${setupOnly ? ' 버튼은 일하는 화면에서 누릅니다.' : ''}<br>
+                                    그때그때 필요 없는 항목(예: 피의자가 1명일 때 피의자2·3)은 설정 없이 [해당 없음]으로 빼면 됩니다.
+                                </div>
                                 <div id="branch-options-list-${workflowId}-${index}">
                                     ${this.renderBranchOptionsList(workflowId, index, item)}
                                 </div>`}
@@ -11834,6 +11883,7 @@
                 </div>`;
 
                 document.body.insertAdjacentHTML('beforeend', modalHtml);
+                if (initialTab) this.switchChecklistItemTab(workflowId, index, initialTab);
             }
 
             closeChecklistItemModal() {
@@ -11844,8 +11894,15 @@
                 }
                 // 모달에서 바뀐 서식·업무팁·조치결과·건너뛰기 내용을 체크리스트 항목의 점 표시에 즉시 반영
                 if (this._cimContext) {
-                    const workflow = this.allData.workflows.find(w => w.id === this._cimContext.workflowId);
+                    const { workflowId, index } = this._cimContext;
+                    const workflow = this.allData.workflows.find(w => w.id === workflowId);
                     this._cimContext = null;
+                    // 건너뛸 항목을 고르지 않은 건너뛰기 버튼은 쓸모가 없으므로 창을 닫을 때 정리
+                    const it = workflow?.checklist?.[index];
+                    if (it?.branchOptions?.some(o => !this.isBranchOptionConfigured(o))) {
+                        it.branchOptions = it.branchOptions.filter(o => this.isBranchOptionConfigured(o));
+                        this.saveData();
+                    }
                     if (workflow) this.refreshFocusChecklist(workflow);
                 }
             }
@@ -19850,6 +19907,7 @@ ${docScope === 'internal' ? `[내부결재 — 보고·검토·승인용]
                             if (item.branchOnly) delete item.branchOnly;
                             if (item.skipped) { delete item.skipped; delete item.skipReason; delete item.skipActionId; }
                             delete item.skipReason;  // 건너뛰지 않은 항목에 남은 예전 사유도 정리
+                            delete item.skipManual;  // 해당 없음 표시도 정리
                             delete item.deadline;    // 항목 마감일도 원본 날짜가 남지 않게 정리 (업무 마감일처럼 새로 지정)
                         });
                     }
@@ -26363,7 +26421,9 @@ ${aiPartnerCitationFirstRules}
                                     if (item.skipped) {
                                         delete item.skipped;
                                         delete item.skipReason;
+                                        delete item.skipActionId;
                                     }
+                                    delete item.skipManual;  // 해당 없음 표시도 정리
 
                                     // 항목 마감일 초기화 (원본의 지난 날짜가 기한 초과로 뜨지 않게)
                                     delete item.deadline;
@@ -27691,28 +27751,18 @@ ${aiPartnerCitationFirstRules}
                     }
                 }
 
-                // 분기 처리 버튼 (건너뛰지 않았고 완료되지 않은 경우에만 표시)
-                // 조건 추가: opt.action이 비어있지 않은 경우에만 버튼 표시 (저장 버튼 눌러서 설정 완료된 것만)
-                // 중요 수정: 이미 분기 처리가 된 항목(branchActionTaken 존재)이라면 분기 버튼을 숨겨야 함!
-                // (대신 실행취소 버튼이 완료 뱃지 옆에 표시됨)
+                // 건너뛰기 버튼: 일하는 화면에서는 누르는 버튼(건너뛰지 않았고 완료·실행 전인 항목만),
+                // 레퍼런스(본보기)에서는 누를 수 없는 규칙 표시만 (실행은 복사하여 시작한 업무에서)
                 let branchButtons = '';
-                if (item.branchOptions && !isSkipped && !isCompleted && !item.branchActionTaken) {
+                if (asTemplate) {
+                    branchButtons = this._branchRuleChipsHtml(workflow, item);
+                } else if (item.branchOptions && !isSkipped && !isCompleted && !item.branchActionTaken) {
                     const validOptions = item.branchOptions
                         .map((opt, optIdx) => ({ opt, optIdx }))
                         .filter(({ opt }) => this.isBranchOptionConfigured(opt));
                     if (validOptions.length > 0) {
-                        branchButtons = `
-                            <div class="branch-buttons" style="display:flex;gap:4px;">
-                                ${validOptions.map(({ opt, optIdx }) => `
-                                    <button onclick="event.stopPropagation(); app.handleBranchOption(${workflow.id}, ${index}, ${optIdx})"
-                                            style="padding:3px 9px;font-size:0.75rem;background:transparent;color:${opt.color || 'var(--accent)'};border:1px solid ${opt.color || 'rgba(37,99,235,0.3)'};border-radius:5px;cursor:pointer;font-weight:600;transition:background 0.15s;font-family:inherit;"
-                                            onmouseover="this.style.background='rgba(0,0,0,0.05)'"
-                                            onmouseout="this.style.background='transparent'">
-                                        ${this.escapeHtml(opt.label)}
-                                    </button>
-                                `).join('')}
-                            </div>
-                        `;
+                        branchButtons = `<div class="branch-buttons" style="display:flex;gap:4px;">${validOptions.map(({ opt, optIdx }) =>
+                            `<button class="branch-run-btn" onclick="event.stopPropagation(); app.handleBranchOption(${workflow.id}, ${index}, ${optIdx})" title="누르면 정해 둔 항목을 건너뜁니다 (실행 전에 확인)">${this._skipIco()}${this.escapeHtml(opt.label || '건너뛰기')}</button>`).join('')}</div>`;
                     }
                 }
 
@@ -27786,12 +27836,15 @@ ${aiPartnerCitationFirstRules}
                          style="${isSkipped ? 'opacity:0.6;' : ''}">
                         <div class="${headerClass}"
                              onclick="app.showChecklistItemModal(${workflow.id}, ${index})"
+                             oncontextmenu="app.openChecklistItemMenu(event, ${workflow.id}, ${index})"
                              style="cursor:pointer;">
                             ${checkboxHtml}
                             ${subItemIcon}
                             <span class="item-title-text" style="${textStyle}">
                                 ${this.escapeHtml(item.text)}
-                                ${item.skipReason ? `<span style="font-size:0.78rem;color:#ef4444;margin-left:8px;font-weight:500;">(사유: ${item.skipReason})</span>` : ''}
+                                ${item.skipReason ? (item.skipManual
+                                    ? `<span style="font-size:0.78rem;color:var(--text-muted);margin-left:8px;font-weight:500;">(${this.escapeHtml(item.skipReason)})</span>`
+                                    : `<span style="font-size:0.78rem;color:#ef4444;margin-left:8px;font-weight:500;">(사유: ${item.skipReason})</span>`) : ''}
                                 ${stageChip}
                             </span>
                             <div style="display:flex;align-items:center;gap:4px;flex-shrink:0;margin-left:auto;">
@@ -27802,6 +27855,7 @@ ${aiPartnerCitationFirstRules}
                                 ${isCompleted && item.branchOnly && !isSkipped ? `<span style="font-size:0.68rem;font-weight:700;color:#8b5cf6;background:rgba(139,92,246,0.1);padding:1px 6px;border-radius:4px;flex-shrink:0;" title="분기 처리로 완료됨 (실제 작업 내용 아님)">🔀 분기</span>` : ''}
                                 ${isSkipped && item.branchActionTaken ? `<button onclick="event.stopPropagation();app.undoBranchOption(${workflow.id},${index})" style="flex-shrink:0;padding:2px 7px;font-size:0.73rem;background:transparent;color:#6b7280;border:1px solid rgba(107,114,128,0.25);border-radius:5px;cursor:pointer;font-family:inherit;">실행취소</button>` : ''}
                                 ${isSkipped && !item.branchActionTaken && item.skipActionId ? `<button onclick="event.stopPropagation();app.undoBranchOptionFromSkippedItem(${workflow.id},${index})" title="이 항목을 건너뛰게 한 분기 처리를 취소합니다" style="flex-shrink:0;padding:2px 7px;font-size:0.73rem;background:transparent;color:#6b7280;border:1px solid rgba(107,114,128,0.25);border-radius:5px;cursor:pointer;font-family:inherit;">실행취소</button>` : ''}
+                                ${isSkipped && item.skipManual && !asTemplate ? `<button class="na-restore-btn" onclick="event.stopPropagation();app.restoreNotApplicable(${workflow.id},${index})" title="해당 없음을 풀고 다시 할 항목으로 되돌립니다">되살리기</button>` : ''}
                                 ${isCompleted && item.branchActionTaken && !isSkipped ? `<button onclick="event.stopPropagation();app.undoBranchOption(${workflow.id},${index})" style="flex-shrink:0;padding:2px 7px;font-size:0.73rem;background:transparent;color:#6b7280;border:1px solid rgba(107,114,128,0.25);border-radius:5px;cursor:pointer;font-family:inherit;">실행취소</button>` : ''}
                                 ${indicatorDots ? `<span style="display:flex;align-items:center;gap:3px;">${indicatorDots}</span>` : ''}
                             </div>
@@ -27930,7 +27984,7 @@ ${aiPartnerCitationFirstRules}
                         <div style="padding:0 18px 4px;overflow-y:auto;flex:1;min-height:0;">${selfRowHtml}${itemRowsHtml}</div>
                         <div style="padding:12px 18px 16px;display:flex;gap:8px;justify-content:flex-end;flex-shrink:0;">
                             <button id="branchPreviewCancelBtn" style="padding:7px 14px;font-size:0.83rem;background:transparent;color:var(--text-muted);border:1px solid var(--border-light);border-radius:7px;cursor:pointer;font-family:inherit;font-weight:600;">취소</button>
-                            <button id="branchPreviewConfirmBtn" style="padding:7px 16px;font-size:0.83rem;background:${opt.color || 'var(--accent)'};color:white;border:none;border-radius:7px;font-weight:700;cursor:pointer;font-family:inherit;">실행</button>
+                            <button id="branchPreviewConfirmBtn" style="padding:7px 16px;font-size:0.83rem;background:var(--accent);color:white;border:none;border-radius:7px;font-weight:700;cursor:pointer;font-family:inherit;">실행</button>
                         </div>
                     </div>`;
                 document.body.appendChild(overlay);
@@ -27958,6 +28012,7 @@ ${aiPartnerCitationFirstRules}
                     currentItem.skipped = true;
                     currentItem.skipReason = `${label} (자기 분기 처리)`;
                     currentItem.skipActionId = actionId;
+                    delete currentItem.skipManual;
                     currentItem.completed = false;
                     skippedItemIds.push(this.ensureChecklistItemId(currentItem));
                 } else {
@@ -27972,6 +28027,7 @@ ${aiPartnerCitationFirstRules}
                     item.skipped = true;
                     item.skipReason = `${label} (${currentItem.text})`;
                     item.skipActionId = actionId;
+                    delete item.skipManual;  // 해당 없음으로 뺀 항목이면 건너뛰기 쪽으로 넘김 (되돌리기는 건너뛰기 [실행취소])
                     item.completed = false;
                     skippedItemIds.push(id);
                 });
@@ -28161,6 +28217,255 @@ ${aiPartnerCitationFirstRules}
                 this.undoBranchOption(workflowId, originIndex);
             }
 
+            // ── 해당 없음 (현장 점검표의 N/A) ──
+            // 미리 설정하지 않고, 일하다가 이번 업무에서 필요 없는 항목을 그 자리에서 뺀다 (예: 피의자가 1명이면 피의자2·3 신문).
+            // 단계를 빼면 그 단계의 끝나지 않은 할 일도 함께 뺀다. 뺀 항목은 "건너뛴 항목"에 모이고 진행률 계산에서 빠지며,
+            // [되살리기]로 언제든 되돌린다. skipManual = 한 번에 뺀 묶음 ID (토스트 [되돌리기]용)
+            markNotApplicable(workflowId, indices, reason = '') {
+                if (this.guardReferenceLock(workflowId, '해당 없음 처리')) return;
+                const workflow = this.allData.workflows.find(w => w.id === workflowId);
+                if (!workflow || !workflow.checklist || workflow.isReference || this._branchEditingNow(workflowId)) return;
+                const cl = workflow.checklist;
+                const open = (it) => !!it && it.skipped !== true && !this.normalizeCompleted(it);
+                const pick = new Set();
+                (indices || []).forEach(i => {
+                    if (!open(cl[i])) return;
+                    pick.add(i);
+                    this.findSubItems(cl, i).forEach(s => { if (open(s.item)) pick.add(s.index); });
+                });
+                if (pick.size === 0) { this.showToast('info', 'ℹ️', '뺄 항목이 없습니다 (이미 끝났거나 건너뛴 항목입니다).'); return; }
+                this._freezeStartedAt(workflow);
+                this._markProgress(workflow);
+                const naId = this.generateChecklistItemId();
+                const why = String(reason || '').trim();
+                const order = [...pick].sort((a, b) => a - b);
+                order.forEach(i => {
+                    const it = cl[i];
+                    it.skipped = true;
+                    it.skipManual = naId;
+                    it.skipReason = why ? `해당 없음 · ${why}` : '해당 없음';
+                    it.completed = false;
+                    it.completedAt = null;
+                });
+                this.syncAllParentsFromSubItems(workflow);
+                this._refreshAfterSkipChange(workflow);
+                const first = ((cl[order[0]].text || '').trim() || '(제목 없음)').slice(0, 24);
+                this.showToast('success', '🔀', order.length === 1 ? `"${first}" 해당 없음으로 뺐습니다.` : `${order.length}개 항목을 해당 없음으로 뺐습니다.`, 6000, {
+                    actions: [{ label: '되돌리기', onAction: () => this._restoreNotApplicableBatch(workflowId, naId) }],
+                });
+                setTimeout(() => this._onChecklistItemCompleted(workflowId), 500);
+            }
+
+            // [되살리기]: 단계를 되살리면 함께 뺀 할 일도, 할 일을 되살리면 빠져 있던 그 단계도 함께 되살린다
+            restoreNotApplicable(workflowId, index) {
+                if (this.guardReferenceLock(workflowId, '되살리기')) return;
+                const workflow = this.allData.workflows.find(w => w.id === workflowId);
+                const cl = workflow?.checklist;
+                const it = cl?.[index];
+                if (!it || it.skipped !== true || !it.skipManual) return;
+                const pick = new Set([index]);
+                if (this._isSubEntry(it)) {
+                    const p = this.findParentItem(cl, index);
+                    if (p && p.item.skipped === true && p.item.skipManual) pick.add(p.index);
+                } else {
+                    this.findSubItems(cl, index).forEach(s => { if (s.item.skipped === true && s.item.skipManual) pick.add(s.index); });
+                }
+                this._clearNotApplicable(workflow, [...pick]);
+                this.showToast('success', '↩', pick.size === 1 ? '되살렸습니다.' : `${pick.size}개 항목을 되살렸습니다.`);
+            }
+
+            _restoreNotApplicableBatch(workflowId, naId) {
+                const workflow = this.allData.workflows.find(w => w.id === workflowId);
+                if (!workflow?.checklist) return;
+                const idx = [];
+                workflow.checklist.forEach((it, i) => { if (it.skipped === true && it.skipManual === naId) idx.push(i); });
+                if (!idx.length) return;
+                this._clearNotApplicable(workflow, idx);
+                this.showToast('info', '↩', '되돌렸습니다.');
+            }
+
+            _clearNotApplicable(workflow, indices) {
+                indices.forEach(i => {
+                    const it = workflow.checklist[i];
+                    if (!it) return;
+                    delete it.skipped;
+                    delete it.skipManual;
+                    delete it.skipReason;
+                });
+                this._freezeStartedAt(workflow);
+                this._markProgress(workflow);
+                this.syncAllParentsFromSubItems(workflow);
+                this._refreshAfterSkipChange(workflow);
+            }
+
+            // 건너뜀·해당 없음이 바뀐 뒤 저장하고 화면 갱신 (100%가 되거나 100%에서 내려오면 [완료 처리] 버튼 때문에 전체 갱신)
+            _refreshAfterSkipChange(workflow) {
+                const wid = workflow.id;
+                this.saveData();
+                this.refreshAIPanelDashboardIfNeeded();
+                this.updateStats();
+                if (this.focusMode && this.focusedWorkflowId === wid) {
+                    const p = this.calculateProgress(workflow);
+                    const prev = this._prevFocusProgress !== undefined ? this._prevFocusProgress : -1;
+                    this._prevFocusProgress = p;
+                    if (p === 100 || prev === 100) this.displayWorkflows();
+                    else this.refreshFocusChecklist(workflow);
+                } else if (this.selectedWorkflowId === wid) {
+                    this.showProjectDetail(wid);
+                } else {
+                    this.displayWorkflows();
+                }
+            }
+
+            // 항목을 마우스 오른쪽으로 누르면 나오는 작은 메뉴 (해당 없음·되살리기·여러 항목 고르기)
+            openChecklistItemMenu(e, workflowId, index) {
+                const workflow = this.allData.workflows.find(w => w.id === workflowId);
+                const item = workflow?.checklist?.[index];
+                if (!item || workflow.isReference || workflow.completedProcessed || this._branchEditingNow(workflowId)) return;  // 브라우저 기본 메뉴
+                e.preventDefault();
+                e.stopPropagation();
+                this._closeChecklistItemMenu();
+                const cl = workflow.checklist;
+                const isSkipped = item.skipped === true;
+                const done = this.normalizeCompleted(item);
+                const entries = [];
+                if (isSkipped && item.skipManual) entries.push(['되살리기', () => this.restoreNotApplicable(workflowId, index)]);
+                if (!isSkipped && !done) {
+                    const hasSubs = this.findSubItems(cl, index).some(s => s.item.skipped !== true && !this.normalizeCompleted(s.item));
+                    entries.push([hasSubs ? '해당 없음으로 빼기 (할 일 포함)' : '해당 없음으로 빼기', () => this.markNotApplicable(workflowId, [index])]);
+                }
+                entries.push(['여러 항목 해당 없음…', () => this.openNotApplicablePicker(workflowId, (!isSkipped && !done) ? [index] : [])]);
+                entries.push(['자세히 (서식·업무팁·조치결과)', () => this.showChecklistItemModal(workflowId, index)]);
+                const menu = document.createElement('div');
+                menu.id = 'checklistItemMenu';
+                menu.className = 'ci-menu';
+                menu.innerHTML = entries.map((en, i) => `<button type="button" data-i="${i}">${this.escapeHtml(en[0])}</button>`).join('');
+                document.body.appendChild(menu);
+                const r = menu.getBoundingClientRect();
+                menu.style.left = Math.max(8, Math.min(e.clientX, window.innerWidth - r.width - 8)) + 'px';
+                menu.style.top = Math.max(8, Math.min(e.clientY, window.innerHeight - r.height - 8)) + 'px';
+                menu.addEventListener('click', (ev) => {
+                    const b = ev.target.closest('button[data-i]');
+                    if (!b) return;
+                    this._closeChecklistItemMenu();
+                    entries[+b.dataset.i][1]();
+                });
+                this._ciMenuOff = (ev) => { if (!menu.contains(ev.target)) this._closeChecklistItemMenu(); };
+                setTimeout(() => {
+                    if (!document.getElementById('checklistItemMenu')) return;
+                    document.addEventListener('mousedown', this._ciMenuOff, true);
+                    window.addEventListener('wheel', this._ciMenuOff, true);
+                }, 0);
+                this._ciMenuUnbindEsc = this._bindDialogEsc(() => this._closeChecklistItemMenu());
+            }
+
+            _closeChecklistItemMenu() {
+                document.getElementById('checklistItemMenu')?.remove();
+                if (this._ciMenuOff) {
+                    document.removeEventListener('mousedown', this._ciMenuOff, true);
+                    window.removeEventListener('wheel', this._ciMenuOff, true);
+                    this._ciMenuOff = null;
+                }
+                if (this._ciMenuUnbindEsc) { this._ciMenuUnbindEsc(); this._ciMenuUnbindEsc = null; }
+            }
+
+            // 고르기 창 공통 동작: Shift+클릭 범위 선택, 단계를 고르면 그 할 일도 함께, 할 일을 풀면 단계도 풀림
+            _wirePickerChecks(overlay, onChange) {
+                let lastClickedIdx = null;
+                const cbOf = (row) => row.querySelector('.branch-picker-checkbox');
+                overlay.querySelectorAll('.branch-picker-checkbox').forEach(cb => {
+                    cb.addEventListener('click', (e) => {
+                        const row = cb.closest('.branch-picker-row');
+                        const idx = parseInt(row.dataset.idx);
+                        if (e.shiftKey && lastClickedIdx !== null) {
+                            const from = Math.min(lastClickedIdx, idx), to = Math.max(lastClickedIdx, idx);
+                            overlay.querySelectorAll('.branch-picker-row').forEach(r => {
+                                const ri = parseInt(r.dataset.idx);
+                                if (ri >= from && ri <= to && cbOf(r)) cbOf(r).checked = cb.checked;
+                            });
+                        } else if (row.dataset.parent === undefined) {
+                            overlay.querySelectorAll(`.branch-picker-row[data-parent="${idx}"]`).forEach(r => { if (cbOf(r)) cbOf(r).checked = cb.checked; });
+                        } else if (!cb.checked) {
+                            const p = overlay.querySelector(`.branch-picker-row[data-idx="${row.dataset.parent}"]`);
+                            if (p && cbOf(p)) cbOf(p).checked = false;
+                        }
+                        lastClickedIdx = idx;
+                        onChange();
+                    });
+                });
+            }
+
+            // [해당 없음 고르기]: 여러 항목을 한 번에 빼는 창 (사유는 선택)
+            openNotApplicablePicker(workflowId, preselect = []) {
+                if (this.guardReferenceLock(workflowId, '해당 없음 처리')) return;
+                const workflow = this.allData.workflows.find(w => w.id === workflowId);
+                if (!workflow?.checklist || workflow.isReference) return;
+                const cl = workflow.checklist;
+                const open = (it) => it.skipped !== true && !this.normalizeCompleted(it);
+                const stageNums = this._stageInfo(cl).numbers;
+                const pre = new Set(preselect);
+                [...pre].forEach(i => this.findSubItems(cl, i).forEach(s => { if (open(s.item)) pre.add(s.index); }));
+                const rowsHtml = cl.map((it, i) => {
+                    if (!open(it)) return '';
+                    const isSub = this._isSubEntry(it);
+                    const parent = isSub ? this.findParentItem(cl, i) : null;
+                    return `<label class="branch-picker-row" data-idx="${i}"${parent ? ` data-parent="${parent.index}"` : ''}
+                                   style="display:flex;align-items:center;gap:8px;padding:7px 10px 7px ${isSub ? '30px' : '10px'};cursor:pointer;border-radius:6px;"
+                                   onmouseover="this.style.background='var(--bg-light)'" onmouseout="this.style.background='transparent'">
+                        <input type="checkbox" class="branch-picker-checkbox" ${pre.has(i) ? 'checked' : ''} style="width:15px;height:15px;accent-color:var(--accent);cursor:pointer;flex-shrink:0;">
+                        <span style="font-size:0.72rem;color:var(--text-muted);flex-shrink:0;width:24px;">${isSub ? '·' : (stageNums.get(i) || '') + '.'}</span>
+                        <span style="font-size:0.85rem;color:var(--text-dark);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${this.escapeHtml(it.text || '(제목 없음)')}</span>
+                    </label>`;
+                }).join('');
+
+                document.getElementById('naPickerOverlay')?.remove();
+                const overlay = document.createElement('div');
+                overlay.id = 'naPickerOverlay';
+                overlay.style.cssText = 'position:fixed;inset:0;background:rgba(17,31,53,0.52);z-index:10002;backdrop-filter:blur(2px);display:flex;align-items:center;justify-content:center;padding:16px;';
+                overlay.innerHTML = `
+                    <div onclick="event.stopPropagation()" style="width:500px;max-width:calc(100vw - 32px);height:min(620px,82vh);display:flex;flex-direction:column;background:var(--white);border-radius:12px;border:1px solid var(--border-subtle);box-shadow:0 20px 60px rgba(17,31,53,0.25);overflow:hidden;">
+                        <div style="padding:14px 18px 12px;border-bottom:1px solid var(--border-light);flex-shrink:0;">
+                            <div style="font-size:0.95rem;font-weight:700;color:var(--text-dark);">해당 없음으로 뺄 항목 고르기</div>
+                            <div style="font-size:0.74rem;color:var(--text-muted);margin-top:3px;line-height:1.5;">이번 업무에서 할 필요가 없는 항목을 고르세요. 단계를 고르면 그 할 일도 함께 빠집니다.<br>Shift+클릭으로 범위 선택 · 뺀 항목은 [되살리기]로 언제든 되돌릴 수 있습니다.</div>
+                        </div>
+                        <div id="naPickerList" style="flex:1;overflow-y:auto;padding:6px 10px;">
+                            ${rowsHtml || '<div style="padding:20px;text-align:center;color:var(--text-muted);font-size:0.82rem;">뺄 수 있는 항목이 없습니다 (모두 끝났거나 건너뛰었습니다)</div>'}
+                        </div>
+                        <div style="padding:10px 18px 0;border-top:1px solid var(--border-light);flex-shrink:0;">
+                            <input type="text" id="naPickerReason" class="form-input" placeholder="사유 (선택) — 예: 피의자 1명" maxlength="40" style="width:100%;font-size:0.84rem;">
+                        </div>
+                        <div style="padding:10px 18px 14px;display:flex;gap:8px;justify-content:flex-end;flex-shrink:0;">
+                            <button type="button" class="btn btn-plain" id="naPickerCancelBtn">취소<kbd class="kbd-hint">Esc</kbd></button>
+                            <button type="button" class="btn btn-primary" id="naPickerConfirmBtn">해당 없음으로 빼기</button>
+                        </div>
+                    </div>`;
+                document.body.appendChild(overlay);
+
+                const confirmBtn = overlay.querySelector('#naPickerConfirmBtn');
+                const picked = () => [...overlay.querySelectorAll('.branch-picker-checkbox:checked')].map(cb => parseInt(cb.closest('.branch-picker-row').dataset.idx));
+                const update = () => {
+                    const n = picked().length;
+                    confirmBtn.textContent = n > 0 ? `해당 없음으로 빼기 (${n}개)` : '해당 없음으로 빼기';
+                    confirmBtn.disabled = n === 0;
+                    confirmBtn.style.opacity = n === 0 ? '0.5' : '';
+                };
+                this._wirePickerChecks(overlay, update);
+                update();
+                let unbindEsc = () => {};
+                const cleanup = () => { unbindEsc(); overlay.remove(); };
+                unbindEsc = this._bindDialogEsc(cleanup);
+                overlay.addEventListener('click', (e) => { if (e.target === overlay) cleanup(); });
+                overlay.querySelector('#naPickerCancelBtn').onclick = cleanup;
+                confirmBtn.onclick = () => {
+                    const idx = picked();
+                    if (!idx.length) return;
+                    const reason = overlay.querySelector('#naPickerReason').value;
+                    cleanup();
+                    this.markNotApplicable(workflowId, idx, reason);
+                };
+                overlay.querySelector('#naPickerReason').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); confirmBtn.click(); } });
+            }
+
             // 서식 목록 HTML 렌더링
             renderChecklistFormatsListHtml(workflowId, index, item, readOnly = false) {
                 const getTag = (name) => {
@@ -28259,195 +28564,181 @@ ${aiPartnerCitationFirstRules}
             }
 
             // 분기 옵션 목록 렌더링
+            // 건너뛰기 아이콘 (꺾여 넘어가는 화살표 — 글꼴마다 모양이 다른 기호 대신 그림으로)
+            _skipIco(size = 11) {
+                return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;margin-right:3px;vertical-align:-1px;"><path d="M4 5v6a4 4 0 0 0 4 4h11"/><polyline points="15 11 19 15 15 19"/></svg>`;
+            }
+
+            // 건너뛰기 설정 ─────────────────────────────────────────────
+            // 편집 중(체크리스트 편집): 바꾼 내용은 편집 [저장]을 눌러야 반영
+            _branchEditingNow(workflowId) {
+                return !!(this.focusMode && this.focusEditMode && this.focusedWorkflowId === workflowId);
+            }
+
+            // 설정만 하고 실행은 하지 않는 때: 편집 중이거나 레퍼런스(본보기)
+            _branchSetupOnly(workflow) {
+                return !!workflow && (!!workflow.isReference || this._branchEditingNow(workflow.id));
+            }
+
+            // 건너뛰기 버튼이 가리키는 항목 → ["「불출석」(출석 여부 확인)", ...] (편집 화면의 "조건부" 표시용)
+            _branchTargetMap(workflow) {
+                const map = new Map();
+                (workflow.checklist || []).forEach(src => {
+                    (src.branchOptions || []).forEach(opt => {
+                        if (!this.isBranchOptionConfigured(opt)) return;
+                        const { items } = this.resolveBranchTargets(workflow, opt);
+                        const from = ((src.text || '').trim() || '(제목 없음)').slice(0, 30);
+                        items.forEach(t => {
+                            if (!map.has(t.id)) map.set(t.id, []);
+                            map.get(t.id).push(`「${opt.label || '건너뛰기'}」(${from})`);
+                        });
+                    });
+                });
+                return map;
+            }
+
+            // 항목 창 "건너뛰기" 탭의 개수 표시
+            _branchTabBadge(item) {
+                const n = (item?.branchOptions || []).filter(o => this.isBranchOptionConfigured(o)).length;
+                return n > 0 ? `<span style="background:rgba(139,92,246,0.12);color:#8b5cf6;font-size:0.63rem;padding:1px 5px;border-radius:5px;font-weight:700;margin-left:2px;">${n}</span>` : '';
+            }
+
+            // 항목 창의 "지금 실행하기" 영역 — 일하는 화면에서만
+            _branchExecHtml(workflow, index) {
+                const item = workflow?.checklist?.[index];
+                if (!item || this._branchSetupOnly(workflow) || this.isReferenceLocked(workflow)) return '';
+                if (item.skipped === true || this.normalizeCompleted(item) || item.branchActionTaken) return '';
+                const valids = (item.branchOptions || [])
+                    .map((o, oi) => ({ o, oi }))
+                    .filter(({ o }) => this.isBranchOptionConfigured(o));
+                if (!valids.length) return '';
+                return `<div style="padding:10px 12px;background:var(--bg-light);border-radius:8px;border:1px solid var(--border-subtle);margin-bottom:12px;">
+                    <div style="font-size:0.69rem;font-weight:700;color:var(--text-muted);letter-spacing:0.05em;margin-bottom:7px;">지금 실행하기</div>
+                    <div style="display:flex;gap:6px;flex-wrap:wrap;">${valids.map(({ o, oi }) =>
+                        `<button class="branch-run-btn" style="font-size:0.8rem;padding:5px 13px;" onclick="app.handleBranchOption(${workflow.id},${index},${oi})">${this._skipIco()}${this.escapeHtml(o.label || '건너뛰기')}</button>`).join('')}</div>
+                </div>`;
+            }
+
+            // 레퍼런스 목록의 건너뛰기 규칙 표시 (누를 수 없음, 마우스를 올리면 건너뛰는 항목)
+            _branchRuleChipsHtml(workflow, item) {
+                const opts = (item.branchOptions || []).filter(o => this.isBranchOptionConfigured(o));
+                if (!opts.length) return '';
+                return `<div class="branch-buttons" style="display:flex;gap:4px;">${opts.map(o => {
+                    const { selfSkip, items } = this.resolveBranchTargets(workflow, o);
+                    const names = items.map(t => '· ' + ((t.item.text || '').trim() || '(제목 없음)'));
+                    if (selfSkip) names.unshift('· 이 항목');
+                    const tip = `「${o.label || '건너뛰기'}」을(를) 누르면 건너뛰는 항목 — 복사하여 시작한 업무에서 누릅니다\n${names.join('\n')}`;
+                    return `<span class="branch-rule-chip" title="${this.escapeHtml(tip)}">${this._skipIco()}${this.escapeHtml(o.label || '건너뛰기')}</span>`;
+                }).join('')}</div>`;
+            }
+
             renderBranchOptionsList(workflowId, index, item) {
-                const COLORS = ['#3b82f6', '#10b981', '#ef4444', '#f59e0b', '#8b5cf6'];
-                const COLOR_NAMES = ['파랑', '초록', '빨강', '노랑', '보라'];
-
                 const workflow = this.allData.workflows.find(w => w.id === workflowId);
-
-                const addBtn = `
-                    <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 10px;background:var(--bg-light);border-radius:6px;border:1px dashed var(--border-subtle);margin-top:5px;">
-                        <span style="font-size:0.77rem;color:var(--text-muted);">항목 건너뛰기 버튼 추가</span>
+                const options = item.branchOptions || [];
+                const addBtn = (text) => `
+                    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--bg-light);border-radius:6px;border:1px dashed var(--border-subtle);margin-top:5px;">
+                        <span style="font-size:0.78rem;color:var(--text-muted);">${text}</span>
                         <button onclick="app.addBranchOptionInput(${workflowId},${index})"
                                 style="padding:3px 10px;font-size:0.75rem;background:var(--accent);color:white;border:none;border-radius:5px;font-weight:600;cursor:pointer;font-family:inherit;">+ 추가</button>
                     </div>`;
+                if (options.length === 0) return addBtn('설정된 건너뛰기 버튼이 없습니다.');
 
-                if (!item.branchOptions || item.branchOptions.length === 0) {
+                const trashSvg = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>';
+                const optionsHtml = options.map((opt, optIdx) => {
+                    const { selfSkip, items } = workflow ? this.resolveBranchTargets(workflow, opt) : { selfSkip: false, items: [] };
+                    const count = items.length + (selfSkip ? 1 : 0);
+                    const names = items.slice(0, 3).map(t => (t.item.text || '').trim() || '(제목 없음)');
+                    if (selfSkip) names.unshift('이 항목');
+                    const summary = count > 0
+                        ? `<b>${count}개</b> 건너뜀 <span style="color:var(--text-muted);">· ${this.escapeHtml(names.slice(0, 3).join(', '))}${count > 3 ? ` 외 ${count - 3}개` : ''}</span>`
+                        : '<span style="color:#d97706;">건너뛸 항목을 고르세요 (고르기 전에는 버튼이 생기지 않습니다)</span>';
                     return `
-                        <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:var(--bg-light);border-radius:6px;border:1px dashed var(--border-subtle);">
-                            <span style="font-size:0.78rem;color:var(--text-muted);">설정된 항목 건너뛰기 버튼이 없습니다.</span>
-                            <button onclick="app.addBranchOptionInput(${workflowId},${index})"
-                                    style="padding:3px 10px;font-size:0.75rem;background:var(--accent);color:white;border:none;border-radius:5px;font-weight:600;cursor:pointer;font-family:inherit;">+ 추가</button>
-                        </div>`;
-                }
-
-                const optionsHtml = item.branchOptions.map((opt, optIdx) => {
-                    const curColor = (opt.color || '#3b82f6').toLowerCase();
-                    const swatchesHtml = COLORS.map((c, ci) => {
-                        const sel = curColor === c.toLowerCase();
-                        return `<button type="button"
-                            onclick="[].forEach.call(this.parentNode.children,function(b){b.style.boxShadow='none'});document.getElementById('branch-color-${workflowId}-${index}-${optIdx}').value='${c}';this.style.boxShadow='0 0 0 2px white,0 0 0 3px ${c}'"
-                            style="width:17px;height:17px;border-radius:50%;background:${c};border:none;cursor:pointer;flex-shrink:0;transition:box-shadow 0.12s;box-shadow:${sel ? '0 0 0 2px white,0 0 0 3px '+c : 'none'};"
-                            title="${COLOR_NAMES[ci]}"></button>`;
-                    }).join('');
-
-                    // 임시 선택 상태 준비 (모달을 여는 동안만 유지 — 큰 선택 창에서 고른 결과가 여기 반영됨)
-                    const pendingKey = `${workflowId}-${index}-${optIdx}`;
-                    if (!this._branchPendingSelections) this._branchPendingSelections = {};
-                    if (!this._branchPendingSelections[pendingKey]) {
-                        // 항목 고유 ID 기준으로 선택 상태 복원 (순서가 바뀌어도 항상 정확한 항목을 가리킴)
-                        const { selfSkip, items: resolvedTargets } = this.resolveBranchTargets(workflow, opt);
-                        this._branchPendingSelections[pendingKey] = { selfSkip, targetItemIds: resolvedTargets.map(t => t.id) };
-                    }
-                    const pending = this._branchPendingSelections[pendingKey];
-                    const pendingCount = pending.targetItemIds.length + (pending.selfSkip ? 1 : 0);
-                    const summaryText = pendingCount > 0
-                        ? `${pendingCount}개 항목 건너뜀${pending.selfSkip ? ' (이 항목 포함)' : ''}`
-                        : '선택된 항목 없음';
-
-                    return `
-                        <div style="background:var(--white);border:1px solid var(--border-light);border-radius:7px;padding:8px 10px;margin-bottom:5px;">
+                        <div class="branch-opt-card">
                             <div style="display:flex;gap:6px;align-items:center;margin-bottom:8px;">
-                                <input type="text" value="${this.escapeHtml(opt.label)}"
-                                       id="branch-label-${workflowId}-${index}-${optIdx}"
-                                       placeholder="버튼 이름"
-                                       style="flex:1;padding:4px 7px;font-size:0.82rem;border:1px solid var(--border-light);border-radius:5px;font-family:'Pretendard','Inter',-apple-system,'Malgun Gothic',sans-serif;font-weight:500;letter-spacing:-0.01em;color:var(--text-dark);min-width:0;">
-                                <div style="display:flex;gap:5px;align-items:center;flex-shrink:0;">
-                                    ${swatchesHtml}
-                                    <input type="hidden" id="branch-color-${workflowId}-${index}-${optIdx}" value="${opt.color || '#3b82f6'}">
-                                </div>
-                                <button onclick="app.removeBranchOption(${workflowId},${index},${optIdx})" title="삭제"
-                                        style="width:24px;height:24px;border:none;border-radius:5px;background:transparent;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.12s;"
-                                        onmouseover="this.style.background='rgba(220,38,38,0.08)';this.style.color='#dc2626'"
-                                        onmouseout="this.style.background='transparent';this.style.color='var(--text-muted)'">
-                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
-                                </button>
+                                <span style="font-size:0.72rem;color:var(--text-muted);flex-shrink:0;">버튼 이름</span>
+                                <input type="text" class="branch-label-input" value="${this.escapeHtml(opt.label || '')}"
+                                       id="branch-label-${workflowId}-${index}-${optIdx}" placeholder="예: 불출석" maxlength="20"
+                                       onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}"
+                                       onchange="app.saveBranchOptionLabel(${workflowId},${index},${optIdx},this.value)">
+                                <button class="branch-del-btn" onclick="app.removeBranchOption(${workflowId},${index},${optIdx})" title="이 버튼 삭제">${trashSvg}</button>
                             </div>
-                            <div style="font-size:0.69rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px;">건너뛸 항목</div>
-                            <div id="branch-summary-${workflowId}-${index}-${optIdx}" style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;background:var(--bg-light);border-radius:6px;border:1px solid var(--border-subtle);">
-                                <span style="font-size:0.78rem;color:var(--text-dark);">${summaryText}</span>
-                                <button onclick="app.openBranchItemPicker(${workflowId},${index},${optIdx})"
-                                        style="padding:4px 11px;font-size:0.74rem;background:var(--white);color:var(--accent);border:1px solid rgba(37,99,235,0.3);border-radius:5px;font-weight:600;cursor:pointer;font-family:inherit;flex-shrink:0;transition:background 0.15s;"
-                                        onmouseover="this.style.background='rgba(37,99,235,0.06)'" onmouseout="this.style.background='var(--white)'">항목 선택</button>
-                            </div>
-                            <div style="display:flex;justify-content:flex-end;margin-top:7px;">
-                                <button onclick="app.saveBranchOptionFromUI(${workflowId},${index},${optIdx},this)"
-                                        style="padding:4px 13px;font-size:0.75rem;background:var(--accent);color:white;border:none;border-radius:5px;font-weight:600;cursor:pointer;font-family:inherit;transition:background 0.15s;"
-                                        onmouseover="if(!this.disabled)this.style.background='var(--accent-dark)'"
-                                        onmouseout="if(!this.disabled)this.style.background='var(--accent)'">저장</button>
+                            <div class="branch-target-row">
+                                <span style="font-size:0.78rem;color:var(--text-dark);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${summary}</span>
+                                <button class="branch-pick-btn" onclick="app.openBranchItemPicker(${workflowId},${index},${optIdx})">${count > 0 ? '항목 바꾸기' : '항목 고르기'}</button>
                             </div>
                         </div>`;
                 }).join('');
-
-                const lastOption = item.branchOptions[item.branchOptions.length - 1];
-                const isEditingNew = lastOption && lastOption.action === '';
-                return isEditingNew ? optionsHtml : optionsHtml + addBtn;
+                // 아직 항목을 고르지 않은 새 버튼이 있으면 [+ 추가]는 숨김
+                return this.isBranchOptionConfigured(options[options.length - 1]) ? optionsHtml + addBtn('건너뛰기 버튼 추가') : optionsHtml;
             }
 
-            // UI에서 분기 옵션 저장 (저장 버튼 클릭 시)
-            saveBranchOptionFromUI(workflowId, index, optIdx, btn) {
-                const label = document.getElementById(`branch-label-${workflowId}-${index}-${optIdx}`).value;
-                const color = document.getElementById(`branch-color-${workflowId}-${index}-${optIdx}`).value;
-
-                // 큰 선택 창(openBranchItemPicker)에서 고른 임시 선택 결과를 그대로 사용
-                const pendingKey = `${workflowId}-${index}-${optIdx}`;
-                const pending = (this._branchPendingSelections && this._branchPendingSelections[pendingKey]) || { selfSkip: false, targetItemIds: [] };
-
-                this.saveBranchOption(workflowId, index, optIdx, 'label', label);
-                this.saveBranchOption(workflowId, index, optIdx, 'color', color);
-                this.saveBranchOption(workflowId, index, optIdx, 'selfSkip', pending.selfSkip);
-                this.saveBranchOption(workflowId, index, optIdx, 'targetItemIds', pending.targetItemIds);
-                this.saveBranchOption(workflowId, index, optIdx, 'action', ''); // 구버전 필드는 더 이상 사용하지 않음(하위 호환용으로만 남겨둠)
-
-                // 공통 데이터 준비
+            // 버튼 이름 바꾸기 — 입력칸을 벗어나면(Enter 포함) 바로 적용
+            saveBranchOptionLabel(workflowId, index, optIdx, value) {
                 const workflow = this.allData.workflows.find(w => w.id === workflowId);
+                const opt = workflow?.checklist?.[index]?.branchOptions?.[optIdx];
+                if (!opt) return;
+                const v = String(value || '').trim();
+                if (!v) {
+                    const el = document.getElementById(`branch-label-${workflowId}-${index}-${optIdx}`);
+                    if (el) el.value = opt.label || '';
+                    return;
+                }
+                if (v === opt.label) return;
+                opt.label = v;
+                this._afterBranchOptionChange(workflowId, index, this.isBranchOptionConfigured(opt) ? `버튼 이름을 「${v}」(으)로 바꿨습니다` : '');
+            }
+
+            // 건너뛰기 설정이 바뀐 뒤: 저장하고, 항목 창(실행 영역·탭 숫자)과 뒤의 체크리스트 목록을 바로 갱신
+            _afterBranchOptionChange(workflowId, index, message = '', rerenderList = false) {
+                const workflow = this.allData.workflows.find(w => w.id === workflowId);
+                if (!workflow || !workflow.checklist[index]) return;
                 const item = workflow.checklist[index];
-
-                // 즉시 갱신: 항목 건너뛰기 실행 버튼 영역 + 헤더 + 배지
-                const executeContainer = document.getElementById(`branch-execute-${workflowId}-${index}`);
-                if (executeContainer) {
-                    const valids = (item.branchOptions || [])
-                        .map((o, oi) => ({ o, oi }))
-                        .filter(({ o }) => this.isBranchOptionConfigured(o));
-                    executeContainer.innerHTML = valids.length > 0
-                        ? `<div style="padding:10px 12px;background:var(--bg-light);border-radius:8px;border:1px solid var(--border-subtle);margin-bottom:12px;">
-                               <div style="font-size:0.69rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:7px;">항목 건너뛰기 실행</div>
-                               <div style="display:flex;gap:6px;flex-wrap:wrap;">
-                                   ${valids.map(({ o, oi }) => `<button onclick="app.handleBranchOption(${workflowId},${index},${oi})" style="padding:5px 13px;font-size:0.8rem;background:transparent;color:${o.color||'var(--accent)'};border:1px solid ${o.color||'rgba(37,99,235,0.3)'};border-radius:5px;cursor:pointer;font-weight:600;font-family:inherit;transition:background 0.15s;" onmouseover="this.style.background='rgba(0,0,0,0.04)'" onmouseout="this.style.background='transparent'">${this.escapeHtml(o.label)}</button>`).join('')}
-                               </div>
-                           </div>`
-                        : '';
+                this.saveData();
+                if (rerenderList) {
+                    const list = document.getElementById(`branch-options-list-${workflowId}-${index}`);
+                    if (list) list.innerHTML = this.renderBranchOptionsList(workflowId, index, item);
                 }
-                const header = document.querySelector(`.checklist-card[data-workflow-id="${workflowId}"][data-index="${index}"] .checklist-card-header`);
-                if (header) {
-                    let btnContainer = header.querySelector('.branch-buttons');
-                    const isSkipped = item.skipped === true;
-                    const isCompleted = this.normalizeCompleted(item);
-                    if (item.branchOptions && !isSkipped && !isCompleted) {
-                        const validOptions = item.branchOptions
-                            .map((opt, oi) => ({ opt, oi }))
-                            .filter(({ opt }) => this.isBranchOptionConfigured(opt));
-                        if (validOptions.length > 0) {
-                            const newBtnHtml = `<div class="branch-buttons" style="display:flex;gap:4px;">${validOptions.map(({ opt, oi }) => `<button onclick="event.stopPropagation();app.handleBranchOption(${workflow.id},${index},${oi})" style="padding:3px 9px;font-size:0.75rem;background:transparent;color:${opt.color||'var(--accent)'};border:1px solid ${opt.color||'rgba(37,99,235,0.3)'};border-radius:5px;cursor:pointer;font-weight:600;transition:background 0.15s;font-family:inherit;" onmouseover="this.style.background='rgba(0,0,0,0.05)'" onmouseout="this.style.background='transparent'">${this.escapeHtml(opt.label)}</button>`).join('')}</div>`;
-                            if (btnContainer) { btnContainer.outerHTML = newBtnHtml; }
-                            else { const t = header.querySelector('.item-title-text'); if (t) t.insertAdjacentHTML('afterend', newBtnHtml); }
-                        }
-                    }
-                }
+                const exec = document.getElementById(`branch-execute-${workflowId}-${index}`);
+                if (exec) exec.innerHTML = this._branchExecHtml(workflow, index);
                 this.updateBranchBadge(workflowId, index);
-
-                // 저장 버튼 변환 → 1.5초 후 설정 목록 리렌더링
-                if (btn) {
-                    btn.textContent = '✓ 저장됨';
-                    btn.style.background = '#10b981';
-                    btn.style.transition = 'none';
-                    btn.disabled = true;
-                    setTimeout(() => {
-                        const listContainer = document.getElementById(`branch-options-list-${workflowId}-${index}`);
-                        if (listContainer) listContainer.innerHTML = this.renderBranchOptionsList(workflowId, index, item);
-                    }, 1500);
-                } else {
-                    const listContainer = document.getElementById(`branch-options-list-${workflowId}-${index}`);
-                    if (listContainer) listContainer.innerHTML = this.renderBranchOptionsList(workflowId, index, item);
+                if (this.focusMode && this.focusedWorkflowId === workflowId) this.refreshFocusChecklist(workflow);
+                else if (this.selectedWorkflowId === workflowId) this.refreshChecklistInPlace(workflowId, index);
+                if (message) {
+                    this.showToast('success', '🔀', this._branchEditingNow(workflowId)
+                        ? `${message} — 체크리스트 편집의 [저장]을 눌러야 반영됩니다` : message, 3000);
                 }
             }
 
-            // 건너뛸 항목을 큼직하게 고를 수 있는 별도 선택 창 (서식·문서함 연결과 같은 방식) —
-            // 좁은 박스 안에 목록을 우겨넣는 대신 화면 대부분을 채워서 체크리스트가 한눈에 들어오게 함.
-            // Shift+클릭으로 범위 선택 지원.
+            // 건너뛸 항목을 큼직하게 고르는 창 — [확인]을 누르면 바로 적용 (따로 저장 버튼 없음).
+            // 이 항목 뒤의 항목만 고를 수 있다 (이미 지난 앞 항목을 건너뛸 일은 없으므로. 예전에 고른 앞 항목은 그대로 보여 줌)
             openBranchItemPicker(workflowId, index, optIdx) {
                 const workflow = this.allData.workflows.find(w => w.id === workflowId);
                 if (!workflow || !workflow.checklist) return;
+                const opt = workflow.checklist[index]?.branchOptions?.[optIdx];
+                if (!opt) return;
+                const { selfSkip, items: resolvedTargets } = this.resolveBranchTargets(workflow, opt);
+                const selectedIds = new Set(resolvedTargets.map(t => t.id));
 
-                const pendingKey = `${workflowId}-${index}-${optIdx}`;
-                if (!this._branchPendingSelections) this._branchPendingSelections = {};
-                if (!this._branchPendingSelections[pendingKey]) {
-                    const opt = workflow.checklist[index]?.branchOptions?.[optIdx] || {};
-                    const { selfSkip, items: resolvedTargets } = this.resolveBranchTargets(workflow, opt);
-                    this._branchPendingSelections[pendingKey] = { selfSkip, targetItemIds: resolvedTargets.map(t => t.id) };
-                }
-                const pending = this._branchPendingSelections[pendingKey];
-                const selectedIds = new Set(pending.targetItemIds);
+                document.getElementById('branchPickerOverlay')?.remove();
 
-                const existing = document.getElementById('branchPickerOverlay');
-                if (existing) existing.remove();
-
-                const stageNums = this._stageInfo(workflow.checklist).numbers;
-                const rowsHtml = workflow.checklist.map((ci, ci_idx) => {
+                const cl = workflow.checklist;
+                const stageNums = this._stageInfo(cl).numbers;
+                const rowsHtml = cl.map((ci, ci_idx) => {
                     if (ci_idx === index) return '';
                     const ciId = this.ensureChecklistItemId(ci);
-                    const isSub = this._isSubEntry(ci);
-                    // 체크리스트 화면과 같은 번호: 단계만 번호, 할 일은 점
-                    const num = isSub ? '·' : stageNums.get(ci_idx);
                     const checked = selectedIds.has(ciId);
-                    const txt = this.escapeHtml(ci.text || '(제목 없음)');
-                    return `<label class="branch-picker-row" data-idx="${ci_idx}"
+                    if (ci_idx < index && !checked) return '';
+                    const isSub = this._isSubEntry(ci);
+                    const parent = isSub ? this.findParentItem(cl, ci_idx) : null;
+                    const num = isSub ? '·' : (stageNums.get(ci_idx) || '') + '.';
+                    return `<label class="branch-picker-row" data-idx="${ci_idx}"${parent && parent.index > index ? ` data-parent="${parent.index}"` : ''}
                                    style="display:flex;align-items:center;gap:8px;padding:7px 10px 7px ${isSub ? '30px' : '10px'};cursor:pointer;border-radius:6px;"
                                    onmouseover="this.style.background='var(--bg-light)'" onmouseout="this.style.background='transparent'">
                         <input type="checkbox" class="branch-picker-checkbox" data-item-id="${ciId}" ${checked ? 'checked' : ''}
                                style="width:15px;height:15px;accent-color:var(--accent);cursor:pointer;flex-shrink:0;">
-                        <span style="font-size:0.72rem;color:var(--text-muted);flex-shrink:0;width:24px;">${isSub ? num : num + '.'}</span>
-                        <span style="font-size:0.85rem;color:var(--text-dark);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${txt}</span>
+                        <span style="font-size:0.72rem;color:var(--text-muted);flex-shrink:0;width:24px;">${num}</span>
+                        <span style="font-size:0.85rem;color:var(--text-dark);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${this.escapeHtml(ci.text || '(제목 없음)')}</span>
+                        ${ci_idx < index ? '<span style="font-size:0.65rem;color:var(--text-muted);border:1px solid var(--border-light);border-radius:4px;padding:0 5px;flex-shrink:0;">앞 항목</span>' : ''}
                     </label>`;
                 }).join('');
 
@@ -28456,208 +28747,105 @@ ${aiPartnerCitationFirstRules}
                 overlay.style.cssText = 'position:fixed;inset:0;background:rgba(17,31,53,0.52);z-index:10002;backdrop-filter:blur(2px);display:flex;align-items:center;justify-content:center;padding:16px;';
                 overlay.innerHTML = `
                     <div onclick="event.stopPropagation()" style="width:480px;max-width:calc(100vw - 32px);height:min(600px,80vh);display:flex;flex-direction:column;background:var(--white);border-radius:12px;border:1px solid var(--border-subtle);box-shadow:0 20px 60px rgba(17,31,53,0.25);overflow:hidden;">
-                        <div style="padding:14px 18px 12px;border-bottom:1px solid var(--border-light);flex-shrink:0;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
-                            <div style="min-width:0;">
-                                <div style="font-size:0.95rem;font-weight:700;color:var(--text-dark);">건너뛸 항목 선택</div>
-                                <div style="font-size:0.72rem;color:var(--text-muted);margin-top:2px;">Shift+클릭으로 범위 선택 · <span id="branchPickerCount">0개</span> 선택됨</div>
-                            </div>
-                            <button id="branchPickerCloseBtn" style="border:none;background:transparent;color:var(--text-muted);cursor:pointer;font-size:1.2rem;line-height:1;padding:4px;flex-shrink:0;">✕</button>
+                        <div style="padding:14px 18px 12px;border-bottom:1px solid var(--border-light);flex-shrink:0;">
+                            <div style="font-size:0.95rem;font-weight:700;color:var(--text-dark);">「${this.escapeHtml(opt.label || '새 버튼')}」을(를) 누르면 건너뛸 항목</div>
+                            <div style="font-size:0.72rem;color:var(--text-muted);margin-top:3px;line-height:1.5;">이 항목 뒤의 항목만 보입니다 · 단계를 고르면 그 할 일도 함께 · Shift+클릭으로 범위 선택 · <span id="branchPickerCount">0개</span> 선택됨</div>
                         </div>
                         <label style="display:flex;align-items:center;gap:8px;padding:10px 18px;background:rgba(239,68,68,0.05);border-bottom:1px solid var(--border-light);cursor:pointer;flex-shrink:0;">
-                            <input type="checkbox" id="branchPickerSelf" ${pending.selfSkip ? 'checked' : ''} style="width:15px;height:15px;accent-color:#ef4444;cursor:pointer;flex-shrink:0;">
+                            <input type="checkbox" id="branchPickerSelf" ${selfSkip ? 'checked' : ''} style="width:15px;height:15px;accent-color:#ef4444;cursor:pointer;flex-shrink:0;">
                             <span style="font-size:0.83rem;color:var(--text-dark);flex:1;font-weight:600;">이 항목도 함께 건너뛰기</span>
                             <span style="font-size:0.65rem;font-weight:700;color:#ef4444;background:rgba(239,68,68,0.1);padding:1px 6px;border-radius:4px;flex-shrink:0;">현재 항목</span>
                         </label>
                         <div id="branchPickerList" style="flex:1;overflow-y:auto;padding:6px 10px;">
-                            ${rowsHtml || '<div style="padding:20px;text-align:center;color:var(--text-muted);font-size:0.82rem;">다른 항목이 없습니다</div>'}
+                            ${rowsHtml || '<div style="padding:20px;text-align:center;color:var(--text-muted);font-size:0.82rem;">이 항목 뒤에 다른 항목이 없습니다</div>'}
                         </div>
                         <div style="padding:12px 18px;border-top:1px solid var(--border-light);display:flex;gap:8px;justify-content:flex-end;flex-shrink:0;">
-                            <button id="branchPickerCancelBtn" style="padding:7px 14px;font-size:0.83rem;background:transparent;color:var(--text-muted);border:1px solid var(--border-light);border-radius:7px;cursor:pointer;font-family:inherit;font-weight:600;">취소</button>
-                            <button id="branchPickerConfirmBtn" style="padding:7px 18px;font-size:0.83rem;background:var(--accent);color:white;border:none;border-radius:7px;font-weight:700;cursor:pointer;font-family:inherit;">확인</button>
+                            <button type="button" class="btn btn-plain" id="branchPickerCancelBtn">취소<kbd class="kbd-hint">Esc</kbd></button>
+                            <button type="button" class="btn btn-primary" id="branchPickerConfirmBtn">확인</button>
                         </div>
                     </div>`;
                 document.body.appendChild(overlay);
 
-                const selfCheckbox = document.getElementById('branchPickerSelf');
-                const countEl = document.getElementById('branchPickerCount');
+                const selfCheckbox = overlay.querySelector('#branchPickerSelf');
+                const countEl = overlay.querySelector('#branchPickerCount');
                 const updateCount = () => {
                     const n = overlay.querySelectorAll('.branch-picker-checkbox:checked').length + (selfCheckbox.checked ? 1 : 0);
                     if (countEl) countEl.textContent = `${n}개`;
                 };
-
-                let lastClickedIdx = null;
-                overlay.querySelectorAll('.branch-picker-checkbox').forEach(cb => {
-                    cb.addEventListener('click', (e) => {
-                        const idx = parseInt(cb.closest('.branch-picker-row').dataset.idx);
-                        if (e.shiftKey && lastClickedIdx !== null) {
-                            const from = Math.min(lastClickedIdx, idx);
-                            const to = Math.max(lastClickedIdx, idx);
-                            const shouldCheck = cb.checked;
-                            overlay.querySelectorAll('.branch-picker-row').forEach(row => {
-                                const rIdx = parseInt(row.dataset.idx);
-                                if (rIdx >= from && rIdx <= to) {
-                                    const rcb = row.querySelector('.branch-picker-checkbox');
-                                    if (rcb) rcb.checked = shouldCheck;
-                                }
-                            });
-                        }
-                        lastClickedIdx = idx;
-                        updateCount();
-                    });
-                });
+                this._wirePickerChecks(overlay, updateCount);
                 selfCheckbox.addEventListener('change', updateCount);
                 updateCount();
 
-                const cleanup = () => overlay.remove();
+                let unbindEsc = () => {};
+                const cleanup = () => { unbindEsc(); overlay.remove(); };
+                unbindEsc = this._bindDialogEsc(cleanup);
                 overlay.onclick = cleanup; // 바깥(배경) 클릭 시 취소와 동일하게 안전하게 닫힘
-                document.getElementById('branchPickerCloseBtn').onclick = cleanup;
-                document.getElementById('branchPickerCancelBtn').onclick = cleanup;
-                document.getElementById('branchPickerConfirmBtn').onclick = () => {
-                    const targetItemIds = Array.from(overlay.querySelectorAll('.branch-picker-checkbox:checked')).map(cb => cb.dataset.itemId);
-                    this._branchPendingSelections[pendingKey] = { selfSkip: selfCheckbox.checked, targetItemIds };
+                overlay.querySelector('#branchPickerCancelBtn').onclick = cleanup;
+                overlay.querySelector('#branchPickerConfirmBtn').onclick = () => {
+                    const targetItemIds = [...overlay.querySelectorAll('.branch-picker-checkbox:checked')].map(cb => cb.dataset.itemId);
+                    const self = selfCheckbox.checked;
                     cleanup();
-                    // 옵션 카드의 선택 요약 문구만 다시 그림 (아직 저장 버튼을 누르기 전이라 데이터는 그대로)
-                    const listContainer = document.getElementById(`branch-options-list-${workflowId}-${index}`);
-                    if (listContainer) {
-                        const wf = this.allData.workflows.find(w => w.id === workflowId);
-                        if (wf) listContainer.innerHTML = this.renderBranchOptionsList(workflowId, index, wf.checklist[index]);
-                    }
+                    // 이름 칸에 적어 둔 이름도 함께 반영 (비어 있으면 "건너뛰기")
+                    const typed = (document.getElementById(`branch-label-${workflowId}-${index}-${optIdx}`)?.value || '').trim();
+                    if (typed) opt.label = typed;
+                    if (!opt.label) opt.label = '건너뛰기';
+                    opt.targetItemIds = targetItemIds;
+                    opt.selfSkip = self;
+                    opt.action = '';  // 구버전 필드(번호 구간)는 더 이상 쓰지 않음
+                    const n = targetItemIds.length + (self ? 1 : 0);
+                    this._afterBranchOptionChange(workflowId, index, n > 0
+                        ? `「${opt.label}」 버튼: ${n}개 항목을 건너뛰도록 정했습니다`
+                        : `「${opt.label}」 버튼: 건너뛸 항목이 없어 버튼이 만들어지지 않습니다`, true);
                 };
             }
 
-            // 항목 건너뛰기 탭 배지 실시간 갱신
+            // 항목 창 "건너뛰기" 탭 이름·개수 갱신 (처음 그릴 때와 같은 모양)
             updateBranchBadge(workflowId, index) {
                 const workflow = this.allData.workflows.find(w => w.id === workflowId);
                 if (!workflow) return;
-                const item = workflow.checklist[index];
-                const count = item?.branchOptions?.length || 0;
                 const tabBtn = document.getElementById(`checklist-tab-branch-${workflowId}-${index}`);
                 if (!tabBtn) return;
-                const dot = `<span style="width:6px;height:6px;border-radius:50%;background:#8b5cf6;display:inline-block;flex-shrink:0;"></span>`;
-                const badge = count > 0
-                    ? `<span style="background:rgba(139,92,246,0.15);color:#8b5cf6;font-size:0.64rem;padding:1px 5px;border-radius:6px;font-weight:700;margin-left:2px;">${count}</span>`
-                    : '';
-                tabBtn.innerHTML = `${dot}항목 건너뛰기${badge}`;
+                tabBtn.innerHTML = `<span style="width:5px;height:5px;border-radius:50%;background:#64748b;display:inline-block;flex-shrink:0;"></span>건너뛰기${this._branchTabBadge(workflow.checklist[index])}`;
             }
 
-                // 분기 옵션 추가
+            // [+ 추가]: 새 버튼 칸을 만들고 이름 칸에 커서. 건너뛸 항목을 고르기 전에는 버튼이 생기지 않고, 고르지 않은 채 창을 닫으면 정리된다.
             addBranchOptionInput(workflowId, index) {
                 const workflow = this.allData.workflows.find(w => w.id === workflowId);
-                if (!workflow || !workflow.checklist) return;
-
-                // 옵션 목록의 인덱스가 밀리므로, 기존에 임시 저장해둔 선택 상태는 초기화
-                this._branchPendingSelections = {};
-
-                if (!workflow.checklist[index].branchOptions) {
-                    workflow.checklist[index].branchOptions = [];
-                }
-
-                // 주의: 여기서 추가만 하고 this.saveData()를 호출하지 않음으로써
-                // 사용자가 [저장] 버튼을 누르기 전까지는 영구 저장되지 않게 함 (UI 상태만 변경)
-                // 하지만 현재 구조상 UI 렌더링을 위해 workflow 객체에는 일단 추가해야 함.
-                // 대신 'temp' 플래그 등을 쓸 수 있으나, 복잡도를 줄이기 위해
-                // [저장] 버튼 클릭 전에는 'action' 값이 비어있으므로 기능이 작동하지 않는 것으로 처리
-                
-                workflow.checklist[index].branchOptions.push({
-                    label: '새 버튼',
-                    action: '',
-                    color: '#3b82f6'
-                });
-
-                // UI 갱신만 수행 (saveData 호출 안 함 -> 새로고침하면 사라짐 = 의도된 동작일 수 있으나
-                // 사용자 편의를 위해 저장은 하되, action이 비어있어 버튼이 기능하지 않음)
-                // 요구사항: "저장버튼을 누르지 않으면 기능과 체크리스트 상단에 버튼이 만들어 지지 않게 해주고"
-                // -> renderChecklistItem에서 action이 있는 경우에만 버튼을 그리도록 조건 추가 필요
-                
-                this.saveData(); // 데이터 구조는 잡아야 하므로 저장은 함
-                
-                // UI 부분 업데이트
+                if (!workflow || !workflow.checklist || !workflow.checklist[index]) return;
+                const item = workflow.checklist[index];
+                if (!item.branchOptions) item.branchOptions = [];
+                item.branchOptions.push({ label: '', action: '', targetItemIds: [], selfSkip: false });
                 const container = document.getElementById(`branch-options-list-${workflowId}-${index}`);
-                if (container) {
-                    container.innerHTML = this.renderBranchOptionsList(workflowId, index, workflow.checklist[index]);
-                } else {
-                    this.showProjectDetail(workflowId);
-                }
-                this.updateBranchBadge(workflowId, index);
+                if (container) container.innerHTML = this.renderBranchOptionsList(workflowId, index, item);
+                document.getElementById(`branch-label-${workflowId}-${index}-${item.branchOptions.length - 1}`)?.focus();
             }
 
-            // 분기 옵션 삭제
+            // 건너뛰기 버튼 삭제 — 이 버튼으로 건너뛴 항목은 다시 살아난다
             removeBranchOption(workflowId, index, optionIndex) {
-                if (!confirm('이 항목 건너뛰기 버튼을 삭제하시겠습니까?\n삭제하면 건너뛰었던 항목이 자동으로 복구됩니다.')) return;
-
-                // 옵션 목록의 인덱스가 밀리므로, 기존에 임시 저장해둔 선택 상태는 초기화
-                this._branchPendingSelections = {};
-
                 const workflow = this.allData.workflows.find(w => w.id === workflowId);
-                if (!workflow || !workflow.checklist) return;
-
-                if (workflow.checklist[index].branchOptions && workflow.checklist[index].branchOptions[optionIndex]) {
-                    const opt = workflow.checklist[index].branchOptions[optionIndex];
-
-                    // 삭제되는 옵션으로 인해 skip된 항목들 복구 (ID 기반으로 정확한 대상만 복구)
+                const item = workflow?.checklist?.[index];
+                const opt = item?.branchOptions?.[optionIndex];
+                if (!opt) return;
+                const doRemove = (message) => {
                     const { items: staleTargets } = this.resolveBranchTargets(workflow, opt);
                     staleTargets.forEach(({ item: ti }) => {
-                        if (ti.skipReason && ti.skipReason.startsWith(opt.label)) {
+                        if (opt.label && ti.skipReason && ti.skipReason.startsWith(opt.label)) {
                             delete ti.skipped;
                             delete ti.skipReason;
                             delete ti.skipActionId;
                         }
                     });
-
-                    workflow.checklist[index].branchOptions.splice(optionIndex, 1);
+                    item.branchOptions.splice(optionIndex, 1);
                     this.syncAllParentsFromSubItems(workflow);
-                    this.saveData();
-
-                    const container = document.getElementById(`branch-options-list-${workflowId}-${index}`);
-                    if (container) {
-                        container.innerHTML = this.renderBranchOptionsList(workflowId, index, workflow.checklist[index]);
-                    }
-                    this.updateBranchBadge(workflowId, index);
-
-                    // 항목 건너뛰기 실행 버튼 영역 갱신
-                    const executeContainer = document.getElementById(`branch-execute-${workflowId}-${index}`);
-                    if (executeContainer) {
-                        const item = workflow.checklist[index];
-                        const valids = (item.branchOptions || [])
-                            .map((o, oi) => ({ o, oi }))
-                            .filter(({ o }) => this.isBranchOptionConfigured(o));
-                        executeContainer.innerHTML = valids.length > 0
-                            ? `<div style="padding:10px 12px;background:var(--bg-light);border-radius:8px;border:1px solid var(--border-subtle);margin-bottom:12px;">
-                                   <div style="font-size:0.69rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:7px;">항목 건너뛰기 실행</div>
-                                   <div style="display:flex;gap:6px;flex-wrap:wrap;">
-                                       ${valids.map(({ o, oi }) => `<button onclick="app.handleBranchOption(${workflowId},${index},${oi})" style="padding:5px 13px;font-size:0.8rem;background:transparent;color:${o.color||'var(--accent)'};border:1px solid ${o.color||'rgba(37,99,235,0.3)'};border-radius:5px;cursor:pointer;font-weight:600;font-family:inherit;transition:background 0.15s;" onmouseover="this.style.background='rgba(0,0,0,0.04)'" onmouseout="this.style.background='transparent'">${this.escapeHtml(o.label)}</button>`).join('')}
-                                   </div>
-                               </div>`
-                            : '';
-                    }
-
-                    // 헤더 분기 버튼 갱신
-                    const header = document.querySelector(`.checklist-card[data-workflow-id="${workflowId}"][data-index="${index}"] .checklist-card-header`);
-                    if (header) {
-                        const item = workflow.checklist[index];
-                        const btnContainer = header.querySelector('.branch-buttons');
-                        const validOptions = (item.branchOptions || [])
-                            .map((opt, oi) => ({ opt, oi }))
-                            .filter(({ opt }) => this.isBranchOptionConfigured(opt));
-                        if (validOptions.length === 0 && btnContainer) {
-                            btnContainer.remove();
-                        } else if (validOptions.length > 0) {
-                            const newBtnHtml = `<div class="branch-buttons" style="display:flex;gap:4px;">${validOptions.map(({ opt, oi }) => `<button onclick="event.stopPropagation();app.handleBranchOption(${workflowId},${index},${oi})" style="padding:3px 9px;font-size:0.75rem;background:transparent;color:${opt.color||'var(--accent)'};border:1px solid ${opt.color||'rgba(37,99,235,0.3)'};border-radius:5px;cursor:pointer;font-weight:600;transition:background 0.15s;font-family:inherit;" onmouseover="this.style.background='rgba(0,0,0,0.05)'" onmouseout="this.style.background='transparent'">${this.escapeHtml(opt.label)}</button>`).join('')}</div>`;
-                            if (btnContainer) { btnContainer.outerHTML = newBtnHtml; }
-                            else { const t = header.querySelector('.item-title-text'); if (t) t.insertAdjacentHTML('afterend', newBtnHtml); }
-                        }
-                    }
-
-                    // 메인 화면 갱신 (복구된 항목 표시 위해)
-                    if (this.selectedWorkflowId === workflowId) {
-                        this.showProjectDetail(workflowId);
-                    } else {
-                        this.displayWorkflows();
-                    }
-                }
+                    this._afterBranchOptionChange(workflowId, index, message, true);
+                };
+                if (!this.isBranchOptionConfigured(opt)) { doRemove(''); return; }
+                this._showChoiceDialog('건너뛰기 버튼 삭제',
+                    `「${opt.label || '건너뛰기'}」 버튼을 삭제할까요?\n이 버튼으로 건너뛴 항목이 있으면 다시 살아납니다.`,
+                    [{ label: '삭제', primary: true, onClick: () => doRemove('건너뛰기 버튼을 삭제했습니다') }]);
             }
 
-            // 분기 옵션 저장
+            // 분기 옵션 값 하나 저장 (예전 방식 호환용)
             saveBranchOption(workflowId, index, optionIndex, field, value) {
                 const workflow = this.allData.workflows.find(w => w.id === workflowId);
                 if (!workflow || !workflow.checklist) return;
@@ -32579,6 +32767,7 @@ ${originalContent}`;
                                 delete item.skipReason;
                             }
                             delete item.skipActionId;
+                            delete item.skipManual;  // 해당 없음 표시도 정리
                             // 항목 마감일 초기화 — 원본의 지난 날짜가 남으면 새 업무가 시작하자마자 기한 초과로 표시됨
                             delete item.deadline;
                             // formats 배열 초기화 (서식파일은 아래에서 새로 복사됨)
