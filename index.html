@@ -5962,6 +5962,15 @@
             return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
         }
 
+        // 용량 표시: 1MB 미만은 KB, 1GB 미만은 MB, 이상은 GB (예: 11KB, 312.4MB, 128.5GB)
+        function fmtBytes(bytes) {
+            const n = Number(bytes) || 0;
+            const GB = 1024 ** 3, MB = 1024 ** 2;
+            if (n >= GB) return `${(n / GB).toFixed(1)}GB`;
+            if (n >= MB) return `${(n / MB).toFixed(1)}MB`;
+            return `${Math.round(n / 1024)}KB`;
+        }
+
         // 저장된 여러 날짜 형식을 Date로 변환 (읽을 수 없으면 null)
         // - 'YYYY-MM-DD'(날짜만): 한국 날짜 그대로 (UTC 자정으로 해석하지 않음)
         // - '2026. 10. 3.' / '2026. 10. 3. 오전 10:59:30' / '2026. 10. 3. 14:05': 예전 화면 표기 그대로 저장된 값
@@ -6292,13 +6301,21 @@
             }
 
             // 용량 확인
+            // Chrome·Edge는 estimate().usageDetails.indexedDB로 이 프로그램 자료가 디스크에서 실제로 차지하는 크기를
+            // 바로 알려준다(정확하고 빠름). 이 값이 없는 브라우저(Firefox·Safari)에서만 자료를 모두 읽어 크기를 어림잡는다.
+            // ※ PC에서 바로 연 HTML(file://)은 폴더가 달라도 모두 한 사이트로 취급되어 한도·사용량을 함께 쓴다.
             async estimateUsage() {
                 if (navigator.storage && navigator.storage.estimate) {
                     const estimate = await navigator.storage.estimate();
-                    
+                    let persisted = null;
+                    try { persisted = navigator.storage.persisted ? await navigator.storage.persisted() : null; } catch (e) {}
+                    const remaining = Math.max((estimate.quota || 0) - (estimate.usage || 0), 0);
+                    const detailIdb = estimate.usageDetails && typeof estimate.usageDetails.indexedDB === 'number'
+                        ? estimate.usageDetails.indexedDB : null;
+
                     // IndexedDB 실제 사용량 계산 시도
-                    let indexedDBUsage = 0;
-                    try {
+                    let indexedDBUsage = detailIdb || 0;
+                    if (detailIdb === null) try {
                         const db = await this.openDatabase();
                         if (db) {
                             // 실제로 존재하는 스토어만 접근
@@ -6345,9 +6362,9 @@
                     // IndexedDB 사용량이 있으면 우선 사용, 없으면 전체 저장소 사용량 사용
                     const usage = indexedDBUsage > 0 ? indexedDBUsage : estimate.usage;
                     
-                    // 브라우저가 제공하는 실제 저장소 할당량 사용 (1GB 제한 제거)
-                    // Chrome/Edge: 디스크 공간의 50% 또는 최소 1GB 중 작은 값
-                    // Firefox/Safari: 브라우저가 관리하는 실제 할당량
+                    // 브라우저가 알려주는 이 사이트의 저장 한도(quota)를 그대로 사용
+                    // Chrome/Edge: 사이트당 디스크 전체 크기의 최대 60%(브라우저 전체는 80%) — 단, 실제로는 남은 디스크 공간을 넘을 수 없음
+                    // Firefox/Safari: getBrowserInfo()의 안내 참고
                     const actualQuota = estimate.quota; // 브라우저의 실제 quota 사용
                     const browserInfo = this.getBrowserInfo();
                     
@@ -6361,6 +6378,10 @@
                         percentUsed: ((usage / estimate.quota) * 100).toFixed(2),
                         actualPercentUsed: ((usage / actualQuota) * 100).toFixed(2),
                         isIndexedDBSpecific: indexedDBUsage > 0,
+                        isExactUsage: detailIdb !== null,      // true: 브라우저가 알려준 실제 디스크 사용량, false: 어림값
+                        totalUsage: estimate.usage || 0,       // 이 사이트(file://) 전체 사용량
+                        remaining,                             // 한도까지 남은 공간 (= 한도 − 전체 사용량)
+                        persisted,                             // true: 영구 보존 승인(디스크가 차도 자동 삭제 대상 아님)
                         browserInfo: browserInfo
                     };
                 }
@@ -6370,10 +6391,10 @@
             // 브라우저 정보 가져오기
             getBrowserInfo() {
                 const ua = navigator.userAgent;
-                if (ua.includes('Edg')) return { name: 'Edge', typicalLimit: '디스크 용량의 50% 또는 최소 1GB' };
-                if (ua.includes('Chrome')) return { name: 'Chrome', typicalLimit: '디스크 용량의 50% 또는 최소 1GB' };
-                if (ua.includes('Firefox')) return { name: 'Firefox', typicalLimit: '10GB~50GB (디스크 용량에 따라)' };
-                if (ua.includes('Safari')) return { name: 'Safari', typicalLimit: '1GB~10GB (디스크 용량에 따라)' };
+                if (ua.includes('Edg')) return { name: 'Edge', typicalLimit: '사이트당 디스크 전체 크기의 최대 60% (남은 공간 안에서)' };
+                if (ua.includes('Chrome')) return { name: 'Chrome', typicalLimit: '사이트당 디스크 전체 크기의 최대 60% (남은 공간 안에서)' };
+                if (ua.includes('Firefox')) return { name: 'Firefox', typicalLimit: '일반: 디스크의 10%(최대 10GB) · 영구 보존 시: 디스크의 최대 50%' };
+                if (ua.includes('Safari')) return { name: 'Safari', typicalLimit: '디스크 전체 크기의 약 60% (Safari 17 이상)' };
                 return { name: 'Unknown', typicalLimit: '브라우저가 관리하는 실제 할당량' };
             }
             
@@ -7675,10 +7696,12 @@
                         // 실제 IndexedDB 제한 기준으로 경고 계산
                         const actualPercentNum = usage.actualPercentUsed ? parseFloat(usage.actualPercentUsed) : 0;
                         const shouldWarn = actualPercentNum >= 80;
-                        
+                        const persistText = usage.persisted === true ? '승인됨 (디스크가 차도 자동 삭제되지 않음)'
+                            : usage.persisted === false ? '승인 안 됨 — 백업을 권장합니다' : '확인할 수 없음';
+
                         const tooltipText = usage.isIndexedDBSpecific 
-                            ? `프로그램 데이터 사용량: ${usage.usageInMB}MB&#10;사용 가능한 저장소 용량: ${usage.actualQuotaInMB || usage.quotaInMB}MB (${usage.actualPercentUsed || '0.00'}% 사용 중)&#10;전체 브라우저 저장소 할당량: ${usage.quotaInMB}MB&#10;저장 위치: ${dbLocation}&#10;데이터베이스: WorkflowDB (버전 2)&#10;브라우저: ${usage.browserInfo?.name || 'Unknown'} (${usage.browserInfo?.typicalLimit || '브라우저가 관리하는 실제 할당량'})&#10;&#10;✅ 1GB 제한이 제거되어 브라우저의 실제 저장소 용량을 사용합니다.&#10;💡 브라우저가 자동으로 관리하며, 디스크 용량에 따라 자동으로 증가합니다.${shouldWarn ? '&#10;&#10;⚠️ 용량이 부족합니다. 클릭하여 년도별 백업을 진행하세요.' : ''}`
-                            : `전체 브라우저 저장소 사용량: ${usage.usageInMB}MB / ${usage.quotaInMB}MB&#10;사용 가능한 저장소 용량: ${usage.actualQuotaInMB || usage.quotaInMB}MB (${usage.actualPercentUsed || '0.00'}% 사용 중)&#10;저장 위치: ${dbLocation}&#10;데이터베이스: WorkflowDB (버전 2)&#10;브라우저: ${usage.browserInfo?.name || 'Unknown'} (${usage.browserInfo?.typicalLimit || '브라우저가 관리하는 실제 할당량'})&#10;&#10;✅ 1GB 제한이 제거되어 브라우저의 실제 저장소 용량을 사용합니다.&#10;💡 프로그램 데이터만의 정확한 사용량은 업무를 저장한 후 표시됩니다.${shouldWarn ? '&#10;&#10;⚠️ 용량이 부족합니다. 클릭하여 년도별 백업을 진행하세요.' : ''}`;
+                            ? `프로그램 데이터 사용량: ${usage.usageInMB}MB&#10;사용 가능한 저장소 용량: ${usage.actualQuotaInMB || usage.quotaInMB}MB (${usage.actualPercentUsed || '0.00'}% 사용 중)&#10;전체 브라우저 저장소 할당량: ${usage.quotaInMB}MB&#10;저장 위치: ${dbLocation}&#10;데이터베이스: WorkflowDB (버전 2)&#10;브라우저: ${usage.browserInfo?.name || 'Unknown'} (${usage.browserInfo?.typicalLimit || '브라우저가 관리하는 실제 할당량'})&#10;남은 공간: 약 ${fmtBytes(usage.remaining)}&#10;영구 보존: ${persistText}${shouldWarn ? '&#10;&#10;⚠️ 용량이 부족합니다. 클릭하여 년도별 백업을 진행하세요.' : ''}`
+                            : `전체 브라우저 저장소 사용량: ${usage.usageInMB}MB / ${usage.quotaInMB}MB&#10;사용 가능한 저장소 용량: ${usage.actualQuotaInMB || usage.quotaInMB}MB (${usage.actualPercentUsed || '0.00'}% 사용 중)&#10;저장 위치: ${dbLocation}&#10;데이터베이스: WorkflowDB (버전 2)&#10;브라우저: ${usage.browserInfo?.name || 'Unknown'} (${usage.browserInfo?.typicalLimit || '브라우저가 관리하는 실제 할당량'})&#10;남은 공간: 약 ${fmtBytes(usage.remaining)}&#10;영구 보존: ${persistText}&#10;💡 프로그램 데이터만의 정확한 사용량은 업무를 저장한 후 표시됩니다.${shouldWarn ? '&#10;&#10;⚠️ 용량이 부족합니다. 클릭하여 년도별 백업을 진행하세요.' : ''}`;
                         
                         // 실제 IndexedDB 제한 기준으로 색상 결정
                         let actualColor = '#27ae60';
@@ -31748,18 +31771,67 @@ ${originalContent}`;
                 return { done, keep: all.length - done.length };
             }
 
+            // 저장 공간 화면의 [다시 요청] — Chrome·Edge는 창을 띄우지 않고 사용 빈도 등으로 자동 판단하므로 결과만 알려준다
+            async requestPersistFromPrefs() {
+                const ok = await this.requestPersistentStorage();
+                this.showToast(ok ? 'success' : 'info', ok ? '✅' : 'ℹ️', ok
+                    ? '영구 보존이 승인되었습니다. 디스크가 차도 자료가 자동으로 지워지지 않습니다.'
+                    : '브라우저가 아직 승인하지 않았습니다. 프로그램을 자주 쓰면 자동으로 승인될 수 있습니다. 그동안은 백업을 꼭 해 두세요.', 5000);
+                this._refreshPrefsIfOpen('storage');
+            }
+
             async _prefsStorageHtml() {
                 let usage = null;
                 if (this.dbReady) { try { usage = await this.dbManager.estimateUsage(); } catch (e) {} }
                 let usageHtml = '<p class="prefs-hint">사용량을 확인할 수 없습니다.</p>';
+                let persistHtml = '';
                 if (usage) {
                     const pct = Math.min(parseFloat(usage.actualPercentUsed) || 0, 100);
                     const color = pct >= 90 ? '#dc2626' : pct >= 70 ? '#f59e0b' : 'var(--accent)';
                     const tip = pct >= 70 ? ' 공간이 부족해지고 있습니다. 아래에서 정리하거나 끝난 업무를 보관하세요.' : '';
+                    const statRow = (label, value, sub = '') => `<div class="prefs-row" style="padding:4px 0;">
+                            <div class="prefs-row-label">${label}${sub ? `<small>${sub}</small>` : ''}</div>
+                            <b style="font-size:0.9rem;white-space:nowrap;">${value}</b>
+                        </div>`;
                     usageHtml = `
-                        <div class="prefs-bar"><div style="width:${pct}%;background:${color};"></div></div>
-                        <div class="prefs-hint" style="margin-top:2px;">${usage.usageInMB}MB / ${usage.actualQuotaInMB}MB (${pct.toFixed(1)}% 사용 중).${tip}</div>`;
+                        <div class="prefs-bar"><div style="width:${Math.max(pct, 0.5)}%;background:${color};"></div></div>
+                        <div class="prefs-hint" style="margin:2px 0 8px;">${pct.toFixed(1)}% 사용 중.${tip}</div>
+                        ${statRow('이 프로그램 자료', fmtBytes(usage.usage), usage.isExactUsage ? '브라우저가 알려준 실제 디스크 사용량' : '자료 크기를 어림잡은 값')}
+                        ${statRow('저장 한도', fmtBytes(usage.actualQuota), `${this.escapeHtml(usage.browserInfo?.name || '')} 기준: ${this.escapeHtml(usage.browserInfo?.typicalLimit || '')}`)}
+                        ${statRow('남은 공간', `약 ${fmtBytes(usage.remaining)}`, '한도 − 사용량. 실제 디스크에 남은 공간보다 클 수는 없습니다')}`;
+                    const ok = usage.persisted === true;
+                    persistHtml = `
+                        <div class="prefs-group">
+                            <div class="prefs-group-title">자료 보호 (영구 보존)</div>
+                            <div class="prefs-row">
+                                <div class="prefs-row-label">${ok ? '✅ 영구 보존 승인됨' : usage.persisted === false ? '⚠️ 영구 보존 승인 안 됨' : '영구 보존 상태를 확인할 수 없음'}
+                                    <small>${ok
+                                        ? '디스크가 꽉 차도 브라우저가 이 자료를 자동으로 지우지 않습니다. 단, 브라우저에서 「인터넷 사용 기록 삭제 → 쿠키 및 사이트 데이터」를 하거나 기관 정책으로 종료 시 기록이 지워지면 함께 사라집니다.'
+                                        : '디스크 공간이 부족해지면 브라우저가 자료를 자동으로 지울 수 있습니다. 브라우저 기록 삭제·PC 초기화 때도 사라지니 정기적으로 백업하세요.'}</small>
+                                </div>
+                                ${ok ? '' : `<button class="btn btn-secondary btn-small" type="button" onclick="app.requestPersistFromPrefs()">다시 요청</button>`}
+                            </div>
+                            ${ok ? '' : `<div class="prefs-row"><div class="prefs-row-label">지금 백업하기<small>전체 자료를 백업 파일로 저장합니다.</small></div>
+                                <button class="btn btn-secondary btn-small" type="button" onclick="app.openPreferences('backup')">백업 및 복원으로</button></div>`}
+                        </div>`;
                 }
+                // 브라우저는 개인정보 보호를 위해 정확한 디스크 여유 공간을 알려주지 않으므로, 정확히 보는 방법을 함께 안내
+                const isEdge = navigator.userAgent.includes('Edg');
+                const idbPath = isEdge
+                    ? '%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\Default\\IndexedDB'
+                    : '%LOCALAPPDATA%\\Google\\Chrome\\User Data\\Default\\IndexedDB';
+                const exactHtml = `
+                    <details class="prefs-group" style="cursor:default;">
+                        <summary class="prefs-group-title" style="cursor:pointer;">정확한 용량을 확인하는 방법</summary>
+                        <ol class="prefs-hint" style="margin:6px 0 0;padding-left:18px;line-height:1.7;">
+                            <li><b>PC에 남은 공간</b>: 파일 탐색기 → 「내 PC」에서 C 드라이브의 남은 공간을 확인합니다. (Windows 설정 → 시스템 → 저장소에서도 볼 수 있습니다)</li>
+                            <li><b>브라우저가 정한 한도와 사용량</b>: 이 화면에서 <b>F12</b> → 「애플리케이션(Application)」 탭 → 「스토리지(Storage)」에서 사용량과 한도를 볼 수 있습니다. (기관 PC는 F12가 막혀 있을 수 있습니다)</li>
+                            <li><b>실제 저장 폴더 크기</b>: 파일 탐색기 주소창에 아래 경로를 붙여 넣고, <code>file__0.indexeddb.leveldb</code>·<code>file__0.indexeddb.blob</code> 두 폴더를 선택해 오른쪽 클릭 → 속성을 봅니다.
+                                <div style="margin-top:4px;padding:6px 8px;border-radius:6px;background:var(--bg-light);font-family:Consolas,monospace;font-size:0.75rem;word-break:break-all;user-select:all;">${idbPath}</div>
+                                <small>브라우저 프로필을 여러 개 쓰면 <code>Default</code> 대신 <code>Profile 1</code> 같은 폴더일 수 있습니다. 이 폴더의 파일은 직접 지우거나 옮기지 마세요.</small>
+                            </li>
+                        </ol>
+                    </details>`;
                 const years = [...new Set(this.allData.workflows.filter(w => !w.isDeleted && w.type !== 'report').map(w => this._workflowYear(w)))].sort((a, b) => a - b);
                 const opts = years.map(y => ({ y, ...this._archiveCandidates(y) })).filter(o => o.done.length > 0);
                 const archiveHtml = opts.length === 0
@@ -31777,6 +31849,8 @@ ${originalContent}`;
                         <div class="prefs-group-title">사용량</div>
                         ${usageHtml}
                     </div>
+                    ${persistHtml}
+                    ${exactHtml}
                     <div class="prefs-group">
                         <div class="prefs-group-title">공간 정리하기</div>
                         <div class="prefs-row">
