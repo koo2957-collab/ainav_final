@@ -5919,9 +5919,23 @@
         // 새 버전을 배포할 때는 아래 세 가지(번호·배포일·바뀐 점)만 고친다.
         // 번호 규칙: 기능 추가는 가운데 숫자(1.1.0), 오류 수정만은 끝 숫자(1.0.1)를 올린다.
         // 업무 자료는 프로그램 파일이 아니라 브라우저 저장 공간에 있어, 파일만 바꿔도 그대로 남는다.
-        const APP_VERSION = '1.1.0';
-        const APP_RELEASE_DATE = '2026-10-07';
+        const APP_VERSION = '1.2.0';
+        const APP_RELEASE_DATE = '2026-10-08';
         const APP_RELEASE_NOTES = [
+            { version: '1.2.0', date: '2026-10-08', notes: [
+                '알림센터 새 단장 — 창을 넓히고 글자를 키움, 종류별 아이콘(성공·경고·오류·업무), 오늘·어제·이전 묶음, 「5분 전」 같은 시간 표시',
+                '알림센터 위쪽에 「모두 읽음」·알림 설정·분류(전체·안 읽음·업무·마감·시스템) 추가, 전체 지우기는 한 번 더 확인',
+                '알림을 누르면 관련 업무·마감 임박 목록·백업 설정·보고서 관리·자료실로 바로 이동',
+                '창을 열기만 해서는 읽음 처리하지 않음 — 알림을 누르거나 「모두 읽음」을 눌러야 읽음',
+                '종 아이콘 숫자는 확인이 필요한 알림(마감·경고·실패)만 셈 — 완료 알림은 기록만 남김',
+                '「오늘의 업무 알림」·「백업 리마인더」는 프로그램을 여러 번 열어도 1건만 유지, 내용이 바뀔 때만 다시 알림',
+                '같은 알림이 10분 안에 반복되면 「×3」처럼 한 줄로 묶음',
+                '업무를 열었다 닫기만 해도 「저장되었습니다」가 뜨던 문제 수정, 「업무 저장됨」은 알림센터에 쌓지 않음',
+                '저장 공간 화면에 이 프로그램 자료·저장 한도·남은 공간·영구 보존(자료 보호) 상태 표시, 정확한 용량 확인 방법 안내',
+                '사용량을 브라우저가 알려주는 실제 디스크 사용량으로 계산하고, 저장 한도 안내를 현재 기준으로 수정',
+                '다크모드에서 알림 창의 아이콘·글자가 모두 흰색으로 보이던 문제 수정',
+                '업무 카드의 「업무 내보내기」도 공유와 같은 업무 파일로 저장 — 항목별 메모·첨부자료가 빠지던 문제 수정(예전에 내보낸 파일도 계속 가져올 수 있음)'
+            ] },
             { version: '1.1.0', date: '2026-10-07', notes: [
                 '체크리스트를 「단계 + 할 일」 구조로 개선(단계는 순서대로, 할 일은 순서 없이 · 단계별 「할 일 n/m」 표시)',
                 '체크리스트 편집은 [저장]을 눌러야 반영(닫거나 포커스 모드에서 나올 때 저장 여부 확인)',
@@ -16560,7 +16574,7 @@ ${item.result.text}
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                                     <div style="flex: 1;">
                                         <div style="font-weight: 600; font-size: 1rem;">업무 내보내기</div>
-                                        <div style="font-size: 0.85rem; opacity: 0.9;">업무 데이터와 파일을 JSON으로 내보내기</div>
+                                        <div style="font-size: 0.85rem; opacity: 0.9;">진행 상태·조치결과·메모·첨부까지 담은 업무 파일 (공유와 같은 파일)</div>
                                     </div>
                                 </button>
                                 
@@ -16587,136 +16601,15 @@ ${item.result.text}
                 document.body.appendChild(modal);
             }
             
-            // 🔥 단일 업무 내보내기
+            // 업무 카드의 [업무 내보내기] — 공유와 같은 업무 파일(workflow_package)로 내보낸다.
+            // 예전에는 별도 형식(type: 'project')으로 내보내 항목별 메모·첨부자료가 빠졌다(그 형식의 파일은 가져오기에서 계속 읽음).
             async exportSingleProject(workflowId) {
-                // 임시로 선택된 ID를 설정하고 exportProjectPackage를 호출
-                // 하지만 exportProjectPackage는 모달을 표시하므로, 직접 내보내기 로직을 구현
-                const workflow = this.allData.workflows.find(w => w.id === workflowId);
+                const workflow = this.allData.workflows.find(w => String(w.id) === String(workflowId));
                 if (!workflow) {
                     this.showToast('error', '❌', '업무를 찾을 수 없습니다');
                     return;
                 }
-                
-                this.showToast('info', '⏳', '업무 파일 생성 중...');
-                // 이 모달은 클릭 즉시 닫혀서 비활성화할 버튼이 없다 — 첨부파일이 많으면 시작 토스트(3초)가
-                // 사라진 뒤 화면이 멈춘 것처럼 보일 수 있어 진행률 표시를 띄운다.
-                this._showProgress('업무 내보내기 준비 중...');
-
-                try {
-                    // 내보낼 workflow 객체 복사 (원본 변경 방지)
-                    const workflowToExport = JSON.parse(JSON.stringify(workflow));
-                    
-                    // 공문(documents) 필드 제거 - 업무 내보내기 시 공문은 제외
-                    if (workflowToExport.documents) {
-                        delete workflowToExport.documents;
-                    }
-                    
-                    const packageData = {
-                        version: '6.2',
-                        exportDate: new Date().toISOString(),
-                        type: 'project',
-                        projects: [workflowToExport],
-                        files: {}
-                    };
-                    
-                    // 업무 관련 파일 수집
-                    const projectKey = `project-${workflow.id}`;
-                    const details = this.checklistDetails[projectKey];
-                    
-                    if (details) {
-                        // 첨부파일 수집
-                        if (details.attachments && details.attachments.length > 0) {
-                            for (const attachment of details.attachments) {
-                                if (attachment.inIndexedDB && attachment.id) {
-                                    try {
-                                        const fileData = await this.dbManager.getFile('projectFiles', attachment.id);
-                                        if (fileData && fileData.blob) {
-                                            const base64 = await this.dbManager.blobToBase64(fileData.blob);
-                                            packageData.files[`project-${workflow.id}-attachment-${attachment.id}`] = {
-                                                name: attachment.name,
-                                                type: attachment.type,
-                                                data: base64
-                                            };
-                                        }
-                                    } catch (error) {
-                                        console.error('첨부파일 수집 실패:', error);
-                                    }
-                                }
-                            }
-                        }
-                        
-                        // 서식파일 수집 (프로젝트 전체 서식)
-                        if (details.forms && details.forms.length > 0) {
-                            for (const form of details.forms) {
-                                if (form.inIndexedDB && form.id) {
-                                    try {
-                                        const fileData = await this.dbManager.getFile('formFiles', form.id);
-                                        if (fileData && fileData.blob) {
-                                            const base64 = await this.dbManager.blobToBase64(fileData.blob);
-                                            packageData.files[`project-${workflow.id}-form-${form.id}`] = {
-                                                name: form.name,
-                                                type: form.type,
-                                                data: base64,
-                                                checklistIndex: null  // 프로젝트 전체 서식은 특정 체크리스트에 고정하지 않음
-                                            };
-                                        }
-                                    } catch (error) {
-                                        console.error('서식파일 수집 실패:', error);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    
-                    // 체크리스트 항목별 서식 파일 수집 (항목의 현재 위치와 항상 함께 이동)
-                    if (workflow.checklist && Array.isArray(workflow.checklist)) {
-                        for (let checklistIndex = 0; checklistIndex < workflow.checklist.length; checklistIndex++) {
-                            const item = workflow.checklist[checklistIndex];
-                            if (item.formats && Array.isArray(item.formats)) {
-                                for (const format of item.formats) {
-                                    if (format.inIndexedDB && format.id) {
-                                        try {
-                                            const fileData = await this.dbManager.getFile('formFiles', format.id);
-                                            if (fileData && fileData.blob) {
-                                                const base64 = await this.dbManager.blobToBase64(fileData.blob);
-                                                packageData.files[`project-${workflow.id}-form-${format.id}`] = {
-                                                    name: format.name,
-                                                    type: format.type,
-                                                    data: base64,
-                                                    checklistIndex: checklistIndex
-                                                };
-                                            }
-                                        } catch (error) {
-                                            console.error('체크리스트 서식파일 수집 실패:', error);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    
-                    const jsonStr = JSON.stringify(packageData, null, 2);
-                    const blob = new Blob([jsonStr], { type: 'application/json' });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    const dateStr = localDateStr();
-                    const sanitizedName = sanitizeFileName(workflow.title || '업무', 80);
-                    const fileName = `업무_${sanitizedName}_${dateStr}.json`;
-                    
-                    document.body.appendChild(a);
-                    a.href = url;
-                    a.download = fileName;
-                    a.click();
-                    document.body.removeChild(a);
-                    setTimeout(() => URL.revokeObjectURL(url), 1000);
-
-                    this.showToast('success', '✅', '업무 내보내기 완료');
-                } catch (error) {
-                    console.error('업무 내보내기 오류:', error);
-                    this.showToast('error', '❌', '업무 내보내기 실패: ' + error.message);
-                } finally {
-                    this._hideProgress();
-                }
+                await this.exportMultipleWorkflowPackages([workflow.id]);
             }
 
             // 템플릿 패키지로 내보내기 (서식 파일 Base64 포함)
@@ -26271,221 +26164,27 @@ ${aiPartnerCitationFirstRules}
                 }
             }
 
+            // [📦 업무 내보내기] 창에서 고른 업무들 — 공유와 같은 업무 파일(workflow_package) 하나로 내보낸다.
             async executeExportProjectPackage(modal, btn = null) {
                 const checkboxes = modal.querySelectorAll('input[type="checkbox"]:checked');
                 if (checkboxes.length === 0) {
                     this.showToast('error', '⚠️', '업무를 선택하세요');
                     return;
                 }
-                // 첨부파일이 많은 업무를 여러 개 선택하면 base64 인코딩에 시간이 걸리는데, 예전엔
-                // 시작 토스트(3초)가 사라진 뒤로는 아무 표시가 없어 버튼을 다시 눌러 내보내기가
-                // 중복 실행될 수 있었다.
+                // 파일을 만드는 동안 버튼을 다시 눌러 내보내기가 중복 실행되지 않게 막는다
                 if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; }
-
                 const selectedIds = Array.from(checkboxes).map(cb => {
-                    // data-original-id 속성이 있으면 사용 (원본 타입 유지)
-                    if (cb.hasAttribute('data-original-id')) {
-                        const originalId = cb.getAttribute('data-original-id');
-                        // 숫자로 파싱 가능하면 숫자로, 아니면 문자열로
-                        const numId = Number(originalId);
-                        return isNaN(numId) ? originalId : numId;
-                    }
-                    // 없으면 value를 JSON 파싱 시도
-                    try {
-                        return JSON.parse(cb.value);
-                    } catch (e) {
-                        // JSON 파싱 실패 시 원본 value 사용
-                        const numValue = Number(cb.value);
-                        return isNaN(numValue) ? cb.value : numValue;
-                    }
+                    const raw = cb.hasAttribute('data-original-id') ? cb.getAttribute('data-original-id') : cb.value;
+                    const num = Number(raw);
+                    return isNaN(num) ? raw : num;
                 });
-                this.showToast('info', '⏳', '업무 파일 생성 중...');
-                this._showProgress('업무 파일 생성 중...');
-
                 try {
-                    const packageData = {
-                        version: '6.2',
-                        exportDate: new Date().toISOString(),
-                        type: 'project',
-                        projects: [],
-                        files: {}
-                    };
-
-                    // 선택된 업무 수집
-                    let _exportDone = 0;
-                    for (const projectId of selectedIds) {
-                        this._updateProgress('업무 파일 생성 중', ++_exportDone, selectedIds.length);
-                        // ID 비교: 타입이 같으면 ===, 다르면 == 또는 문자열 비교
-                        const project = this.allData.workflows.find(p => {
-                            // 정확한 타입 일치
-                            if (p.id === projectId) return true;
-                            // 느슨한 비교 (숫자/문자열 변환)
-                            if (p.id == projectId) return true;
-                            // 문자열로 변환하여 비교
-                            if (String(p.id) === String(projectId)) return true;
-                            return false;
-                        });
-                        if (!project) {
-                            console.warn('업무를 찾을 수 없습니다:', {
-                                찾는ID: projectId,
-                                찾는ID타입: typeof projectId,
-                                사용가능한ID들: this.allData.workflows.map(w => ({ id: w.id, type: typeof w.id, title: w.title }))
-                            });
-                            continue;
-                        }
-
-                        // 내보낼 project 객체 복사 (원본 변경 방지)
-                        const projectToExport = JSON.parse(JSON.stringify(project));
-                        
-                        // 공문(documents) 필드 제거 - 업무 패키지 내보내기 시 공문은 제외
-                        if (projectToExport.documents) {
-                            delete projectToExport.documents;
-                        }
-                        
-                        packageData.projects.push(projectToExport);
-
-                        // 업무 관련 파일 수집
-                        const projectKey = `project-${projectId}`;
-                        const details = this.checklistDetails[projectKey];
-                        
-                        if (details) {
-                            // 첨부파일 수집
-                            if (details.attachments && details.attachments.length > 0) {
-                                for (const attachment of details.attachments) {
-                                    if (attachment.inIndexedDB && attachment.id) {
-                                        try {
-                                            const fileData = await this.dbManager.getFile('projectFiles', attachment.id);
-                                            if (fileData && fileData.blob) {
-                                                const base64 = await this.dbManager.blobToBase64(fileData.blob);
-                                                packageData.files[`project-${projectId}-attachment-${attachment.id}`] = {
-                                                    name: attachment.name,
-                                                    type: attachment.type,
-                                                    data: base64
-                                                };
-                                            }
-                                        } catch (error) {
-                                            console.error('첨부파일 수집 실패:', error);
-                                        }
-                                    }
-                                }
-                            }
-
-                            // 서식파일 수집 (프로젝트 전체 서식: 특정 체크리스트에 고정하지 않음)
-                            if (details.forms && details.forms.length > 0) {
-                                for (const form of details.forms) {
-                                    if (form.inIndexedDB && form.id) {
-                                        try {
-                                            const fileData = await this.dbManager.getFile('formFiles', form.id);
-                                            if (fileData && fileData.blob) {
-                                                const base64 = await this.dbManager.blobToBase64(fileData.blob);
-                                                packageData.files[`project-${projectId}-form-${form.id}`] = {
-                                                    name: form.name,
-                                                    type: form.type,
-                                                    data: base64,
-                                                    checklistIndex: null  // 프로젝트 전체 서식은 인덱스에 묶지 않음
-                                                };
-                                            }
-                                        } catch (error) {
-                                            console.error('서식파일 수집 실패:', error);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        
-                        // 체크리스트 항목별 서식 파일 수집 (workflow.checklist[index].formats)
-                        await this._collectChecklistFormatFiles(project, packageData);
-
-                        // PDF 문서 수집
-                        if (this.dbReady) {
-                            try {
-                                const pdfDocs = await this.dbManager.getPdfDocumentsByProject(projectId);
-                                if (pdfDocs && pdfDocs.length > 0) {
-                                    packageData.pdfDocuments = packageData.pdfDocuments || {};
-                                    packageData.pdfDocuments[projectId] = pdfDocs;
-                                }
-                            } catch (error) {
-                                console.error('PDF 문서 수집 실패:', error);
-                            }
-                        }
-                    }
-
-                    // 최종 검증: projects 배열 확인
-                    if (!packageData.projects || packageData.projects.length === 0) {
-                        const errorDetails = {
-                            selectedIds: selectedIds,
-                            selectedIdsTypes: selectedIds.map(id => typeof id),
-                            totalWorkflows: this.allData.workflows.length,
-                            availableIds: this.allData.workflows.map(w => ({ id: w.id, type: typeof w.id, title: w.title }))
-                        };
-                        console.error('내보내기 실패 - 자세한 정보:', errorDetails);
-                        throw new Error(`내보낼 업무가 없습니다. (선택한 ${selectedIds.length}개 업무를 찾을 수 없음) - 브라우저 콘솔에서 자세한 정보를 확인하세요.`);
-                    }
-                    
-                    
-                    // JSON 파일로 다운로드
-                    const jsonStr = JSON.stringify(packageData, null, 2);
-                    const blob = new Blob([jsonStr], { type: 'application/json' });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    const dateStr = localDateStr();
-                    const count = packageData.projects.length;
-                    
-                    // 파일명 생성: 단일이면 제목 포함, 다중이면 개수만
-                    let fileName;
-                    if (count === 1) {
-                        // 이미 수집한 packageData.projects에서 첫 번째 업무 사용 (더 안전)
-                        const project = packageData.projects[0];
-                        if (project && project.title && project.title.trim()) {
-                            const sanitizedTitle = sanitizeFileName(project.title.trim(), 80);
-                            // sanitizeFileName이 빈 문자열을 반환할 수 있으므로 체크
-                            if (sanitizedTitle && sanitizedTitle.trim()) {
-                                fileName = `업무_${sanitizedTitle}_${dateStr}.json`;
-                            } else {
-                                // 제목이 특수문자만 있어서 모두 제거된 경우
-                                fileName = `업무_${dateStr}.json`;
-                            }
-                        } else {
-                            // 제목이 없거나 빈 문자열인 경우
-                            fileName = `업무_${dateStr}.json`;
-                        }
-                    } else {
-                        fileName = `업무_${count}개_${dateStr}.json`;
-                    }
-                    
-                    a.href = url;
-                    a.download = fileName;
-                    a.click();
-                    URL.revokeObjectURL(url);
-
-                    // 🔥 모달 닫기 및 스크롤 복원
-                    if (this.closeExportModal) {
-                        this.closeExportModal();
-                    } else {
-                        // 🔥 공통 함수 사용
-                        this.removeModalAndRestoreScroll(modal);
-                    }
-                    
-                    this.currentExportModal = null;
-                    this.closeExportModal = null;
-
-                    this.showToast('success', '✅', `업무 ${selectedIds.length}개 패키지 내보내기 완료`);
-                } catch (error) {
-                    console.error('패키지 내보내기 오류:', error);
-                    this.showToast('error', '❌', '패키지 내보내기 실패: ' + error.message);
-
-                    // 에러 발생 시에도 모달 닫기 및 스크롤 복원
-                    if (this.closeExportModal) {
-                        this.closeExportModal();
-                    } else {
-                        // 🔥 공통 함수 사용
-                        this.removeModalAndRestoreScroll(modal);
-                    }
-
-                    this.currentExportModal = null;
-                    this.closeExportModal = null;
+                    await this.exportMultipleWorkflowPackages(selectedIds);
                 } finally {
-                    this._hideProgress();
+                    if (this.closeExportModal) this.closeExportModal();
+                    if (document.body.contains(modal)) this.removeModalAndRestoreScroll(modal);
+                    this.currentExportModal = null;
+                    this.closeExportModal = null;
                     if (btn) { btn.disabled = false; btn.style.opacity = ''; }
                 }
             }
