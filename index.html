@@ -1761,13 +1761,51 @@
         :root.dark-mode .fap-dl-behind { color: #fbbf24; }
 
         /* ── 체크리스트 줄: 마우스를 올린 줄에만 길잡이 버튼 (터치 화면은 제목을 누르면 나오는 빠른 버튼으로) ── */
+        .checklist-card .checklist-card-header:has(> .cl-main) { flex-wrap: nowrap; }
+        /* 오른쪽 고정 칸 — 값이 없어도 자리는 그대로라 모든 줄에서 세로로 맞는다 */
+        .checklist-card-header .cl-right { position: relative; display: flex; align-items: center; gap: 6px; flex-shrink: 0; margin-left: auto; }
+        .checklist-card-header .cl-col { display: inline-flex; align-items: center; justify-content: flex-end; flex-shrink: 0; }
+        .checklist-card-header .cl-col-sub { width: 112px; }
+        .checklist-card-header .cl-col-dl { width: 66px; }
+        .checklist-card-header .cl-col-dots { width: 24px; gap: 3px; justify-content: flex-start; }
+        .cl-dot-empty { width: 6px; height: 6px; display: inline-block; }
+        .checklist-card.sub-item .checklist-card-header .cl-right { margin-right: 2px; }  /* 할 일 줄은 테두리가 없어 2px 더 넓음 — 상위 단계와 칸을 맞춤 */
+        /* 길잡이: 고정 칸 바로 왼쪽에 겹쳐 뜸(자리를 차지하지 않음) — 긴 제목 끝은 마우스를 올린 동안만 가려짐 */
+        @media (hover: hover) {
+            .checklist-card-header .cl-right > .cl-hover-guide { position: absolute; right: 100%; top: 50%; transform: translateY(-50%); margin-right: 6px; box-shadow: -14px 0 10px -2px var(--white); background: linear-gradient(rgba(139,92,246,0.1), rgba(139,92,246,0.1)), var(--white); z-index: 1; }
+            :root.dark-mode .checklist-card-header .cl-right > .cl-hover-guide { box-shadow: -14px 0 10px -2px var(--bg-card); background: linear-gradient(rgba(139,92,246,0.2), rgba(139,92,246,0.2)), var(--bg-card); }
+        }
+        /* 번호 칸 폭을 모두 같게 — 진행중 단계의 동그라미 번호 때문에 제목 시작점이 달라지지 않게 */
+        .checklist-card .checklist-card-header .item-number { display: inline-flex; align-items: center; justify-content: center; min-width: 26px; height: 20px; padding: 0 4px; border-radius: 10px; box-sizing: border-box; }
+        /* 진행중 단계: 「진행중」 글자 대신 번호를 파란 동그라미로 (왼쪽 파란 막대와 함께) */
+        .checklist-card.stage-current:not(.sub-item):not(.completed) .checklist-card-header .item-number { display: inline-flex; align-items: center; justify-content: center; min-width: 24px; height: 20px; padding: 0 5px; border-radius: 10px; background: var(--accent); color: #fff !important; }
+        .checklist-card .checklist-card-header .cl-main { flex-direction: column; align-items: flex-start; justify-content: center; flex-wrap: nowrap; }  /* 제목 왼쪽 정렬, 둘째 줄은 그 아래 */
+        @media (max-width: 640px) { .checklist-card-header .cl-col-sub { width: auto; } .checklist-card-header .cl-col-sub .stage-bar { display: none; } }  /* 번호·제목·마감일은 한 줄에, 제목 칸 안에서만 줄바꿈 */
+        .checklist-card-header .cl-main { flex: 1 1 auto; min-width: 0; display: flex; flex-wrap: wrap; align-items: center; column-gap: 8px; row-gap: 4px; }
+        .checklist-card-header .cl-main .item-title-text { flex: 0 1 auto; min-width: 0; overflow-wrap: anywhere; }  /* 제목+정보가 한 줄에 안 들어가면 정보가 다음 줄로 */
+        .checklist-card-header .cl-meta { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px; min-width: 0; }
+        .checklist-card-header .cl-meta .stage-chip { margin-left: 0; }
         .cl-hover-guide { display: none; align-items: center; gap: 3px; height: 24px; padding: 0 9px; border: 1px solid rgba(139,92,246,0.3); border-radius: 999px; background: rgba(139,92,246,0.08); font-family: inherit; font-size: 0.72rem; font-weight: 700; white-space: nowrap; cursor: pointer; flex-shrink: 0; }
         :root:root .cl-hover-guide { color: #7c3aed; }
         .cl-hover-guide:hover { background: rgba(139,92,246,0.16); border-color: #8b5cf6; }
         @media (hover: hover) {
-            .checklist-card-header:hover .cl-hover-guide, .checklist-card-header:focus-within .cl-hover-guide { display: inline-flex; }
+            .cl-hover-guide { display: inline-flex; visibility: hidden; }
+            .checklist-card-header:hover .cl-hover-guide, .checklist-card-header:focus-within .cl-hover-guide { visibility: visible; }
         }
         :root.dark-mode:root .cl-hover-guide { color: #c4b5fd; }
+
+        /* 업무 절차 업무팁 상자: 어느 항목의 팁인지 (단계 · 지금 할 일) */
+        :root:root .proc-tip-src { font-size: 0.72rem; font-weight: 700; color: #7c3aed; margin: 0 0 2px; }
+        :root:root .proc-tip-src span { font-weight: 500; color: var(--text-muted, #8899aa); }
+        .proc-tip-src.sep { margin-top: 8px; padding-top: 8px; border-top: 1px dashed rgba(139,92,246,0.2); }
+        .proc-clamp { overflow: hidden; }
+        .proc-clamp.cut { -webkit-mask-image: linear-gradient(to bottom, #000 60%, transparent); mask-image: linear-gradient(to bottom, #000 60%, transparent); }
+        .proc-more, .proc-tip-fold { display: block; margin: 2px 0 0; padding: 2px 4px 2px 0; border: none; background: transparent; font-family: inherit; font-size: 0.72rem; font-weight: 600; text-align: left; cursor: pointer; border-radius: 4px; }
+        :root:root .proc-more { color: #7c3aed; }
+        :root:root .proc-tip-fold { color: var(--text-gray, #64748b); margin: 0 0 4px; }
+        .proc-more:hover, .proc-tip-fold:hover { text-decoration: underline; }
+        :root.dark-mode:root .proc-more { color: #c4b5fd; }
+        :root.dark-mode:root .proc-tip-src { color: #c4b5fd; }
 
         /* ── 업무팁·서식 아이콘 (업무 절차) ── */
         .cl-ind-btn { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; padding: 0; border: none; border-radius: 5px; background: transparent; font-size: 0.86rem; line-height: 1; cursor: pointer; opacity: 0.95; flex-shrink: 0; transition: opacity 0.12s, background 0.12s, transform 0.12s; }
@@ -6350,8 +6388,12 @@
                 '날짜 선택 창 새로 만듦 — 오늘·내일·이번 주 금·다음 주 월·1주 뒤·근무일 5일 뒤·업무 마감일을 한 번에 고르고, 달력에 주말·공휴일(설·추석·대체공휴일 포함)·다른 마감(점)·업무 마감(🏁) 표시',
                 '날짜에 마우스를 올리면 D-n·근무일 수와 「업무 전체 마감보다 늦습니다」·「공휴일입니다」 경고를 바로 보여 줌 — 프로그램의 모든 날짜 칸에 적용',
                 '업무 화면 왼쪽 마감 표시를 카드로 — D-n을 크게(여유 초록·7일 이내 주황·임박/지남 빨강), 「10월 30일 (금)」·근무일 수·생성일→마감 기간 막대, 진행이 기간보다 많이 늦으면 ⚠, 누르면 날짜 선택 창',
+                '체크리스트 줄을 가지런히 — 오른쪽에 폭이 고정된 칸(할 일 · 마감 · 점 3자리)을 두어 모든 줄에서 세로로 맞고, 「진행중」 글자 대신 번호를 파란 동그라미로, 길잡이 버튼은 칸 왼쪽에 겹쳐 떠서 제목 공간을 차지하지 않음',
+                '건너뛰기 버튼 이름은 길게 써도 되고(최대 50자), 버튼에는 앞 8자까지만 「…」로 보여 칸이 늘어나지 않음 — 마우스를 올리면 전체 이름, 앞 8자가 같은 버튼을 만들면 알려 줌',
+                '체크리스트 줄 정리 — 제목이 길거나 건너뛰기 버튼이 많아도 제목이 찌그러지지 않게: 진행중·할 일·건너뛰기 버튼은 제목 옆(길면 제목 아래 줄)으로, 건너뛰기 버튼이 3개 이상이면 2개 + 「⤼ +n」, 길잡이 버튼은 자리를 미리 잡아 두어 마우스를 올려도 줄이 출렁이지 않음',
                 '체크리스트 줄에 마우스를 올리면 「✨ 길잡이」 버튼이 나타남 — 그 항목의 업무팁·서식·법령을 한 화면에 모아 보기(하위 할 일도 같음), 업무팁 점에 마우스를 올리면 첫 줄 미리 보기',
-                '업무 절차 패널에서 하위 할 일의 업무팁도 안내 — 진행중 단계의 지금 차례 할 일은 업무팁·서식을 그 아래에 펼치고, 다른 할 일은 💡를 눌러 보기',
+                '업무 절차 패널은 「단계 → 할 일 목록 → 업무팁 상자」 순서 — 단계를 시작할 땐 단계 팁 + 지금 차례 할 일 팁, 할 일을 하나라도 끝내면 단계 팁은 한 줄로 접고 지금 할 일 팁만',
+                '업무 절차의 긴 업무팁은 몇 줄까지만 보여 주고(둘이면 3·4줄, 하나면 7줄) 「… 전체 내용은 ✨ 길잡이에서」로 연결 — 진행중 단계가 위에 있으면 스크롤 없이 한 화면에',
                 '조치결과·업무팁 입력칸 위에 기호 줄 — 보고서식 □ ○ - · / 공문식 1. 가. 1) 가)를 누르면 그 줄 앞에 붙고, Enter로 다음 줄에 이어서(번호는 다음 번호), ⇥/⇤(Tab·Shift+Tab)로 단계를 바꾸면 기호도 단계에 맞게 바뀜',
                 '「일정 보기」 추가 — 상단 [일정](모든 업무)·업무 화면 [일정 보기](그 업무만)에서 항목 마감을 월 달력으로, 오른쪽에 「기한 지남 + 이번 주 할 일」',
                 '일정 보기에서 항목을 다른 날로 끌어 놓으면 마감일 변경, 항목을 누르면 그 업무의 그 항목으로 바로 이동',
@@ -13358,7 +13400,7 @@
                     branchCount && !isSkipped ? `<button type="button" class="fci-mark-branch" onclick="event.stopPropagation();app.openItemSettingsMenu(event,${workflow.id},${index})" title="건너뛰기 버튼 ${branchCount}개: ${this.escapeHtml((item.branchOptions || []).filter(o => this.isBranchOptionConfigured(o)).map(o => o.label || '(이름 없음)').join(', '))} — 눌러서 설정">${this._skipIco(14)}${(() => {
                         // 개수 대신 버튼 이름 (상용 양식 도구처럼 "무엇이 일어나는지"를 글자로) — 여러 개면 「불출석 외 1」
                         const names = (item.branchOptions || []).filter(o => this.isBranchOptionConfigured(o)).map(o => o.label || '(이름 없음)');
-                        const first = names[0].length > 8 ? names[0].slice(0, 8) + '…' : names[0];
+                        const first = this._shortLabel(names[0]);
                         return this.escapeHtml(first) + (names.length > 1 ? ` <span class="fci-mark-more">외 ${names.length - 1}</span>` : '');
                     })()}</button>` : '',
                     targetOf ? `<span class="fci-mark-target" title="${this.escapeHtml(targetOf.map(t => '「' + t + '」을(를) 누르면 건너뜀').join('\n'))}"></span>` : '',
@@ -22459,28 +22501,44 @@ ${docScope === 'internal' ? `[내부결재 — 보고·검토·승인용]
                 let pendingDetailForBoat = null;  // { idx, html } — 배 도착 후 주입할 상세 내용
 
                 // 업무팁·필요 서식 상세박스 HTML 생성 (진행중 단계 · 방금 완료된 단계 공용)
-                const buildDetailHtml = (stepItem, idAttr = '') => {
+                const buildDetailHtml = (stepItem, idAttr = '', subItem = null, opt = {}) => {
                     const formatNames = [];
-                    if (Array.isArray(stepItem.formats)) {
-                        stepItem.formats.forEach(f => {
-                            const name = typeof f === 'string' ? f : (f && f.name) ? f.name : null;
-                            if (name && name.trim()) formatNames.push(name.trim());
-                        });
-                    }
-                    if (Array.isArray(stepItem.linkedDocs) && this._repoDocMetaCache) {
-                        stepItem.linkedDocs.forEach(docId => {
-                            const meta = this._getRepoDocMeta(docId);
-                            if (meta && meta.name) formatNames.push(meta.name);
-                        });
-                    }
-                    const tipText = (stepItem.tip && stepItem.tip.content && stepItem.tip.content.trim()) ? stepItem.tip.content.trim() : '';
+                    const addFormats = (it) => {
+                        if (Array.isArray(it.formats)) {
+                            it.formats.forEach(f => {
+                                const name = typeof f === 'string' ? f : (f && f.name) ? f.name : null;
+                                if (name && name.trim() && !formatNames.includes(name.trim())) formatNames.push(name.trim());
+                            });
+                        }
+                        if (Array.isArray(it.linkedDocs) && this._repoDocMetaCache) {
+                            it.linkedDocs.forEach(docId => {
+                                const meta = this._getRepoDocMeta(docId);
+                                if (meta && meta.name && !formatNames.includes(meta.name)) formatNames.push(meta.name);
+                            });
+                        }
+                    };
+                    addFormats(stepItem);
+                    if (subItem) addFormats(subItem);
+                    const tipOf = it => (it && it.tip && it.tip.content && it.tip.content.trim()) ? it.tip.content.trim() : '';
+                    const stageTip = tipOf(stepItem), subTip = tipOf(subItem);
+                    const tipText = stageTip || subTip;
                     if (formatNames.length === 0 && !tipText) return '';
 
                     const sectionLabelStyle = 'font-size:0.7rem;font-weight:700;color:var(--text-muted,#8899aa);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px;';
-                    const tipBlock = tipText ? `<div>
+                    // 긴 팁은 정해진 줄 수까지만 — 넘치면 그린 뒤 _procClampCheck가 끝을 흐리게 하고 「… 전체 내용은 길잡이에서」를 붙인다
+                    const noteHtml = (t, lines, gIdx) => `<div class="proc-clamp" data-gidx="${gIdx != null ? gIdx : ''}" data-wid="${workflowId}" style="font-size:0.79rem;color:var(--text-dark,#1e2d47);line-height:1.65;max-height:calc(${lines} * 0.79rem * 1.65 + 2px);">${renderIndentedNoteHtml(t)}</div>`;
+                    const fold = !!(opt.fold && stageTip);   // 할 일을 하나라도 끝냈으면 단계 팁은 한 줄로 접음
+                    const both = !!(stageTip && subTip && !fold);
+                    const stageSec = !stageTip ? '' : fold
+                        ? `<button type="button" class="proc-tip-fold" onclick="event.stopPropagation();app._procTipFold(this)" aria-expanded="false">▸ ${esc(stepItem.text || '')} 업무팁</button><div class="proc-tip-foldbody" hidden>${noteHtml(stageTip, 7, opt.stageIdx)}</div>`
+                        : (subTip ? `<div class="proc-tip-src">${esc(stepItem.text || '')}</div>` : '') + noteHtml(stageTip, both ? 3 : 7, opt.stageIdx);
+                    const subSec = !subTip ? '' : `<div class="proc-tip-src${stageTip ? ' sep' : ''}">${esc(subItem.text || '')} <span>· 지금 할 일</span></div>${noteHtml(subTip, both ? 4 : 7, opt.subIdx)}`;
+                    const tipBlock = !tipText ? '' : `<div>
                             <div style="${sectionLabelStyle}">업무팁</div>
-                            <div style="font-size:0.79rem;color:var(--text-dark,#1e2d47);line-height:1.65;">${renderIndentedNoteHtml(tipText)}</div>
-                        </div>` : '';
+                            ${stageSec}${subSec}
+                        </div>`;
+                    clearTimeout(this._procClampT);
+                    this._procClampT = setTimeout(() => this._procClampCheck(), 30);
                     const formatsBlock = formatNames.length > 0 ? `<div${tipText ? ' style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(139,92,246,0.15);"' : ''}>
                             <div style="${sectionLabelStyle}">필요 서식·문서</div>
                             ${formatNames.map(n => `<div style="display:flex;align-items:flex-start;gap:6px;font-size:0.78rem;color:var(--text-dark,#1e2d47);line-height:1.55;margin-bottom:3px;"><span style="color:#8b5cf6;flex-shrink:0;margin-top:3px;font-size:0.62rem;">▸</span><span>${esc(n)}</span></div>`).join('')}
@@ -22534,7 +22592,10 @@ ${docScope === 'internal' ? `[내부결재 — 보고·검토·승인용]
                     // 진행중 단계만 필요 서식·저장된 업무팁을 펼쳐서 보여줌
                     let detailHtml = '';
                     if (isCurrent) {
-                        detailHtml = buildDetailHtml(item);
+                        const subsHere = procOther ? [] : this.findSubItems(workflow.checklist, idx).filter(({ item: si }) => si.skipped !== true);
+                        const nowSubE = subsHere.find(({ item: si }) => !this.normalizeCompleted(si));
+                        const anyDone = subsHere.some(({ item: si }) => this.normalizeCompleted(si));
+                        detailHtml = buildDetailHtml(item, '', nowSubE ? nowSubE.item : null, { fold: anyDone, stageIdx: idx, subIdx: nowSubE ? nowSubE.index : null });
                         // 진행중 단계가 막 바뀐 참이면, 상세 내용을 지금 바로 그리지 않고 빈 자리만
                         // 남겨둔다 — 배가 도착한 뒤 이 자리에 주입해야 "배가 다 오고 나서 펼쳐진다"는
                         // 순서가 만들어진다.
@@ -22552,19 +22613,14 @@ ${docScope === 'internal' ? `[내부결재 — 보고·검토·승인용]
                     // 하위 항목: 큰 원형 마커가 붙는 독립 단계로 취급하지 않고, 상위 항목 아래 작게 들여써서
                     // "이 단계의 세부 절차"라는 느낌으로만 표시. 클릭하면 해당 하위 항목으로 바로 이동.
                     const subItems = this.findSubItems(workflow.checklist, idx);
-                    const subNowIdx = (subItems.find(({ item: si }) => !this.normalizeCompleted(si) && si.skipped !== true) || {}).index;
                     const subItemsHtml = subItems.length > 0 ? `
                         <div style="margin-top:5px;padding-left:2px;display:flex;flex-direction:column;gap:3px;">
                             ${subItems.map(({ index: subIdx, item: subItem }) => {
                                 const subDone = this.normalizeCompleted(subItem);
-                                const subTip = !!(subItem.tip && subItem.tip.content && subItem.tip.content.trim());
-                                // 진행중 단계에서 지금 차례인 할 일(안 끝난 첫 할 일)은 업무팁·서식을 바로 아래에 펼침
-                                const subNow = isCurrent && !procOther && subIdx === subNowIdx;
-                                return `<div class="proc-sub-row${subNow ? ' is-now' : ''}" style="display:flex;align-items:center;gap:6px;cursor:pointer;" onclick="event.stopPropagation();app.scrollToMainChecklistItem(${workflowId},${subIdx})">
-                                    <span style="width:11px;height:11px;border-radius:50%;flex-shrink:0;${subDone ? 'background:#10b981;' : subNow ? 'border:2px solid #8b5cf6;' : 'border:1.5px solid var(--border-light,#dde3ee);'}"></span>
-                                    <span style="font-size:0.79rem;line-height:1.5;color:${subDone ? 'var(--text-muted,#8899aa)' : 'var(--text-dark,#1e2d47)'};${subDone ? 'text-decoration:line-through;text-decoration-color:var(--border-light,#dde3ee);' : ''}${subNow ? 'font-weight:600;' : ''}">${esc(subItem.text || '')}</span>
-                                    ${subTip && !subNow ? `<button type="button" class="cl-ind-btn" onclick="event.stopPropagation();app.showChecklistItemModal(${workflowId},${subIdx},'tip')" title="업무팁: ${esc(this._tipPreview(subItem))} — 눌러서 보기" aria-label="업무팁 보기">💡</button>` : ''}
-                                </div>${subNow ? buildDetailHtml(subItem).replace('class="proc-step-detail" style="margin-top:6px;', 'class="proc-step-detail proc-sub-detail" style="margin:2px 0 4px 17px;') : ''}`;
+                                return `<div class="proc-sub-row" style="display:flex;align-items:center;gap:6px;cursor:pointer;" onclick="event.stopPropagation();app.scrollToMainChecklistItem(${workflowId},${subIdx})">
+                                    <span style="width:11px;height:11px;border-radius:50%;flex-shrink:0;${subDone ? 'background:#10b981;' : 'border:1.5px solid var(--border-light,#dde3ee);'}"></span>
+                                    <span style="font-size:0.79rem;line-height:1.5;color:${subDone ? 'var(--text-muted,#8899aa)' : 'var(--text-dark,#1e2d47)'};${subDone ? 'text-decoration:line-through;text-decoration-color:var(--border-light,#dde3ee);' : ''}">${esc(subItem.text || '')}</span>
+                                </div>`;
                             }).join('')}
                         </div>` : '';
 
@@ -22582,8 +22638,8 @@ ${docScope === 'internal' ? `[내부결재 — 보고·검토·승인용]
                             </div>
                             <div style="flex:1;min-width:0;padding-bottom:${isLast ? '2px' : '14px'};">
                                 <div class="proc-step-title" style="font-size:${isCurrent ? '0.9rem' : '0.86rem'};font-weight:${isCurrent ? '700' : '500'};color:${textColor};line-height:1.5;${isDone ? 'text-decoration:line-through;text-decoration-color:var(--border-light,#dde3ee);' : ''}">${esc(item.text || '')}${isCurrent ? ` <span style="font-size:0.7rem;font-weight:700;color:#8b5cf6;">${procMine ? '▶ 내 차례' : '▶ 진행중'}</span>` : ''}${procMine && !procOther ? ' <span class="cb-proc-who mine">★ 내 담당</span>' : ''}${procOther ? ` <span class="cb-proc-who">${esc(procOther)}</span>` : ''}</div>
-                                ${detailHtml}
                                 ${subItemsHtml}
+                                ${detailHtml}
                             </div>
                         </div>
                     `;
@@ -22651,7 +22707,7 @@ ${docScope === 'internal' ? `[내부결재 — 보고·검토·승인용]
                                 setTimeout(() => this._procFoldArrived(workflowId, prevStepIdxForTransition), 450);
                                 if (pendingDetailForBoat) {
                                     const slot = document.getElementById(`proc-detail-slot-${pendingDetailForBoat.idx}`);
-                                    if (slot) slot.outerHTML = pendingDetailForBoat.html;
+                                    if (slot) { slot.outerHTML = pendingDetailForBoat.html; this._procClampCheck(); }
                                 }
                                 // 배가 도착해 다음 단계 업무팁이 펼쳐진 뒤에 읽기 시작
                                 this._ttsProcAuto(workflowId, currentStepIdxPreview);
@@ -29390,6 +29446,58 @@ ${aiPartnerCitationFirstRules}
                 return result;
             }
 
+            // 업무 절차 업무팁이 정해진 줄 수를 넘으면 끝을 흐리게 하고 아래에 「… 전체 내용은 ✨ 길잡이에서」
+            _procClampCheck() {
+                document.querySelectorAll('.proc-step-detail .proc-clamp').forEach(el => {
+                    if (!el.offsetParent) return;  // 접힌 단계 팁은 펼칠 때 확인
+                    const cut = el.scrollHeight > el.clientHeight + 3;
+                    el.classList.toggle('cut', cut);
+                    const next = el.nextElementSibling;
+                    const has = next && next.classList.contains('proc-more');
+                    const wid = Number(el.dataset.wid);
+                    if (cut && !has && el.dataset.gidx !== '' && !isNaN(wid)) {
+                        const b = document.createElement('button');
+                        b.type = 'button';
+                        b.className = 'proc-more';
+                        b.textContent = '… 전체 내용은 ✨ 길잡이에서';
+                        b.onclick = (e) => { e.stopPropagation(); this.showChecklistHelp(wid, Number(el.dataset.gidx)); };
+                        el.after(b);
+                    } else if (!cut && has) next.remove();
+                });
+            }
+
+            _procTipFold(btn) {
+                const body = btn.nextElementSibling;
+                if (!body) return;
+                const open = body.hidden;
+                body.hidden = !open;
+                btn.setAttribute('aria-expanded', String(open));
+                btn.textContent = btn.textContent.replace(/^[▸▾]/, open ? '▾' : '▸');
+                if (open) this._procClampCheck();
+            }
+
+            // 하위 할 일이 있는 단계가 하나라도 있으면 체크리스트 오른쪽에 「할 일」 칸 자리를 잡는다 (모든 줄 정렬용)
+            _clHasSubs(workflow) {
+                const cl = (workflow && workflow.checklist) || [];
+                return cl.some(it => this._isSubEntry(it) && it.skipped !== true);
+            }
+
+            // 버튼 이름은 화면에 8자까지만 (넘으면 「…」) — 칸이 늘어나지 않게, 전체 이름은 마우스를 올려서
+            _shortLabel(label, n = 8) {
+                const chars = Array.from(String(label || ''));
+                return chars.length > n ? chars.slice(0, n).join('').trimEnd() + '…' : chars.join('');
+            }
+
+            // 건너뛰기 버튼이 많을 때 접어 둔 나머지 (「⤼ +n」)
+            openBranchMoreMenu(event, workflowId, index, from) {
+                const wf = this.allData.workflows.find(w => w.id === workflowId);
+                const item = wf && wf.checklist[index];
+                if (!item || !item.branchOptions) return;
+                const opts = item.branchOptions.map((opt, optIdx) => ({ opt, optIdx })).filter(({ opt }) => this.isBranchOptionConfigured(opt)).slice(from);
+                const r = event.currentTarget.getBoundingClientRect();
+                this._openCiMenu(r.left, r.bottom + 4, opts.map(({ opt, optIdx }) => [opt.label || '건너뛰기', () => this.handleBranchOption(workflowId, index, optIdx), this._skipIco()]));
+            }
+
             // 업무팁 첫 줄(기호 빼고 60자) — 💡에 마우스를 올리면 미리 보기
             _tipPreview(item) {
                 const t = String((item && item.tip && item.tip.content) || '');
@@ -29946,8 +30054,11 @@ ${aiPartnerCitationFirstRules}
                         .map((opt, optIdx) => ({ opt, optIdx }))
                         .filter(({ opt }) => this.isBranchOptionConfigured(opt));
                     if (validOptions.length > 0) {
-                        branchButtons = `<div class="branch-buttons" style="display:flex;gap:4px;">${validOptions.map(({ opt, optIdx }) =>
-                            `<button class="branch-run-btn" onclick="event.stopPropagation(); app.handleBranchOption(${workflow.id}, ${index}, ${optIdx})" title="누르면 정해 둔 항목을 건너뜁니다 (실행 전에 확인)">${this._skipIco()}${this.escapeHtml(opt.label || '건너뛰기')}</button>`).join('')}</div>`;
+                        const MAXB = 2;
+                        const shown = validOptions.slice(0, MAXB);  // 3개부터는 2개 + 「⤼ +n」
+                        const rest = validOptions.length - shown.length;
+                        branchButtons = `<div class="branch-buttons" style="display:flex;gap:4px;flex-wrap:wrap;">${shown.map(({ opt, optIdx }) =>
+                            `<button class="branch-run-btn" onclick="event.stopPropagation(); app.handleBranchOption(${workflow.id}, ${index}, ${optIdx})" title="${this.escapeHtml(opt.label || '건너뛰기')} — 누르면 정해 둔 항목을 건너뜁니다 (실행 전에 확인)">${this._skipIco()}${this.escapeHtml(this._shortLabel(opt.label || '건너뛰기'))}</button>`).join('')}${rest > 0 ? `<button class="branch-run-btn branch-more" onclick="event.stopPropagation(); app.openBranchMoreMenu(event, ${workflow.id}, ${index}, ${MAXB})" title="나머지 건너뛰기 버튼 ${rest}개">${this._skipIco()}+${rest}</button>` : ''}</div>`;
                     }
                 }
 
@@ -29988,8 +30099,8 @@ ${aiPartnerCitationFirstRules}
                     : `checklist-card ${isExpanded ? 'expanded' : ''} ${isCompleted ? 'completed' : ''} ${isSub ? 'sub-item' : ''} ${stageState}${collabLockMsg ? ' collab-locked' : ''}${collabLockMsg && workflow.collab && workflow.collab.role === 'assignee' ? ' cb-others' : ''}`;
                 const headerClass = isSkipped ? 'checklist-card-header skipped' : `checklist-card-header ${isExpanded ? 'expanded' : ''} ${isCompleted ? 'completed' : ''}`;
                 const textStyle = isSkipped
-                    ? 'flex: 1; text-decoration: line-through; color: #b0b8c8; font-size:0.88rem;'
-                    : (isCompleted ? 'flex: 1; text-decoration: line-through; color: var(--text-muted);' : 'flex: 1; color: var(--text-dark); font-weight:500;');
+                    ? 'text-decoration: line-through; color: #b0b8c8; font-size:0.88rem;'
+                    : (isCompleted ? 'text-decoration: line-through; color: var(--text-muted);' : 'color: var(--text-dark); font-weight:500;');
                 
                 // 하위 항목 표시는 CSS 연결선(.sub-item::before)으로 그림
                 const subItemIcon = '';
@@ -30013,7 +30124,7 @@ ${aiPartnerCitationFirstRules}
                     hasResult  ? '<span title="조치결과 있음" style="width:6px;height:6px;border-radius:50%;background:#8b5cf6;display:inline-block;"></span>' : '',
                     hasTip     ? `<span title="업무팁 있음: ${this.escapeHtml(this._tipPreview(item))}" style="width:6px;height:6px;border-radius:50%;background:#f59e0b;display:inline-block;"></span>` : '',
                     hasFormats ? '<span title="서식 첨부됨" style="width:6px;height:6px;border-radius:50%;background:#10b981;display:inline-block;"></span>' : '',
-                ].filter(Boolean).join('');
+                ].map(d => d || '<span class="cl-dot-empty"></span>').join('');  // 자리 고정 — 같은 색 점은 모든 줄에서 같은 위치
 
                 return `
                     <div class="${cardClass}"
@@ -30026,26 +30137,25 @@ ${aiPartnerCitationFirstRules}
                              style="cursor:pointer;">
                             ${checkboxHtml}
                             ${subItemIcon}
-                            <span class="item-title-text" style="${textStyle}">
-                                ${this.escapeHtml(item.text)}
-                                ${item.skipReason ? (item.skipManual
-                                    ? `<span style="font-size:0.78rem;color:var(--text-muted);margin-left:8px;font-weight:500;">(${this.escapeHtml(item.skipReason)})</span>`
-                                    : `<span style="font-size:0.78rem;color:#ef4444;margin-left:8px;font-weight:500;">(사유: ${item.skipReason})</span>`) : ''}
-                                ${stageChip}
-                            </span>
-                            <div style="display:flex;align-items:center;gap:4px;flex-shrink:0;margin-left:auto;">
-                                ${!isSkipped ? `<button type="button" class="cl-hover-guide" onclick="event.stopPropagation();app.showChecklistHelp(${workflow.id},${index})" title="이 항목의 업무팁·서식·법령을 한 화면에 모아 보기">✨ ${this.isAIAvailable() ? 'AI 길잡이' : '길잡이'}</button>` : ''}
-                                ${!isSub ? this._collabChipHtml(workflow, item, index) : ''}
-                                ${stageBadge}
-                                ${branchButtons}
-                                ${deadlineBadge}
-                                ${false /* 길잡이 버튼은 줄 미리보기(cl-peek)의 빠른 버튼으로 옮김 — 작은 버튼이 붙어 있어 잘못 눌리던 문제 */ && !isSkipped ? `<button class="ai-guide-btn" onclick="event.stopPropagation();app.showChecklistHelp(${workflow.id},${index})" title="${this.isAIAvailable() ? 'AI 길잡이' : '업무 길잡이'}"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M9 4.5a.75.75 0 01.721.544l.813 2.846a3.75 3.75 0 002.576 2.576l2.846.813a.75.75 0 010 1.442l-2.846.813a3.75 3.75 0 00-2.576 2.576l-.813 2.846a.75.75 0 01-1.442 0l-.813-2.846a3.75 3.75 0 00-2.576-2.576l-2.846-.813a.75.75 0 010-1.442l2.846-.813A3.75 3.75 0 007.466 7.89l.813-2.846A.75.75 0 019 4.5zM18 1.5a.75.75 0 01.728.568l.258 1.036c.236.94.97 1.674 1.91 1.91l1.036.258a.75.75 0 010 1.456l-1.036.258a2.25 2.25 0 00-1.91 1.91l-.258 1.036a.75.75 0 01-1.456 0l-.258-1.036a2.25 2.25 0 00-1.91-1.91l-1.036-.258a.75.75 0 010-1.456l1.036-.258a2.25 2.25 0 001.91-1.91l.258-1.036A.75.75 0 0118 1.5z" clip-rule="evenodd"/></svg><span class="ai-guide-label">${this.isAIAvailable() ? 'AI 길잡이' : '업무 길잡이'}</span></button>` : ''}
+                            <div class="cl-main">
+                                <span class="item-title-text" style="${textStyle}">
+                                    ${this.escapeHtml(item.text)}
+                                    ${item.skipReason ? (item.skipManual
+                                        ? `<span style="font-size:0.78rem;color:var(--text-muted);margin-left:8px;font-weight:500;">(${this.escapeHtml(item.skipReason)})</span>`
+                                        : `<span style="font-size:0.78rem;color:#ef4444;margin-left:8px;font-weight:500;">(사유: ${item.skipReason})</span>`) : ''}
+                                </span>
+                                ${(() => { const meta = [!isSub ? this._collabChipHtml(workflow, item, index) : '', branchButtons].filter(Boolean).join(''); return meta ? `<span class="cl-meta">${meta}</span>` : ''; })()}
+                            </div>
+                            <div class="cl-right">
                                 ${isCompleted && item.branchOnly && !isSkipped ? `<span style="font-size:0.68rem;font-weight:700;color:#8b5cf6;background:rgba(139,92,246,0.1);padding:1px 6px;border-radius:4px;flex-shrink:0;" title="분기 처리로 완료됨 (실제 작업 내용 아님)">${this._skipIco(11)}분기</span>` : ''}
                                 ${isSkipped && item.branchActionTaken ? `<button onclick="event.stopPropagation();app.undoBranchOption(${workflow.id},${index})" style="flex-shrink:0;padding:2px 7px;font-size:0.73rem;background:transparent;color:#6b7280;border:1px solid rgba(107,114,128,0.25);border-radius:5px;cursor:pointer;font-family:inherit;">실행취소</button>` : ''}
                                 ${isSkipped && !item.branchActionTaken && item.skipActionId ? `<button onclick="event.stopPropagation();app.undoBranchOptionFromSkippedItem(${workflow.id},${index})" title="이 항목을 건너뛰게 한 분기 처리를 취소합니다" style="flex-shrink:0;padding:2px 7px;font-size:0.73rem;background:transparent;color:#6b7280;border:1px solid rgba(107,114,128,0.25);border-radius:5px;cursor:pointer;font-family:inherit;">실행취소</button>` : ''}
                                 ${isSkipped && item.skipManual && !asTemplate ? `<button class="na-restore-btn" onclick="event.stopPropagation();app.restoreNotApplicable(${workflow.id},${index})" title="해당 없음을 풀고 다시 할 항목으로 되돌립니다">되살리기</button>` : ''}
                                 ${isCompleted && item.branchActionTaken && !isSkipped ? `<button onclick="event.stopPropagation();app.undoBranchOption(${workflow.id},${index})" style="flex-shrink:0;padding:2px 7px;font-size:0.73rem;background:transparent;color:#6b7280;border:1px solid rgba(107,114,128,0.25);border-radius:5px;cursor:pointer;font-family:inherit;">실행취소</button>` : ''}
-                                ${indicatorDots ? `<span class="cl-dots" style="display:flex;align-items:center;gap:3px;">${indicatorDots}</span>` : ''}                            </div>
+                                ${!isSkipped ? `<button type="button" class="cl-hover-guide" onclick="event.stopPropagation();app.showChecklistHelp(${workflow.id},${index})" title="이 항목의 업무팁·서식·법령을 한 화면에 모아 보기">✨ ${this.isAIAvailable() ? 'AI 길잡이' : '길잡이'}</button>` : ''}
+                                ${this._clHasSubs(workflow) ? `<span class="cl-col cl-col-sub">${stageBadge}</span>` : ''}
+                                <span class="cl-col cl-col-dl">${deadlineBadge}</span>
+                                <span class="cl-col cl-col-dots cl-dots">${indicatorDots}</span>                            </div>
                         </div>
                         ${this._clPeekHtml(workflow, item, index, { isSkipped, locked: collabLockMsg, asTemplate })}
                     </div>
@@ -30623,6 +30733,8 @@ ${aiPartnerCitationFirstRules}
                 base.branchOptions = base.branchOptions.filter(o => this.isBranchOptionConfigured(o) || o === opt);
                 this.hasUnsavedChanges = true;
                 this.saveData();
+                const same8 = base.branchOptions.find(o => o !== opt && this.isBranchOptionConfigured(o) && o.label && o.label !== label && this._shortLabel(o.label) === this._shortLabel(label) && Array.from(label).length > 8);
+                if (same8) setTimeout(() => this.showToast('info', 'ℹ️', `「${same8.label}」과(와) 앞 8자가 같아 버튼에서는 둘 다 「${this._shortLabel(label)}」로 보여요. 앞부분을 다르게 지으면 구분하기 쉽습니다.`, 5000), 1800);
                 this.showToast('success', '🔀', `「${label}」 버튼을 ${prev ? '고쳤습니다' : '만들었습니다'} — 누르면 ${targets.length}개 항목을 건너뜁니다. 체크리스트 편집의 [저장]을 눌러야 반영됩니다.`, 5000);
                 this._endBranchPick();
             }
@@ -30652,7 +30764,7 @@ ${aiPartnerCitationFirstRules}
                 const n = cl.filter((it, i) => i > baseIdx && p.selected.has(it.itemId)).length;
                 const bar = index === 0 ? `<div class="bp-bar">
                         <span class="bp-ico">${this._skipIco(18)}</span>
-                        <input id="bpLabel" class="bp-label" value="${esc(p.label)}" placeholder="버튼 이름 (예: 자체 종결)" oninput="app._branchPick && (app._branchPick.label = this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault();app.saveBranchPick();}">
+                        <input id="bpLabel" class="bp-label" maxlength="50" value="${esc(p.label)}" placeholder="버튼 이름 (예: 자체 종결)" title="길게 써도 됩니다 — 버튼에는 앞 8자까지 보이고, 마우스를 올리면 전체 이름이 보입니다" oninput="app._branchPick && (app._branchPick.label = this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault();app.saveBranchPick();}">
                         <span class="bp-hint">을(를) 누르면 건너뛸 항목을 아래에서 고르세요 · <b>${n}</b>개 선택</span>
                         <span class="bp-actions"><button type="button" class="btn btn-primary btn-small" onclick="app.saveBranchPick()">저장</button>
                         <button type="button" class="btn btn-secondary btn-small" onclick="app.cancelBranchPick()">취소</button></span>
@@ -31001,7 +31113,7 @@ ${aiPartnerCitationFirstRules}
                     const names = items.map(t => '· ' + ((t.item.text || '').trim() || '(제목 없음)'));
                     if (selfSkip) names.unshift('· 이 항목');
                     const tip = `「${o.label || '건너뛰기'}」을(를) 누르면 건너뛰는 항목 — 복사하여 시작한 업무에서 누릅니다\n${names.join('\n')}`;
-                    return `<span class="branch-rule-chip" title="${this.escapeHtml(tip)}">${this._skipIco()}${this.escapeHtml(o.label || '건너뛰기')}</span>`;
+                    return `<span class="branch-rule-chip" title="${this.escapeHtml(tip)}">${this._skipIco()}${this.escapeHtml(this._shortLabel(o.label || '건너뛰기'))}</span>`;
                 }).join('')}</div>`;
             }
 
@@ -31030,7 +31142,7 @@ ${aiPartnerCitationFirstRules}
                             <div style="display:flex;gap:6px;align-items:center;margin-bottom:8px;">
                                 <span style="font-size:0.72rem;color:var(--text-muted);flex-shrink:0;">버튼 이름</span>
                                 <input type="text" class="branch-label-input" value="${this.escapeHtml(opt.label || '')}"
-                                       id="branch-label-${workflowId}-${index}-${optIdx}" placeholder="예: 자체 종결" maxlength="20"
+                                       id="branch-label-${workflowId}-${index}-${optIdx}" placeholder="예: 자체 종결" maxlength="50"
                                        onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}"
                                        onchange="app.saveBranchOptionLabel(${workflowId},${index},${optIdx},this.value)">
                                 <button class="branch-del-btn" onclick="app.removeBranchOption(${workflowId},${index},${optIdx})" title="이 버튼 삭제">${trashSvg}</button>
