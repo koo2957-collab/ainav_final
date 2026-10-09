@@ -1531,6 +1531,156 @@
         #notifyCenterMenu .nc-foot-btn:hover { background: color-mix(in srgb, var(--text-dark) 7%, transparent); color: var(--text-dark); }
         #notifyCenterMenu .nc-foot-btn.danger { background: #dc2626; color: #fff; }
         #notifyCenterMenu .nc-foot-btn.danger:hover { background: #b91c1c; color: #fff; }
+        /* ── 협업: 체크리스트 담당 표시 · 협업 창 · 조치결과 첨부 ── */
+        .cb-chip { display: inline-flex; align-items: center; gap: 3px; padding: 1px 8px; border-radius: 999px; font-size: 0.7rem; font-weight: 700; white-space: nowrap; cursor: pointer; flex-shrink: 0; line-height: 1.6; }
+        .cb-chip.wait { color: #b45309; background: rgba(245,158,11,0.13); }
+        .cb-chip.late { color: #dc2626; background: rgba(239,68,68,0.12); }
+        .cb-chip.done { color: #047857; background: rgba(16,185,129,0.13); }
+        .cb-chip.draft { color: var(--text-gray); background: var(--bg-light); }
+        .cb-chip.mine { color: #fff; background: var(--accent); }
+        .cb-chip.other { color: var(--text-gray); background: var(--bg-light); }
+        .checklist-card.collab-locked { background: repeating-linear-gradient(135deg, transparent 0 10px, rgba(100,116,139,0.04) 10px 20px); }
+        .checklist-card.collab-locked .checkbox { cursor: not-allowed; opacity: 0.5; }
+        .cb-lock-banner { padding: 8px 18px; background: rgba(100,116,139,0.08); border-bottom: 1px solid rgba(100,116,139,0.2); flex-shrink: 0; font-size: 0.78rem; color: var(--text-dark); }
+        .cb-panel { margin: 8px 0 6px; padding: 9px 11px; border-radius: 8px; background: rgba(37,99,235,0.06); border: 1px solid rgba(37,99,235,0.18); }
+        .cb-panel-title { font-size: 0.74rem; font-weight: 700; color: var(--accent); }
+        .cb-panel-line { font-size: 0.78rem; color: var(--text-dark); margin-top: 2px; }
+        .cb-count { margin-left: 6px; padding: 0 7px; border-radius: 999px; font-size: 0.7rem; font-weight: 700; background: rgba(245,158,11,0.15); color: #b45309; }
+        .cb-count.late { background: rgba(239,68,68,0.13); color: #dc2626; }
+        .cb-modal { max-width: 860px; width: 100%; }
+        .cb-body { display: flex; flex-direction: column; gap: 12px; font-size: 0.86rem; color: var(--text-dark); }
+        .cb-sec { border: 1px solid var(--border-light); border-radius: 10px; padding: 12px 14px; }
+        .cb-sec-title { font-size: 0.86rem; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        details.cb-sec > summary { cursor: pointer; margin-bottom: 0; }
+        details.cb-sec[open] > summary { margin-bottom: 8px; }
+        .cb-hint { font-size: 0.76rem; font-weight: 400; color: var(--text-gray); }
+        .cb-note { padding: 10px 12px; border-radius: 8px; background: var(--bg-light); line-height: 1.6; }
+        .cb-memo { padding: 8px 12px; border-radius: 8px; background: rgba(245,158,11,0.1); }
+        .cb-warn { padding: 7px 10px; border-radius: 6px; background: rgba(245,158,11,0.12); color: #92400e; font-size: 0.8rem; }
+        .cb-ok { font-size: 0.74rem; color: #047857; font-weight: 700; }
+        .cb-bad { font-size: 0.74rem; color: #dc2626; font-weight: 700; }
+        .cb-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; padding: 3px 0; }
+        .cb-input { padding: 6px 9px; border: 1px solid var(--border-light); border-radius: 6px; font-family: inherit; font-size: 0.85rem; background: var(--white); color: var(--text-dark); }
+        .cb-actions { display: flex; align-items: center; justify-content: flex-end; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+        .cb-table-wrap { overflow-x: auto; }
+        .cb-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+        .cb-table th { text-align: left; font-size: 0.74rem; color: var(--text-gray); font-weight: 600; padding: 6px; border-bottom: 1px solid var(--border-light); white-space: nowrap; }
+        .cb-table td { padding: 6px; border-bottom: 1px solid var(--border-subtle); vertical-align: middle; }
+        .cb-table select, .cb-table input[type="date"] { padding: 4px 6px; border: 1px solid var(--border-light); border-radius: 6px; font-family: inherit; font-size: 0.8rem; background: var(--white); color: var(--text-dark); max-width: 150px; }
+        .cb-table tr.cb-skip td { opacity: 0.5; }
+        .cb-table tr.cb-mine td { background: rgba(37,99,235,0.06); font-weight: 600; }
+        .cb-step-name { min-width: 140px; }
+        .cb-status { min-width: 110px; }
+        .cb-status small { display: block; font-size: 0.7rem; color: var(--text-gray); }
+        .cb-st { font-weight: 700; font-size: 0.78rem; }
+        .cb-st.wait { color: #b45309; } .cb-st.late { color: #dc2626; } .cb-st.done { color: #047857; } .cb-st.draft { color: var(--text-gray); }
+        .cb-mini { padding: 3px 8px; border: 1px solid var(--border-light); border-radius: 6px; background: var(--white); color: var(--text-dark); font-family: inherit; font-size: 0.74rem; cursor: pointer; white-space: nowrap; }
+        .cb-mini:hover { border-color: var(--accent); color: var(--accent); }
+        .cb-people { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+        .cb-person { display: inline-flex; align-items: center; gap: 4px; padding: 3px 4px 3px 10px; border-radius: 999px; background: var(--bg-light); font-size: 0.8rem; }
+        .cb-person small { color: var(--text-gray); }
+        .cb-person button { border: none; background: transparent; color: var(--text-gray); cursor: pointer; font-size: 0.75rem; padding: 0 4px; }
+        .cb-hist { margin: 0; padding-left: 18px; max-height: 220px; overflow-y: auto; font-size: 0.8rem; line-height: 1.7; }
+        .cb-hist-at { color: var(--text-gray); font-size: 0.74rem; font-variant-numeric: tabular-nums; }
+        .cb-pick { display: flex; flex-direction: column; gap: 8px; }
+        .cb-pick-row { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 1.5px solid var(--border-light); border-radius: 10px; cursor: pointer; }
+        .cb-pick-row:has(input:checked) { border-color: var(--accent); background: rgba(37,99,235,0.05); }
+        .cb-pick-row small { color: var(--text-gray); }
+        .rf-box { margin-top: 12px; border: 1.5px dashed var(--border-light); border-radius: 8px; padding: 10px 12px; }
+        .rf-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 0.8rem; font-weight: 700; color: var(--text-dark); margin-bottom: 6px; }
+        .rf-usage { font-size: 0.72rem; font-weight: 600; color: var(--text-gray); }
+        .rf-row { display: flex; align-items: center; gap: 8px; padding: 4px 0; border-top: 1px solid var(--border-subtle); }
+        .rf-row:first-of-type { border-top: none; }
+        .rf-name { flex: 1; min-width: 0; text-align: left; border: none; background: transparent; color: var(--accent); font-family: inherit; font-size: 0.82rem; cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 0; }
+        .rf-name:hover { text-decoration: underline; }
+        .rf-size { font-size: 0.72rem; color: var(--text-gray); white-space: nowrap; }
+        .rf-del { border: none; background: transparent; color: var(--text-gray); cursor: pointer; font-size: 0.8rem; }
+        .rf-del:hover { color: #dc2626; }
+        .rf-empty { font-size: 0.78rem; color: var(--text-gray); padding: 2px 0 4px; }
+        .rf-add { display: flex; align-items: center; gap: 10px; margin-top: 8px; flex-wrap: wrap; }
+        .rf-shrink { font-size: 0.76rem; color: var(--text-gray); display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }
+        .cb-mine-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; padding: 8px 12px; border-radius: 8px; background: rgba(37,99,235,0.06); border: 1px solid rgba(37,99,235,0.18); }
+        .cb-mine-prog { font-size: 0.84rem; font-weight: 600; color: var(--text-dark); }
+        .cb-mine-prog b { color: var(--accent); font-size: 0.95rem; }
+        .cb-mine-bar .cb-hint { flex: 1; min-width: 160px; }
+        .checklist-card.cb-others { opacity: 0.62; }
+        .checklist-card.cb-others:hover { opacity: 0.9; }
+        .proc-step-row.cb-proc-other { opacity: 0.55; }
+        .cb-proc-who { font-size: 0.68rem; font-weight: 600; color: var(--text-gray); background: var(--bg-light); padding: 0 6px; border-radius: 999px; white-space: nowrap; }
+        .cb-proc-who.mine { color: #fff; background: var(--accent); }
+        /* 체크리스트 줄: 왼쪽 체크 구역은 넓게(머리말 여백까지), 마우스를 올리면 구역별로 다른 배경 */
+        .checklist-card-header .cl-check-zone { align-self: stretch; margin: -10px 0 -10px -12px; padding: 10px 10px 10px 12px; min-width: 58px; border-radius: 8px 0 0 8px; transition: background 0.12s; }
+        .checklist-card-header .cl-check-zone:hover { background: rgba(37,99,235,0.08); }
+        .checklist-card.collab-locked .cl-check-zone { cursor: not-allowed; }
+        .checklist-card.collab-locked .cl-check-zone:hover { background: transparent; }
+        .cl-peek { padding: 4px 14px 12px 58px; border-top: 1px dashed var(--border-light); cursor: default; }
+        .checklist-card.sub-item .cl-peek, .checklist-card.sub-item .cl-result-row.compact { padding-left: 58px; }
+        .cl-peek-lock { font-size: 0.76rem; color: var(--text-gray); padding: 6px 0 2px; }
+        .cl-peek-text { margin-top: 8px; padding: 8px 10px; border-radius: 6px; background: var(--bg-light); font-size: 0.82rem; color: var(--text-dark); white-space: pre-wrap; }
+        .cl-peek-sum { margin-top: 4px; font-size: 0.76rem; color: #7c3aed; }
+        /* 빠른 버튼은 항상 한 줄 — 넘치면 옆으로 넘겨 본다(펼친 영역 높이가 항목마다 같도록) */
+        .cl-chips { display: flex; flex-wrap: nowrap; gap: 5px; margin-top: 8px; overflow-x: auto; scrollbar-width: thin; padding-bottom: 2px; }
+        .cl-chip { flex-shrink: 0; white-space: nowrap; padding: 3px 9px; border: 1px solid var(--border-light); border-radius: 999px; background: var(--white); color: var(--text-gray); font-family: inherit; font-size: 0.74rem; font-weight: 600; cursor: pointer; }
+        .cl-result-label { flex-shrink: 0; align-self: center; font-size: 0.72rem; font-weight: 700; color: #7c3aed; min-width: 44px; }
+        .fci-settings-btn { flex-shrink: 0; display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border: 1px solid var(--border-light); border-radius: 6px; background: var(--white); color: var(--text-gray); font-family: inherit; font-size: 0.74rem; font-weight: 600; cursor: pointer; white-space: nowrap; }
+        .fci-settings-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .fci-settings-dots { display: inline-flex; gap: 3px; }
+        .cl-chip.on { color: var(--text-dark); border-color: var(--text-muted); }
+        .cl-chip:hover { border-color: var(--accent); color: var(--accent); }
+        .cl-result-row { display: flex; align-items: flex-start; gap: 6px; margin-top: 8px; }
+        .cl-result-row.compact { margin: 0; padding: 0 14px 10px 58px; }
+        .cl-result-input { flex: 1; min-height: 32px; max-height: 220px; resize: none; overflow-y: auto; padding: 6px 9px; border: 1px solid var(--border-light); border-radius: 6px; background: var(--white); color: var(--text-dark); font-family: inherit; font-size: 0.82rem; line-height: 1.5; }
+        .cl-result-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,99,235,0.12); }
+        .cl-result-row.compact .cl-result-input { border-style: dashed; background: transparent; }
+        .cl-result-row.compact .cl-result-input:focus { border-style: solid; background: var(--white); }
+        .cl-attach-btn { flex-shrink: 0; display: inline-flex; align-items: center; gap: 2px; height: 32px; padding: 0 9px; border: 1px solid var(--border-light); border-radius: 6px; font-size: 0.8rem; color: var(--text-gray); cursor: pointer; background: var(--white); }
+        .cl-attach-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .cl-attach-btn b { color: var(--accent); }
+        .cb-reply-cta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; padding: 10px 12px; border-radius: 8px; background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.35); font-size: 0.84rem; color: var(--text-dark); }
+        .cb-reply-cta.warn { background: rgba(245,158,11,0.12); border-color: rgba(245,158,11,0.4); }
+        .cb-reply-cta.done { background: var(--bg-light); border-color: var(--border-light); color: var(--text-gray); }
+        .cb-reply-cta .btn { margin-left: auto; }
+        .fap-btn.cb-pulse { animation: cbPulse 1.6s ease-in-out infinite; }
+        @keyframes cbPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(37,99,235,0.45); } 50% { box-shadow: 0 0 0 6px rgba(37,99,235,0); } }
+        .cb-card-badge { display: inline-flex; align-items: center; padding: 1px 7px; border-radius: 5px; font-size: 0.68rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px; }
+        .cb-card-badge.red { color: #dc2626; background: rgba(239,68,68,0.1); }
+        .cb-card-badge.amber { color: #b45309; background: rgba(245,158,11,0.13); }
+        .cb-card-badge.green { color: #047857; background: rgba(16,185,129,0.12); }
+        .cb-card-badge.blue { color: var(--accent); background: rgba(37,99,235,0.1); }
+        .cb-card-badge.gray { color: var(--text-gray); background: var(--bg-light); }
+        .cb-dl-warn { display: block; margin-top: 2px; font-size: 0.68rem; color: #b45309; max-width: 170px; line-height: 1.35; }
+        .cb-board { padding-bottom: 6px; }
+        .cb-board-row { display: grid; grid-template-columns: 26px minmax(120px, 1.2fr) minmax(150px, 1.4fr) auto; align-items: center; gap: 10px; padding: 8px 4px; border-top: 1px solid var(--border-subtle); }
+        .cb-board-row.red { background: rgba(239,68,68,0.05); }
+        .cb-board-row.done { opacity: 0.7; }
+        .cb-light { font-size: 1rem; text-align: center; }
+        .cb-board-who small, .cb-board-dl small { display: block; font-size: 0.72rem; color: var(--text-gray); font-weight: 400; }
+        .cb-board-who b { font-size: 0.86rem; }
+        .cb-board-dl { font-size: 0.82rem; font-weight: 600; }
+        .cb-board-row.red .cb-board-dl { color: #dc2626; }
+        .cb-board-row.yellow .cb-board-dl { color: #b45309; }
+        .cb-bar { margin-top: 4px; height: 5px; border-radius: 3px; background: var(--border-light); overflow: hidden; }
+        .cb-bar i { display: block; height: 100%; border-radius: 3px; background: #10b981; }
+        .cb-bar i.yellow { background: #f59e0b; } .cb-bar i.red { background: #ef4444; }
+        @media (max-width: 640px) { .cb-board-row { grid-template-columns: 24px 1fr; } .cb-board-row > span:nth-child(3), .cb-board-row > span:nth-child(4) { grid-column: 2; } }
+        /* 작업 화면: [진행중 단계로] 버튼 — 스크롤 영역 맨 아래에 붙어 있음 */
+        .focus-jump-wrap { position: sticky; bottom: 0; height: 0; z-index: 5; }
+        .focus-jump-btn { position: absolute; right: 0; bottom: 14px; padding: 7px 14px; border: none; border-radius: 999px; background: var(--accent); color: #fff; font-family: inherit; font-size: 0.8rem; font-weight: 700; cursor: pointer; box-shadow: 0 4px 14px rgba(37,99,235,0.35); }
+        .focus-jump-btn:hover { background: var(--accent-dark, #1d4ed8); }
+        .checklist-card.jump-flash { animation: jumpFlash 1.2s ease; }
+        @keyframes jumpFlash { 0%, 100% { box-shadow: none; } 25%, 60% { box-shadow: 0 0 0 3px rgba(37,99,235,0.35); } }
+        /* 업무 절차: 완료 단계 접기 + 진행중 제목 고정 */
+        .proc-fold { margin-bottom: 10px; }
+        .proc-fold-btn { display: flex; align-items: center; gap: 8px; width: 100%; padding: 6px 10px; border: 1px solid var(--border-light, #dde3ee); border-radius: 8px; background: transparent; color: var(--text-gray, #5a6a85); font-family: inherit; font-size: 0.8rem; font-weight: 600; cursor: pointer; text-align: left; }
+        .proc-fold-btn:hover { border-color: #10b981; color: #047857; }
+        .proc-fold-ico { width: 18px; height: 18px; border-radius: 50%; background: #10b981; color: #fff; font-size: 0.7rem; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .proc-fold-btn span:nth-child(2) { flex: 1; }
+        .proc-fold-arrow { transition: transform 0.2s; }
+        .proc-fold.open .proc-fold-arrow { transform: rotate(180deg); }
+        .proc-fold-list { display: none; margin-top: 10px; }
+        .proc-fold.open .proc-fold-list { display: block; }
+        .proc-step-row.is-current .proc-step-title { position: sticky; top: 0; z-index: 2; background: var(--white); padding: 2px 0; }
+        :root.dark-mode .proc-step-row.is-current .proc-step-title { background: var(--bg-card); }
         .sidebar-overdue-alert { display: none; align-items: center; gap: 5px; width: fit-content; margin: 0 0 14px; padding: 4px 11px; background: #fef2f2; color: #ef4444; font-size: 0.73rem; font-weight: 700; border-radius: 999px; cursor: pointer; white-space: nowrap; transition: background 0.12s; }
         .sidebar-overdue-alert::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #ef4444; flex-shrink: 0; }
         .sidebar-overdue-alert:hover { background: #fee2e2; }
@@ -5919,9 +6069,37 @@
         // 새 버전을 배포할 때는 아래 세 가지(번호·배포일·바뀐 점)만 고친다.
         // 번호 규칙: 기능 추가는 가운데 숫자(1.1.0), 오류 수정만은 끝 숫자(1.0.1)를 올린다.
         // 업무 자료는 프로그램 파일이 아니라 브라우저 저장 공간에 있어, 파일만 바꿔도 그대로 남는다.
-        const APP_VERSION = '1.2.0';
-        const APP_RELEASE_DATE = '2026-10-08';
+        const APP_VERSION = '1.3.0';
+        const APP_RELEASE_DATE = '2026-10-09';
         const APP_RELEASE_NOTES = [
+            { version: '1.3.0', date: '2026-10-09', notes: [
+                '협업 기능 추가 — 업무 화면의 [협업·인수인계]에서 단계별 담당자·마감일을 정하고 요청 파일을 만들어 내부 메신저로 보냄',
+                '요청 파일 하나를 여러 담당자에게 보내면, 받은 사람이 파일을 열고 본인 이름을 골라 맡은 단계만 처리',
+                '담당자는 [관리자에게 회신]으로 회신 파일을 만듦 — 맡은 단계의 체크·해당 없음·조치결과·조치결과 첨부만 담김(법령·서식 제외)',
+                '관리자가 회신 파일을 열면 맡긴 단계만 원래 업무에 자동으로 합쳐짐 — 같은 회신·맡기지 않은 사람의 회신·바뀐 파일은 막거나 경고',
+                '다른 사람에게 맡긴 단계는 잠겨서 고칠 수 없고, 체크리스트에 「김철수 · 회신 대기 · D-3」처럼 담당과 기한 표시',
+                '조치결과에 파일 첨부 추가(결과 공문·점검 사진 등) — 담당자는 회신 첨부 합계 10MB까지, 사진은 자동으로 줄여서 첨부',
+                '담당자 변경(인수인계) — 업무 전체와 관리자 자격을 새 담당자에게 넘기고, 넘긴 PC의 업무는 보기 전용',
+                '업무 여권 — 요청·회신·인수인계 기록을 이어 붙인 확인값으로, 중간 기록이 바뀌면 알아챔',
+                '회신 기한·내 담당 기한이 다가오거나 지나면 알림센터에 알림(업무마다 1건으로 갱신)',
+                '담당자 화면은 전체 단계를 보여 주되 「진행중」·업무 절차는 내 단계 기준(▶ 내 차례), 다른 단계는 흐리게 담당자 이름과 함께, 기본은 [내 담당만 보기](다른 단계 n개 숨김 표시), [전체 단계 보기]로 앞뒤 단계도 보기 — 고른 보기는 업무마다 기억',
+                '항목 날짜 지정·조치결과 저장·해당 없음 등을 해도 체크리스트가 맨 위로 튀지 않고, 방금 만진 항목이 그 자리에 그대로 보이도록 개선',
+                '업무를 다시 열면 마지막으로 보던 곳부터(처음 여는 업무는 진행중 단계부터), 진행중 단계가 화면 밖이면 [진행중 단계로] 버튼 표시',
+                '업무 절차는 끝난 단계를 「✓ 완료 n단계」 한 줄로 접어 진행중 단계가 항상 맨 위에 오고, 진행중 단계 제목은 스크롤해도 위에 고정',
+                '할 일이 있는 단계를 체크할 때 화면이 위아래로 출렁이던 문제 수정 — 체크해도 화면은 그대로, 다음 항목이 화면 아래로 벗어났을 때만 필요한 만큼 내림',
+                '하위 할 일은 진행중 단계만 자동으로 펼침(아코디언 방식) — 단계가 끝나면 체크된 모습을 잠깐 보여 준 뒤 부드럽게 접고 다음 단계를 펼침, 직접 펼친 단계는 다음 단계로 넘어가면 다시 자동으로',
+                '협업 담당자 화면의 진행률은 내 담당 단계 기준(작게 전체 진행률), 업무 마감일은 관리자 전체 마감 대신 본인 마감일로 표시',
+                '담당자의 할 일이 다 끝나면 「회신을 보내야 관리자에게 전달됩니다」 안내·[회신] 강조·카드에 「회신할 차례」 — 회신 뒤 고치면 「다시 회신」',
+                '중간 회신 추가 — 다 끝나지 않아도 진행 상황을 보내면 관리자 현황에 「중간 회신 · 항목 1/4」로 표시(단계는 계속 회신 대기)',
+                '관리자 협업 창 맨 위에 신호등 회신 현황판(기한 지남→임박→여유→반영 순, 기간 막대), 업무 카드에 「회신 1건 기한 지남」 표시',
+                '[재촉 문구 복사] — 기한에 맞는 정중한 재촉 문구를 만들어 복사(메신저에 붙여 넣기), 재촉 기록은 업무 여권에 남음',
+                '담당자 마감일을 정할 때 경고 — 업무 전체 마감보다 늦음, 앞뒤 단계와 순서가 어긋남, 주말·고정 공휴일',
+                '체크리스트 줄을 눌렀을 때 창이 잘못 열리던 문제 개선 — 왼쪽 체크 구역을 넓게, 제목을 누르면 줄 아래에 조치결과 입력·업무팁·서식 등 빠른 버튼이 펼쳐지고 버튼을 눌러야 해당 탭 창이 열림',
+                '끌어서 스크롤·글자 고르기·체크 직후 두 번 누름은 무시, 작은 버튼이 붙어 있던 길잡이·해당 없음은 제목을 누르면 나오는 빠른 버튼으로 옮김',
+                '조치결과는 항목 제목을 누르면 줄 아래에서 바로 입력(창을 열지 않음), 📎로 결과 파일 첨부',
+                '건너뛰기 규칙은 체크리스트 편집 화면의 [⚙ 설정] → 「건너뛰기 규칙 만들기」에서만(일하는 화면에서는 줄의 버튼을 누르기만), 서식 붙이기·업무팁 쓰기도 같은 메뉴에',
+                '일하는 화면의 항목 창은 조치결과·업무팁·서식 3개 탭이고 조치결과가 먼저 열림, 빠른 버튼은 항상 한 줄'
+            ] },
             { version: '1.2.0', date: '2026-10-08', notes: [
                 '알림센터 새 단장 — 창을 넓히고 글자를 키움, 종류별 아이콘(성공·경고·오류·업무), 오늘·어제·이전 묶음, 「5분 전」 같은 시간 표시',
                 '알림센터 위쪽에 「모두 읽음」·알림 설정·분류(전체·안 읽음·업무·마감·시스템) 추가, 전체 지우기는 한 번 더 확인',
@@ -6947,6 +7125,7 @@
                     await this.ensureDeadlineNotifyDefaultOn();
                     if (localStorage.getItem('deadlineNotifyMode') !== 'off') {
                         this.checkDeadlineNotifications();
+                        this.checkCollabDeadlines();  // 협업: 회신 기한(관리자)·내 담당 기한(담당자)
                     }
                     this.checkFirstRunStartupPrompt();
                 }, 1500);
@@ -8406,8 +8585,10 @@
             }
 
             // 체크리스트 완료/전체 개수 계산 (건너뛴 항목은 분자·분모 모두에서 제외 - 순수 함수)
-            getChecklistStats(workflow) {
+            // opts.overall: 협업 담당자 PC에서도 업무 전체 기준으로 셀 때 (기본은 내 담당 단계만)
+            getChecklistStats(workflow, opts = {}) {
                 const list = (workflow && workflow.checklist) || [];
+                const mineOnly = opts.overall ? null : this._collabMineStageSet(workflow);  // 협업 담당자: 내 담당 단계만 진행률에 넣는다
                 let completed = 0;
                 let total = 0;
                 for (let i = 0; i < list.length; i++) {
@@ -8424,6 +8605,7 @@
                     if (this._isSubEntry(item)) {
                         continue;
                     }
+                    if (mineOnly && !mineOnly.has(i)) continue;
                     total++;
 
                     // boolean 값 직접 확인
@@ -8793,19 +8975,20 @@
                             <div class="fap-progress-bar-wrap">
                                 <div class="fap-progress-bar-fill" style="width:${progress}%;"></div>
                             </div>
-                            <div class="fap-progress-text">${progress}% 완료 &nbsp;·&nbsp; ${completedCount}/${totalCount} 단계</div>
+                            <div class="fap-progress-text">${this._collabMineStageSet(workflow) ? '내 담당 ' : ''}${progress}% 완료 &nbsp;·&nbsp; ${completedCount}/${totalCount} 단계${this._collabMineStageSet(workflow) ? ` <span style="opacity:0.7;">(전체 ${this._collabMineProgress(workflow).overallPct}%)</span>` : ''}</div>
                             <div class="fap-progress-text" style="margin-top:2px;">${this._workDatesText(workflow)}</div>
                             ${deadlineHtml}
                             <div style="border-top:1px solid var(--border-subtle);margin:14px 0 10px;"></div>
                             <button class="fap-btn" onclick="app.enterFocusEditMode()">${isPackage ? '편집 (레퍼런스 고치기)' : '체크리스트 편집'}</button>
                             <button class="fap-btn" onclick="app.showExportStateChoiceModal([${workflow.id}])">내보내기</button>
+                            ${!isPackage ? this._collabPanelHtml(workflow) : ''}
                             <button class="fap-btn" onclick="app.generateOfficialDocument(${workflow.id})">AI 기안</button>
                             <button class="fap-btn" onclick="app.openPDFModal(${workflow.id})">출력</button>
                             <div class="fap-spacer"></div>
                             ${isPackage ? `<button class="fap-btn fap-btn-primary" onclick="app.duplicateWorkflow(${workflow.id})">복사하여 시작</button>` : ''}
                             ${isPackage ? `<button class="fap-btn" style="font-size:0.82rem;" onclick="app.setReference(${workflow.id}, false)" title="레퍼런스에서 빼서 ${workflow.completedProcessed ? '처리완료' : '진행중'} 탭으로 옮깁니다">↩ 레퍼런스 해제 (${workflow.completedProcessed ? '처리완료로' : '진행중으로'})</button>` : ''}
                             ${isPackage ? `<button class="fap-btn" style="color:var(--text-muted);font-size:0.82rem;" onclick="app.archiveTemplate(${workflow.id})">보관함으로 이동</button>` : ''}
-                            ${!isPackage && isCompleted && !workflow.completedProcessed ? `<button class="fap-btn fap-btn-done" onclick="app.markWorkflowDone(${workflow.id})">✅ 완료 처리</button>` : ''}
+                            ${!isPackage && isCompleted && !workflow.completedProcessed && !(workflow.collab && workflow.collab.role === 'assignee') ? `<button class="fap-btn fap-btn-done" onclick="app.markWorkflowDone(${workflow.id})">✅ 완료 처리</button>` : ''}
                             ${!isPackage && workflow.completedProcessed ? `
                                 <div style="font-size:0.78rem;color:#10b981;font-weight:700;text-align:center;padding:4px 0;">✅ 완료 처리됨</div>
                                 <button class="fap-btn fap-btn-primary" onclick="app.registerAsReference(${workflow.id})" title="체크를 비운 사본을 레퍼런스(본보기)로 만듭니다. 이 업무는 처리 기록과 함께 그대로 남습니다">${this._refIco(14)} 레퍼런스로 등록</button>
@@ -8815,7 +8998,9 @@
                         `;
                     }
 
-                    // 포커스 카드 렌더링
+                    // 포커스 카드 렌더링 — 다시 그리기 전 위치(기준 항목)를 기억했다가 다시 그린 뒤 제자리로
+                    this._bindFocusTouchTracking();
+                    const _focusScrollState = this._focusScrollCapture(workflow.id);
                     container.innerHTML = `
                         <div class="workflow-card ${isPackage ? 'package' : ''}" id="workflow-${workflow.id}" style="border-left: none; border-top: 3px solid var(--accent); padding: 0; aspect-ratio: auto; height: 100%; overflow: hidden; display: flex; flex-direction: column;">
                             <!-- 포커스 카드 헤더 -->
@@ -8870,6 +9055,8 @@
                     // 체크리스트 항목 내부 스크롤 해제 (부모 div가 스크롤 담당)
                     const clItems = document.getElementById('checklist-items-' + workflow.id);
                     if (clItems) { clItems.style.maxHeight = 'none'; clItems.style.overflowY = 'visible'; }
+                    this._focusScrollRestore(workflow.id, _focusScrollState);
+                    this._bindFocusJump(workflow.id);
 
                     // 포커스 모드에서는 사이드바 업데이트 생략
                     return;
@@ -9218,6 +9405,7 @@
                                 <div style="display:flex;align-items:center;gap:6px;min-width:0;">
                                     ${refTag}
                                     ${_topBadge}
+                                    ${this._collabCardBadgeHtml(workflow)}
                                 </div>
                                 <button onclick="event.stopPropagation();app.togglePin(${workflow.id});" title="${pinTitle}"
                                         style="border:none;background:transparent;cursor:pointer;padding:2px;display:flex;align-items:center;flex-shrink:0;margin-left:auto;transition:opacity 0.15s;opacity:${isPinned ? '1' : '0.5'}"
@@ -10666,6 +10854,1250 @@
                 if (listEl && prevScroll) listEl.scrollTop = prevScroll;
             }
 
+            // ══════════════ 작업 화면 스크롤: 손댄 곳은 그 자리에 ══════════════
+            // 업무 화면은 날짜 지정·조치결과 저장 등에서 통째로 다시 그려지는데(displayWorkflows), 예전엔 그때마다
+            // 맨 위로 돌아갔다. 다시 그리기 전에 "기준 항목"(최근에 만진 항목, 없으면 화면 맨 위 항목)이 화면에서
+            // 몇 px 아래에 있었는지 기억했다가, 다시 그린 뒤 그 항목이 같은 높이에 오도록 맞춘다(스크롤 고정).
+            _bindFocusTouchTracking() {
+                if (this._focusTouchBound) return;
+                this._focusTouchBound = true;
+                const mark = (e) => {
+                    const card = e.target && e.target.closest ? e.target.closest('.checklist-card[data-index][data-workflow-id]') : null;
+                    if (!card || !card.closest('[id^="focus-checklist-scroll-"]')) return;
+                    const wf = this.allData.workflows.find(w => String(w.id) === card.dataset.workflowId);
+                    const it = wf && wf.checklist ? wf.checklist[+card.dataset.index] : null;
+                    if (it) this._focusTouch = { wfId: wf.id, itemId: this.ensureChecklistItemId(it), at: Date.now() };
+                };
+                document.addEventListener('pointerdown', (e) => { this._lastPointerDown = { x: e.clientX, y: e.clientY, at: Date.now() }; mark(e); }, true);
+                document.addEventListener('focusin', mark, true);
+            }
+            _focusScrollCapture(workflowId) {
+                const sc = document.getElementById(`focus-checklist-scroll-${workflowId}`);
+                const wf = this.allData.workflows.find(w => w.id === workflowId);
+                if (!sc || !wf || !wf.checklist) return null;
+                const top = sc.getBoundingClientRect().top, bottom = sc.getBoundingClientRect().bottom;
+                const visible = el => { const r = el.getBoundingClientRect(); return r.bottom > top + 1 && r.top < bottom - 1; };
+                let el = null;
+                const t = this._focusTouch;
+                if (t && t.wfId === workflowId && Date.now() - t.at < 10 * 60 * 1000) {
+                    const idx = wf.checklist.findIndex(it => it.itemId === t.itemId);
+                    const cand = idx >= 0 ? sc.querySelector(`.checklist-card[data-index="${idx}"]`) : null;
+                    if (cand && visible(cand)) el = cand;
+                }
+                const cards = [...sc.querySelectorAll('.checklist-card[data-index]')];
+                if (!el) el = cards.find(visible) || null;
+                const it = el ? wf.checklist[+el.dataset.index] : null;
+                // 기준 후보를 여러 개, 각자 "자기" 높이와 함께 기억한다: ① 기준 항목 ② 그 항목이 속한 단계 제목 ③ 바로 아래 항목들.
+                // 다시 그린 뒤 ①이 사라졌으면(할 일이 접힘·해당 없음 등) ②, ③ 순으로 보이는 것을 골라 그 항목의 원래 높이에 맞춘다
+                // — 할 일이 접혀도 단계 제목은 제자리에 있고, 접힌 만큼은 그 "아래"에서 줄어든다.
+                const anchorOf = c => { const x = wf.checklist[+c.dataset.index]; return x ? { id: this.ensureChecklistItemId(x), offset: c.getBoundingClientRect().top - top } : null; };
+                const anchors = [];
+                if (el) {
+                    anchors.push(anchorOf(el));
+                    const si = this._stageIndexOf(wf.checklist, +el.dataset.index);
+                    const stageEl = si !== +el.dataset.index ? sc.querySelector(`.checklist-card[data-index="${si}"]`) : null;
+                    if (stageEl && visible(stageEl)) anchors.push(anchorOf(stageEl));
+                    cards.slice(cards.indexOf(el) + 1).filter(visible).slice(0, 4).forEach(c => anchors.push(anchorOf(c)));
+                }
+                return { scrollTop: sc.scrollTop, itemId: it ? this.ensureChecklistItemId(it) : null, offset: el ? el.getBoundingClientRect().top - top : 0, anchors: anchors.filter(Boolean) };
+            }
+            _focusScrollRestore(workflowId, st) {
+                const sc = document.getElementById(`focus-checklist-scroll-${workflowId}`);
+                const wf = this.allData.workflows.find(w => w.id === workflowId);
+                if (!sc || !wf || !st) return;
+                const shown = el => !!el && el.offsetParent !== null && el.getBoundingClientRect().height > 0;  // 접힌 묶음 속이면 false
+                const cardOf = id => {
+                    const idx = (wf.checklist || []).findIndex(it => it.itemId === id);
+                    return idx >= 0 ? sc.querySelector(`.checklist-card[data-index="${idx}"]`) : null;
+                };
+                // 저장해 둔 마지막 위치(예전 형식)는 기준이 하나뿐
+                const anchors = st.anchors && st.anchors.length ? st.anchors : (st.itemId ? [{ id: st.itemId, offset: st.offset }] : []);
+                // 후보 중 지금 보이는 첫 항목을 그 항목의 원래 높이에 맞춘다 (보이는 후보가 없으면 이전 스크롤 값 그대로)
+                const a = anchors.find(x => shown(cardOf(x.id)));
+                if (a) sc.scrollTop += (cardOf(a.id).getBoundingClientRect().top - sc.getBoundingClientRect().top) - a.offset;
+                else sc.scrollTop = st.scrollTop;
+            }
+            // 업무를 닫을 때 보던 위치를 기억 → 다시 열면 그 자리. 처음 여는 업무는 진행중 단계부터.
+            _focusSaveLastPos(workflowId) {
+                const st = this._focusScrollCapture(workflowId);
+                if (!st) return;
+                try {
+                    const m = JSON.parse(localStorage.getItem('focusLastPos') || '{}');
+                    m[workflowId] = { itemId: st.itemId, offset: Math.round(st.offset), scrollTop: Math.round(st.scrollTop), at: Date.now() };
+                    const keys = Object.keys(m).sort((a, b) => (m[b].at || 0) - (m[a].at || 0));
+                    keys.slice(100).forEach(k => delete m[k]);  // 최근 100개 업무만
+                    localStorage.setItem('focusLastPos', JSON.stringify(m));
+                } catch (e) {}
+            }
+            _focusRestoreEntry(workflowId) {
+                let saved = null;
+                try { saved = JSON.parse(localStorage.getItem('focusLastPos') || '{}')[workflowId] || null; } catch (e) {}
+                if (saved) { this._focusScrollRestore(workflowId, saved); this._updateFocusJump(workflowId); return; }
+                this._focusScrollToCurrent(workflowId, false);
+            }
+            _focusScrollToCurrent(workflowId, smooth = true) {
+                const sc = document.getElementById(`focus-checklist-scroll-${workflowId}`);
+                const wf = this.allData.workflows.find(w => w.id === workflowId);
+                if (!sc || !wf) return;
+                const { currentIdx } = this._stageInfo(wf.checklist || [], wf);
+                const el = currentIdx >= 0 ? sc.querySelector(`.checklist-card[data-index="${currentIdx}"]`) : null;
+                if (!el) return;
+                const delta = el.getBoundingClientRect().top - sc.getBoundingClientRect().top - 12;
+                sc.scrollTo({ top: sc.scrollTop + delta, behavior: smooth ? 'smooth' : 'auto' });
+                if (smooth) { el.classList.remove('jump-flash'); void el.offsetWidth; el.classList.add('jump-flash'); setTimeout(() => el.classList.remove('jump-flash'), 1200); }
+                setTimeout(() => this._updateFocusJump(workflowId), smooth ? 450 : 0);
+            }
+            // 진행중 단계가 화면 밖이면 아래쪽에 [▲/▼ 진행중 단계로] 버튼 (메신저의 "새 메시지로 이동"처럼 자동으로 끌고 가지 않음)
+            _bindFocusJump(workflowId) {
+                const sc = document.getElementById(`focus-checklist-scroll-${workflowId}`);
+                if (!sc) return;
+                if (!sc.querySelector('.focus-jump-btn')) {
+                    // 높이 0인 틀에 버튼을 띄워, 버튼이 보이든 숨든 목록 길이가 바뀌지 않게 한다(다시 그릴 때 위치가 밀리지 않도록)
+                    const wrap = document.createElement('div');
+                    wrap.className = 'focus-jump-wrap';
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'focus-jump-btn';
+                    btn.hidden = true;
+                    btn.onclick = () => this._focusScrollToCurrent(workflowId, true);
+                    wrap.appendChild(btn);
+                    sc.appendChild(wrap);
+                }
+                if (!sc._jumpBound) {
+                    sc._jumpBound = true;
+                    sc.addEventListener('scroll', () => { cancelAnimationFrame(sc._jumpRaf); sc._jumpRaf = requestAnimationFrame(() => this._updateFocusJump(workflowId)); }, { passive: true });
+                }
+                this._updateFocusJump(workflowId);
+            }
+            _updateFocusJump(workflowId) {
+                const sc = document.getElementById(`focus-checklist-scroll-${workflowId}`);
+                const btn = sc && sc.querySelector('.focus-jump-btn');
+                const wf = this.allData.workflows.find(w => w.id === workflowId);
+                if (!btn || !wf) return;
+                const { currentIdx } = this._stageInfo(wf.checklist || [], wf);
+                const el = currentIdx >= 0 ? sc.querySelector(`.checklist-card[data-index="${currentIdx}"]`) : null;
+                if (!el || this.focusEditMode) { btn.hidden = true; return; }
+                const r = el.getBoundingClientRect(), b = sc.getBoundingClientRect();
+                const above = r.bottom < b.top + 8, below = r.top > b.bottom - 40;
+                btn.hidden = !(above || below);
+                btn.textContent = above ? '▲ 진행중 단계로' : '▼ 진행중 단계로';
+            }
+
+            // ══════════════ 업무 절차 패널: 진행중이 항상 맨 위 ══════════════
+            toggleProcFold(workflowId) {
+                if (!this._procDoneOpen) this._procDoneOpen = {};
+                this._procDoneOpen[workflowId] = !this._procDoneOpen[workflowId];
+                document.getElementById('procFold')?.classList.toggle('open', this._procDoneOpen[workflowId]);
+            }
+            _procFoldLabel(workflow, idxList) {
+                const done = idxList.filter(i => this.normalizeCompleted(workflow.checklist[i])).length;
+                return done === idxList.length ? `완료 ${done}단계` : `앞 단계 ${idxList.length}개 (완료 ${done})`;
+            }
+            // 방금 완료한 단계: 배가 다음 단계에 도착한 뒤 접힌 줄로 들어간다
+            _procFoldArrived(workflowId, idx) {
+                const track = document.getElementById('procStepsTrack');
+                const wf = this.allData.workflows.find(w => w.id === workflowId);
+                const row = track && track.querySelector(`.proc-step-row[data-step-idx="${idx}"]`);
+                if (!row || !wf || row.closest('#procFoldList')) return;
+                let list = document.getElementById('procFoldList');
+                if (!list) {
+                    const g = document.createElement('div');
+                    g.className = 'proc-fold' + (this._procDoneOpen && this._procDoneOpen[workflowId] ? ' open' : '');
+                    g.id = 'procFold';
+                    g.innerHTML = `<button type="button" class="proc-fold-btn" onclick="app.toggleProcFold(${workflowId})"><span class="proc-fold-ico">✓</span><span id="procFoldLabel"></span><span class="proc-fold-arrow">▾</span></button><div class="proc-fold-list" id="procFoldList"></div>`;
+                    track.insertBefore(g, track.firstChild);
+                    list = g.querySelector('#procFoldList');
+                }
+                const finish = () => {
+                    row.style.maxHeight = ''; row.style.opacity = ''; row.style.overflow = ''; row.style.transition = '';
+                    list.appendChild(row);
+                    const ids = [...list.querySelectorAll('.proc-step-row[data-step-idx]')].map(r => +r.dataset.stepIdx);
+                    const label = document.getElementById('procFoldLabel');
+                    if (label) label.textContent = this._procFoldLabel(wf, ids);
+                    this._procScrollCurrentTop(workflowId, true);
+                };
+                if (list.closest('.proc-fold').classList.contains('open') || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) { finish(); return; }
+                row.style.overflow = 'hidden';
+                row.style.maxHeight = row.scrollHeight + 'px';
+                row.style.transition = 'max-height 0.3s ease, opacity 0.3s ease';
+                requestAnimationFrame(() => requestAnimationFrame(() => { row.style.maxHeight = '0px'; row.style.opacity = '0'; }));
+                setTimeout(finish, 320);
+            }
+            // 진행중 단계가 화면 밖일 때만 맨 위로 — 사용자가 직접 스크롤하고 있으면(4초) 건드리지 않는다
+            _procScrollCurrentTop(workflowId, smooth = false) {
+                const box = document.getElementById('aiPanelOfflineDashboard');
+                const row = box && box.querySelector('.proc-step-row.is-current');
+                if (!box || !row) return;
+                if (Date.now() - (this._procUserScrollAt || 0) < 4000) return;
+                const r = row.getBoundingClientRect(), b = box.getBoundingClientRect();
+                const titleH = (row.querySelector('.proc-step-title')?.offsetHeight || 24);
+                if (r.top >= b.top && r.top + titleH <= b.bottom) return;  // 이미 보이면 그대로
+                box.scrollTo({ top: box.scrollTop + (r.top - b.top) - 6, behavior: smooth ? 'smooth' : 'auto' });
+            }
+            _bindProcUserScroll() {
+                const box = document.getElementById('aiPanelOfflineDashboard');
+                if (!box || box._userScrollBound) return;
+                box._userScrollBound = true;
+                const mark = () => { this._procUserScrollAt = Date.now(); };
+                box.addEventListener('wheel', mark, { passive: true });
+                box.addEventListener('touchstart', mark, { passive: true });
+                box.addEventListener('keydown', mark);
+            }
+
+            // ══════════════ 협업: 단계 맡기기 · 회신 합치기 · 인수인계 ══════════════
+            // 서버 없는 오프라인 환경에서 내부 메신저로 파일을 주고받으며 협업한다.
+            // · 관리자(owner) PC의 업무가 원본. 단계(상위 항목)마다 담당자·마감일을 정해 [요청 파일]을 만든다.
+            //   요청 파일은 업무 파일(workflow_package)에 collabRequest를 더한 것이라, 여러 담당자에게 같은 파일을 보내도 된다.
+            // · 담당자(assignee)는 요청 파일을 열어 본인 이름을 고르고, 맡은 단계만 처리해 [회신 파일]을 만든다.
+            //   회신에는 맡은 단계의 체크·해당 없음·조치결과·조치결과 첨부만 담는다(법령·서식·다른 단계는 담지 않음).
+            // · 관리자가 회신 파일을 열면 같은 업무(collab.uid)를 찾아, 그 사람에게 맡긴 단계만 원본에 반영한다.
+            // · 인수인계: 업무 전체와 관리자 자격을 새 담당자에게 넘기고, 내 PC의 업무는 읽기 전용이 된다.
+            // workflow.collab = { uid, role: 'owner'|'assignee'|'handedOver', owner, me,
+            //                     steps: { [단계 itemId]: { assignee, deadline, memo, status: 'draft'|'sent'|'replied', sendId, sentAt, round, repliedAt, comment } },
+            //                     sendId·round·receivedAt(담당자: 받은 요청·회신 차수), handedOverTo, history: [업무 여권 도장] }
+            // 조치결과 첨부는 checklistDetails[`${업무id}-r-${항목id}`].attachments 에 둔다 — 기존 첨부와 같은 구조라
+            // 공유·백업·복원·고아 파일 정리가 그대로 동작한다.
+
+            _collabMyName() { try { return (localStorage.getItem('collabMyName') || '').trim(); } catch (e) { return ''; } }
+            _collabSetMyName(name) { try { localStorage.setItem('collabMyName', String(name || '').trim()); } catch (e) {} }
+            _collabPeople() {
+                try { const v = JSON.parse(localStorage.getItem('collabPeople') || '[]'); return Array.isArray(v) ? v.filter(p => p && p.name) : []; }
+                catch (e) { return []; }
+            }
+            _collabSavePeople(list) { try { localStorage.setItem('collabPeople', JSON.stringify(list || [])); } catch (e) {} }
+            _collabLimitBytes() {
+                let mb = 10;
+                try { mb = parseFloat(localStorage.getItem('collabAttachLimitMB')) || 10; } catch (e) {}
+                return Math.round(mb * 1024 * 1024);
+            }
+            _collabNewId(prefix) { return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`; }
+            _collabMMDD(d = new Date()) { return `${pad2(d.getMonth() + 1)}${pad2(d.getDate())}`; }
+            _collabSafeName(s) { return sanitizeFileName(String(s || ''), 40); }
+
+            collabAddPerson(name, dept = '') {
+                name = String(name || '').trim(); dept = String(dept || '').trim();
+                if (!name) { this.showToast('info', 'ℹ️', '이름을 입력해 주세요'); return false; }
+                const list = this._collabPeople();
+                const found = list.find(p => p.name === name);
+                if (found) found.dept = dept || found.dept || '';
+                else list.push({ name, dept });
+                this._collabSavePeople(list);
+                return true;
+            }
+            collabRemovePerson(name) {
+                this._collabSavePeople(this._collabPeople().filter(p => p.name !== name));
+            }
+            _collabPersonLabel(name) {
+                const p = this._collabPeople().find(x => x.name === name);
+                return p && p.dept ? `${name}(${p.dept})` : name;
+            }
+
+            // ── 단계 도우미 ──
+            _collabStepId(cl, index) {
+                if (index == null || !cl[index]) return null;
+                const si = this._stageIndexOf(cl, index);
+                return cl[si] ? this.ensureChecklistItemId(cl[si]) : null;
+            }
+            _collabStepIndices(cl, stepId) {
+                const si = (cl || []).findIndex(it => it && it.itemId === stepId && !this._isSubEntry(it));
+                if (si < 0) return [];
+                return [si, ...this.findSubItems(cl, si).map(s => s.index)];
+            }
+            _collabStepLabel(wf, stepIds) {
+                const cl = wf.checklist || [];
+                const nums = this._stageInfo(cl).numbers;
+                const labels = (stepIds || []).map(sid => {
+                    const i = cl.findIndex(it => it && it.itemId === sid);
+                    return i >= 0 ? `${nums.get(i) || i + 1}단계` : null;
+                }).filter(Boolean);
+                return labels.length ? labels.join('·') : '단계';
+            }
+            _collabStepTitle(wf, sid) {
+                const cl = wf.checklist || [];
+                const i = cl.findIndex(it => it && it.itemId === sid);
+                if (i < 0) return '(삭제된 단계)';
+                const n = this._stageInfo(cl).numbers.get(i) || i + 1;
+                return `${n}단계 ${(cl[i].text || '').trim() || '(제목 없음)'}`;
+            }
+            _collabFindByUid(uid, role) {
+                return this.allData.workflows.find(w => !w.isDeleted && w.collab && w.collab.uid === uid && (!role || w.collab.role === role));
+            }
+
+            // ── 잠금: 바통(통표)을 가진 사람만 그 단계를 고칠 수 있다 ──
+            // 반환: 잠금 이유 문자열(잠겨 있지 않으면 '')
+            _collabLock(workflow, index) {
+                const c = workflow && workflow.collab;
+                if (!c) return '';
+                if (c.role === 'handedOver') return `${c.handedOverTo || '다음 담당자'} 님에게 인수인계한 업무입니다 (보기 전용)`;
+                const cl = workflow.checklist || [];
+                const sid = this._collabStepId(cl, index);
+                const st = sid && c.steps ? c.steps[sid] : null;
+                if (c.role === 'owner') return st && st.status === 'sent' ? `${st.assignee} 님에게 맡긴 단계입니다 (회신 대기 중)` : '';
+                if (c.role === 'assignee') return st && st.assignee === c.me ? '' : `${st && st.assignee ? st.assignee + ' 님' : '관리자'} 담당 단계입니다 (보기 전용)`;
+                return '';
+            }
+            // materials: 서식·업무팁·연결 문서처럼 관리자가 관리하는 자료 — 담당자 PC에서는 맡은 단계라도 고칠 수 없다(회신에 담기지 않음)
+            _collabGuard(workflowId, index, label = '수정', opts = {}) {
+                const wf = this.allData.workflows.find(w => String(w.id) === String(workflowId));
+                if (!wf || !wf.collab) return false;
+                let why = this._collabLock(wf, index);
+                if (!why && opts.materials && wf.collab.role === 'assignee') why = '서식·업무팁은 관리자가 관리합니다 (회신에 담기지 않음)';
+                if (!why) return false;
+                this.showToast('info', '🔒', `${why} — ${label}할 수 없습니다.`, 3500);
+                return true;
+            }
+            _collabGuardAny(workflowId, indices, label) {
+                const wf = this.allData.workflows.find(w => String(w.id) === String(workflowId));
+                if (!wf || !wf.collab) return false;
+                const hit = (indices || []).find(i => this._collabLock(wf, i));
+                return hit !== undefined ? this._collabGuard(workflowId, hit, label) : false;
+            }
+            // 체크리스트 구조 편집(항목 추가·삭제·순서): 담당자·인수인계한 PC에서는 막는다
+            _collabGuardStructure(workflowId) {
+                const wf = this.allData.workflows.find(w => String(w.id) === String(workflowId));
+                const role = wf && wf.collab && wf.collab.role;
+                if (role === 'assignee') { this.showToast('info', '🔒', '담당자는 맡은 단계의 체크·조치결과만 입력할 수 있습니다. 항목을 더하거나 바꿔야 하면 회신 의견에 적어 주세요.', 5000); return true; }
+                if (role === 'handedOver') { this.showToast('info', '🔒', this._collabLock(wf), 3500); return true; }
+                return false;
+            }
+
+            // ── 업무 여권: 주고받은 기록에 앞 도장의 확인값을 이어 붙여, 중간 기록이 바뀌면 알아챌 수 있게 한다 ──
+            async _collabHash(text) {
+                try {
+                    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+                    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+                } catch (e) { return ''; }  // 해시를 못 만드는 환경이면 확인값 없이 기록만 남김
+            }
+            async _collabStamp(wf, actor, action, text) {
+                if (!wf.collab) return;
+                const h = wf.collab.history || (wf.collab.history = []);
+                const prev = h.length ? h[h.length - 1].hash || '' : '';
+                const at = new Date().toISOString();
+                const hash = await this._collabHash([prev, at, actor, action, text].join('|'));
+                h.push({ at, actor, action, text, prev, hash });
+            }
+            async _collabVerifyHistory(wf) {
+                const h = (wf.collab && wf.collab.history) || [];
+                let prev = '';
+                for (let i = 0; i < h.length; i++) {
+                    const e = h[i];
+                    if (!e.hash) { prev = ''; continue; }
+                    if ((e.prev || '') !== prev) return { ok: false, at: i };
+                    const hash = await this._collabHash([e.prev || '', e.at, e.actor, e.action, e.text].join('|'));
+                    if (hash && hash !== e.hash) return { ok: false, at: i };
+                    prev = e.hash;
+                }
+                return { ok: true };
+            }
+
+            _collabEnsureOwner(wf) {
+                if (!wf.collab) wf.collab = { uid: this._collabNewId('c'), role: 'owner', steps: {}, history: [] };
+                const c = wf.collab;
+                if (!c.uid) c.uid = this._collabNewId('c');
+                if (!c.steps) c.steps = {};
+                if (!c.history) c.history = [];
+                if (!c.role) c.role = 'owner';
+                if (c.role === 'owner') c.owner = this._collabMyName() || c.owner || '';
+                return c;
+            }
+
+            // ── 체크리스트 줄에 붙는 담당 표시 ──
+            _collabChipHtml(workflow, item, index) {
+                const c = workflow.collab;
+                if (!c || !c.steps || this._isSubEntry(item)) return '';
+                const st = c.steps[item.itemId];
+                if ((!st || !st.assignee) && c.role === 'assignee') {
+                    return `<span class="cb-chip other" title="관리자 담당 단계입니다 (보기 전용)">🔒 ${this.escapeHtml(c.owner || '관리자')}(관리자)</span>`;
+                }
+                if (!st || !st.assignee) return '';
+                const dl = st.deadline ? (() => {
+                    const d = this.calculateDaysLeft(st.deadline);
+                    return d === 999 ? '' : d < 0 ? ` · 기한 ${Math.abs(d)}일 지남` : d === 0 ? ' · 오늘까지' : ` · D-${d}`;
+                })() : '';
+                const who = this.escapeHtml(st.assignee);
+                let cls = 'cb-chip', text = '';
+                if (c.role === 'assignee') {
+                    if (st.assignee === c.me) { cls += ' mine'; text = '★ 내 담당'; /* 기한은 옆의 마감 배지(D-n)로 보인다 */ }
+                    else { cls += ' other'; text = `🔒 ${who} 담당`; }
+                } else if (st.status === 'sent') {
+                    cls += dl.includes('지남') ? ' late' : ' wait'; text = `👤 ${who} · 회신 대기${dl}${st.interim ? ` · 중간 ${st.interim.done}/${st.interim.total}` : ''}`;
+                } else if (st.status === 'replied') {
+                    cls += ' done'; text = `✅ ${who} 회신 반영${st.round > 1 ? ` (${st.round}차)` : ''}`;
+                } else {
+                    cls += ' draft'; text = `👤 ${who} · 보내기 전`;
+                }
+                return `<span class="${cls}" title="${this.escapeHtml(this._collabLock(workflow, index) || '협업 담당 단계')}" onclick="event.stopPropagation();app.openCollabModal(${workflow.id})">${text}</span>`;
+            }
+
+            // ── 업무 화면 오른쪽 패널의 협업 영역 ──
+            _collabPanelHtml(workflow) {
+                const c = workflow.collab;
+                const id = workflow.id;
+                if (!c) return `<button class="fap-btn" onclick="app.openCollabModal(${id})">협업·인수인계</button>`;
+                if (c.role === 'assignee') {
+                    const mine = Object.keys(c.steps || {}).filter(s => c.steps[s].assignee === c.me);
+                    return `<div class="cb-panel">
+                            <div class="cb-panel-title">담당자로 받은 업무</div>
+                            <div class="cb-panel-line">${this.escapeHtml(c.me)} 님 · ${this.escapeHtml(this._collabStepLabel(workflow, mine))}</div>
+                            <div class="cb-panel-line">요청: ${this.escapeHtml(c.owner || '관리자')}${c.round ? ` · ${c.round}차 회신함` : ''}</div>
+                        </div>
+                        <button class="fap-btn fap-btn-primary${['send', 'resend'].includes(this._collabReplyState(workflow)) ? ' cb-pulse' : ''}" onclick="app.openCollabReplyModal(${id})">📩 관리자에게 회신</button>
+                        <button class="fap-btn" onclick="app.openCollabModal(${id})">협업 현황·이력</button>`;
+                }
+                if (c.role === 'handedOver') {
+                    return `<div class="cb-panel"><div class="cb-panel-title">인수인계함</div>
+                            <div class="cb-panel-line">${this.escapeHtml(c.handedOverTo || '')} 님에게 넘김 · 보기 전용</div></div>
+                        <button class="fap-btn" onclick="app.openCollabModal(${id})">협업 이력 보기</button>`;
+                }
+                const steps = Object.values(c.steps || {}).filter(s => s.assignee);
+                const wait = steps.filter(s => s.status === 'sent').length;
+                const done = steps.filter(s => s.status === 'replied').length;
+                const late = steps.filter(s => s.status === 'sent' && s.deadline && this.calculateDaysLeft(s.deadline) < 0).length;
+                return `<button class="fap-btn" onclick="app.openCollabModal(${id})">협업·인수인계${steps.length ? `<span class="cb-count${late ? ' late' : ''}">${wait ? `회신 대기 ${wait}` : `반영 ${done}`}</span>` : ''}</button>`;
+            }
+
+            // ══ 관리자 화면: 담당자 지정 · 요청 보내기 · 현황 · 인수인계 · 이력 ══
+            openCollabModal(workflowId) {
+                const wf = this.allData.workflows.find(w => w.id === workflowId);
+                if (!wf) return;
+                document.getElementById('collabModal')?.remove();
+                const modal = document.createElement('div');
+                modal.className = 'modal show';
+                modal.id = 'collabModal';
+                modal.innerHTML = `<div class="modal-content cb-modal"><div id="collabModalBody"></div></div>`;
+                modal.addEventListener('click', (e) => { if (e.target === modal) this.closeCollabModal(); });
+                document.body.appendChild(modal);
+                this._collabModalWf = workflowId;
+                this._renderCollabModal();
+            }
+            closeCollabModal() {
+                document.getElementById('collabModal')?.remove();
+                this._collabModalWf = null;
+                if (!document.querySelector('.modal.show')) this.restoreBodyScroll();
+                if (this.focusMode) this.displayWorkflows();
+            }
+            async _renderCollabModal() {
+                const body = document.getElementById('collabModalBody');
+                const wf = this.allData.workflows.find(w => w.id === this._collabModalWf);
+                if (!body || !wf) return;
+                const c = wf.collab;
+                const role = c ? c.role : 'owner';
+                const esc = s => this.escapeHtml(String(s ?? ''));
+                const me = this._collabMyName();
+                const people = this._collabPeople();
+                const cl = wf.checklist || [];
+                const nums = this._stageInfo(cl).numbers;
+                const stages = cl.map((it, i) => ({ it, i })).filter(({ it }) => !this._isSubEntry(it));
+                const head = `<div class="modal-header"><div class="modal-title">🤝 협업 · 인수인계 — ${esc(wf.title)}</div>
+                        <button class="close-btn" onclick="app.closeCollabModal()">&times;</button></div>`;
+
+                // 업무 여권(이력)
+                const hist = (c && c.history) || [];
+                const verify = hist.length ? await this._collabVerifyHistory(wf) : { ok: true };
+                const historyHtml = `<details class="cb-sec" ${role !== 'owner' ? 'open' : ''}><summary class="cb-sec-title">📘 업무 여권 (주고받은 기록 ${hist.length}건)
+                        ${hist.length ? (verify.ok ? '<span class="cb-ok">✔ 기록 확인됨</span>' : `<span class="cb-bad">⚠ ${verify.at + 1}번째 기록부터 바뀐 흔적이 있습니다</span>`) : ''}</summary>
+                        ${hist.length ? `<ol class="cb-hist">${hist.slice().reverse().map(h => `<li><span class="cb-hist-at">${esc(fmtDateTime(h.at, { short: true }))}</span> <b>${esc(h.actor)}</b> ${esc(h.text)}</li>`).join('')}</ol>`
+                            : '<p class="cb-hint">아직 주고받은 기록이 없습니다.</p>'}</details>`;
+
+                if (role === 'assignee' || role === 'handedOver') {
+                    const rows = stages.map(({ it, i }) => {
+                        const st = c.steps && c.steps[it.itemId];
+                        return `<tr class="${st && st.assignee === c.me ? 'cb-mine' : ''}"><td>${nums.get(i)}단계</td><td>${esc(it.text)}</td>
+                            <td>${st && st.assignee ? esc(st.assignee) : esc(c.owner || '관리자')}</td><td>${st && st.deadline ? esc(st.deadline) : '-'}</td></tr>`;
+                    }).join('');
+                    body.innerHTML = head + `<div class="cb-body">
+                        <div class="cb-note">${role === 'assignee'
+                            ? `<b>${esc(c.me)}</b> 님이 담당자로 받은 업무입니다. ★ 표시된 단계만 체크·조치결과를 입력할 수 있습니다. 다 하면 [관리자에게 회신]을 눌러 회신 파일을 만들고, 메신저로 <b>${esc(c.owner || '관리자')}</b> 님께 보내 주세요.`
+                            : `<b>${esc(c.handedOverTo)}</b> 님에게 인수인계한 업무입니다. 이 PC에서는 보기만 할 수 있습니다.`}</div>
+                        ${(() => { const memos = Object.values(c.steps || {}).filter(s => s.assignee === c.me && s.memo).map(s => s.memo); return memos.length ? `<div class="cb-memo">💬 요청 메모: ${esc(memos.join(' / '))}</div>` : ''; })()}
+                        <div class="cb-table-wrap"><table class="cb-table"><thead><tr><th>단계</th><th>내용</th><th>담당</th><th>마감</th></tr></thead><tbody>${rows}</tbody></table></div>
+                        ${role === 'assignee' ? `<div class="cb-actions"><button class="btn btn-primary" onclick="app.closeCollabModal();app.openCollabReplyModal(${wf.id})">📩 관리자에게 회신</button></div>` : ''}
+                        ${historyHtml}</div>`;
+                    return;
+                }
+
+                // ── 관리자(또는 아직 협업 전) ──
+                const steps = (c && c.steps) || {};
+                const personOpts = (sel) => `<option value="">나(관리자)</option>` + people.map(p => `<option value="${esc(p.name)}" ${p.name === sel ? 'selected' : ''}>${esc(p.name)}${p.dept ? ` (${esc(p.dept)})` : ''}</option>`).join('')
+                    + (sel && !people.some(p => p.name === sel) ? `<option value="${esc(sel)}" selected>${esc(sel)}</option>` : '');
+                const statusText = (st) => {
+                    if (!st || !st.assignee) return '<span class="cb-st">-</span>';
+                    if (st.status === 'sent') {
+                        const d = st.deadline ? this.calculateDaysLeft(st.deadline) : 999;
+                        return `<span class="cb-st ${d < 0 ? 'late' : 'wait'}">⏳ 회신 대기${d < 0 ? ` · ${Math.abs(d)}일 지남` : ''}</span><small>${esc(fmtDateTime(st.sentAt, { short: true }))} 보냄</small>${st.interim ? `<small>중간 회신 · 항목 ${st.interim.done}/${st.interim.total} (${esc(fmtDate(st.interim.at, { short: true }))})</small>` : ''}`;
+                    }
+                    if (st.status === 'replied') return `<span class="cb-st done">✅ ${st.round > 1 ? st.round + '차 ' : ''}회신 반영</span><small>${esc(fmtDateTime(st.repliedAt, { short: true }))}</small>${st.comment ? `<small title="${esc(st.comment)}">💬 ${esc(st.comment.slice(0, 30))}${st.comment.length > 30 ? '…' : ''}</small>` : ''}`;
+                    return '<span class="cb-st draft">보내기 전</span>';
+                };
+                const rows = stages.map(({ it, i }) => {
+                    const sid = this.ensureChecklistItemId(it);
+                    const st = steps[sid] || {};
+                    const locked = st.status === 'sent' || st.status === 'replied';
+                    const skipped = it.skipped === true;
+                    return `<tr class="${skipped ? 'cb-skip' : ''}">
+                        <td>${nums.get(i)}단계</td>
+                        <td class="cb-step-name">${esc(it.text)}${skipped ? ' <small>(건너뜀)</small>' : ''}</td>
+                        <td><select ${locked || skipped ? 'disabled' : ''} onchange="app.collabSetStep(${wf.id},'${sid}','assignee',this.value)">${personOpts(st.assignee)}</select></td>
+                        <td><input type="date" value="${esc(st.deadline || '')}" ${locked || skipped || !st.assignee ? 'disabled' : ''} onchange="app.collabSetStep(${wf.id},'${sid}','deadline',this.value)">${!locked && st.deadline ? this._collabDeadlineWarnings(wf, sid, st.deadline).map(w => `<small class="cb-dl-warn">⚠ ${esc(w)}</small>`).join('') : ''}</td>
+                        <td class="cb-status">${statusText(st)}</td>
+                        <td>${st.status === 'sent' ? `<button class="cb-mini" onclick="app.collabRecallStep(${wf.id},'${sid}')" title="맡긴 것을 거두고 다시 내가 처리">회수</button>`
+                            : st.status === 'replied' ? `<button class="cb-mini" onclick="app.collabReassignStep(${wf.id},'${sid}')" title="같은 사람이나 다른 사람에게 다시 맡기기">다시 맡기기</button>` : ''}</td>
+                    </tr>`;
+                }).join('');
+                const toSend = Object.entries(steps).filter(([sid, st]) => st.assignee && st.assignee !== me && (!st.status || st.status === 'draft') && cl.some(it => it.itemId === sid));
+                const sendNames = [...new Set(toSend.map(([, st]) => st.assignee))];
+
+                body.innerHTML = head + `<div class="cb-body">
+                    ${this._collabBoardHtml(wf)}
+                    <div class="cb-sec">
+                        <div class="cb-sec-title">내 이름 (관리자)</div>
+                        <div class="cb-row"><input id="cbMyName" class="cb-input" value="${esc(me)}" placeholder="예: 홍길동" onchange="app._collabSetMyName(this.value);app._renderCollabModal()">
+                        <span class="cb-hint">요청·회신 파일에 이 이름이 들어갑니다.</span></div>
+                    </div>
+                    <div class="cb-sec">
+                        <div class="cb-sec-title">① 단계별 담당자·마감일 <span class="cb-hint">담당자를 비워 두면 내가 처리합니다</span></div>
+                        <div class="cb-table-wrap"><table class="cb-table"><thead><tr><th>단계</th><th>내용</th><th>담당자</th><th>마감일</th><th>상태</th><th></th></tr></thead><tbody>${rows || '<tr><td colspan="6">체크리스트에 단계가 없습니다.</td></tr>'}</tbody></table></div>
+                        <div class="cb-row" style="margin-top:8px;"><input id="cbReqMemo" class="cb-input" style="flex:1;" placeholder="요청 메모 (선택) — 예: A동 위주로 확인 부탁드립니다"></div>
+                        <div class="cb-actions">
+                            <span class="cb-hint">${toSend.length ? `${esc(sendNames.join(', '))} 님에게 보낼 단계 ${toSend.length}개` : '보낼 단계가 없습니다 — 담당자를 먼저 고르세요'}</span>
+                            <button class="btn btn-primary" ${toSend.length && me ? '' : 'disabled'} onclick="app.collabSendRequests(${wf.id})">📨 요청 파일 만들기</button>
+                        </div>
+                        ${!me ? '<div class="cb-warn">요청 파일을 만들려면 위에 내 이름을 먼저 적어 주세요.</div>' : ''}
+                        <p class="cb-hint" style="margin:6px 0 0;">만든 파일 하나를 메신저로 담당자 모두에게 보내면 됩니다. 받은 사람이 파일을 열고 본인 이름을 고릅니다. 회신 파일을 받으면 [가져오기]로 열면 자동으로 합쳐집니다.</p>
+                    </div>
+                    <details class="cb-sec" ${people.length ? '' : 'open'}>
+                        <summary class="cb-sec-title">👥 함께 일하는 사람 (${people.length}명)</summary>
+                        <div class="cb-people">${people.map(p => `<span class="cb-person">${esc(p.name)}${p.dept ? ` <small>${esc(p.dept)}</small>` : ''}<button onclick="app.collabRemovePerson('${esc(p.name)}');app._renderCollabModal()" title="목록에서 빼기">✕</button></span>`).join('') || '<span class="cb-hint">아직 없습니다.</span>'}</div>
+                        <div class="cb-row"><input id="cbNewName" class="cb-input" placeholder="이름"><input id="cbNewDept" class="cb-input" placeholder="소속 (선택)">
+                            <button class="btn btn-secondary btn-small" onclick="if(app.collabAddPerson(document.getElementById('cbNewName').value, document.getElementById('cbNewDept').value)) app._renderCollabModal()">추가</button></div>
+                    </details>
+                    <details class="cb-sec">
+                        <summary class="cb-sec-title">🔁 담당자 변경 (인수인계)</summary>
+                        <p class="cb-hint">업무 전체와 관리자 자격을 새 담당자에게 넘깁니다. 진행 상태·조치결과·첨부·맡겨 둔 단계 정보까지 모두 넘어가고, 이 PC의 업무는 보기 전용이 됩니다.</p>
+                        <div class="cb-row"><select id="cbHandoverTo" class="cb-input">${people.filter(p => p.name !== me).map(p => `<option value="${esc(p.name)}">${esc(p.name)}${p.dept ? ` (${esc(p.dept)})` : ''}</option>`).join('') || '<option value="">먼저 위에서 사람을 추가하세요</option>'}</select>
+                            <button class="btn btn-secondary" ${people.some(p => p.name !== me) && me ? '' : 'disabled'} onclick="app.collabMakeHandover(${wf.id}, document.getElementById('cbHandoverTo').value)">인수인계 파일 만들기</button></div>
+                    </details>
+                    ${historyHtml}
+                </div>`;
+            }
+
+            collabSetStep(workflowId, sid, field, value) {
+                const wf = this.allData.workflows.find(w => w.id === workflowId);
+                if (!wf) return;
+                const c = this._collabEnsureOwner(wf);
+                const st = c.steps[sid] || (c.steps[sid] = { status: 'draft' });
+                if (st.status === 'sent' || st.status === 'replied') return;
+                if (field === 'assignee') {
+                    if (!value) { delete c.steps[sid]; }
+                    else { st.assignee = value; st.status = 'draft'; }
+                } else if (field === 'deadline') {
+                    st.deadline = value || null;
+                    const warns = this._collabDeadlineWarnings(wf, sid, st.deadline);
+                    if (warns.length) this.showToast('warning', '⚠️', warns.join(' · '), 6000);
+                }
+                this.saveData();
+                this._renderCollabModal();
+            }
+            collabRecallStep(workflowId, sid) {
+                const wf = this.allData.workflows.find(w => w.id === workflowId);
+                const st = wf?.collab?.steps?.[sid];
+                if (!st) return;
+                this._showChoiceDialog('맡긴 단계 회수', `${st.assignee} 님에게 맡긴 「${this._collabStepTitle(wf, sid)}」을(를) 거둬들이고 다시 내가 처리할까요?\n이후 ${st.assignee} 님의 이 요청에 대한 회신 파일은 반영되지 않습니다.`,
+                    [{ label: '회수하기', primary: true, onClick: async () => {
+                        await this._collabStamp(wf, this._collabMyName() || '관리자', 'recall', `${st.assignee} 님에게 맡긴 ${this._collabStepLabel(wf, [sid])} 회수`);
+                        delete wf.collab.steps[sid];
+                        this.saveData();
+                        this.checkCollabDeadlines(wf);
+                        this._renderCollabModal();
+                    } }]);
+            }
+            collabReassignStep(workflowId, sid) {
+                const wf = this.allData.workflows.find(w => w.id === workflowId);
+                const st = wf?.collab?.steps?.[sid];
+                if (!st) return;
+                st.status = 'draft';
+                delete st.sendId;
+                this.saveData();
+                this._renderCollabModal();
+                this.showToast('info', 'ℹ️', '담당자·마감일을 다시 정한 뒤 [요청 파일 만들기]를 누르세요');
+            }
+
+            // [요청 파일 만들기] — 보낼 단계들을 'sent'로 바꾸고 업무 파일 + collabRequest 를 저장
+            async collabSendRequests(workflowId) {
+                const wf = this.allData.workflows.find(w => w.id === workflowId);
+                if (!wf) return;
+                const me = this._collabMyName();
+                if (!me) { this.showToast('info', 'ℹ️', '내 이름을 먼저 적어 주세요'); return; }
+                const c = this._collabEnsureOwner(wf);
+                c.owner = me;
+                const cl = wf.checklist || [];
+                const targets = Object.entries(c.steps).filter(([sid, st]) => st.assignee && st.assignee !== me && (!st.status || st.status === 'draft') && cl.some(it => it.itemId === sid));
+                if (!targets.length) { this.showToast('info', 'ℹ️', '보낼 단계가 없습니다'); return; }
+                const memo = (document.getElementById('cbReqMemo')?.value || '').trim();
+                const snapshot = JSON.stringify(c);
+                const sendId = this._collabNewId('s');
+                const now = new Date().toISOString();
+                targets.forEach(([, st]) => { Object.assign(st, { status: 'sent', sendId, sentAt: now, memo, round: 0 }); delete st.interim; delete st.nudgedAt; });
+                const names = [...new Set(targets.map(([, st]) => st.assignee))];
+                await this._collabStamp(wf, me, 'send', `${names.join(', ')} 님에게 ${targets.map(([sid, st]) => `${this._collabStepLabel(wf, [sid])}(${st.assignee}${st.deadline ? ` · ${st.deadline}까지` : ''})`).join(', ')} 요청`);
+                const request = {
+                    sendId, uid: c.uid, owner: me, sentAt: now, memo, minVersion: '1.3.0',
+                    steps: Object.fromEntries(targets.map(([sid, st]) => [sid, { assignee: st.assignee, dept: (this._collabPeople().find(p => p.name === st.assignee) || {}).dept || '', deadline: st.deadline || null, memo }]))
+                };
+                await this.saveDataImmediate();
+                const fileName = `[요청] ${this._collabSafeName(wf.title)}_${this._collabSafeName(names.join('·'))}_${this._collabMMDD()}.json`;
+                const saved = await this.exportMultipleWorkflowPackages([wf.id], {
+                    extra: { collabRequest: request }, fileName,
+                    successText: `요청 파일을 만들었습니다. 메신저로 ${names.join(', ')} 님에게 보내 주세요.`
+                });
+                if (!saved) {  // 저장 창에서 취소 — 보낸 것으로 바꾼 상태를 되돌림
+                    wf.collab = JSON.parse(snapshot);
+                    this.saveData();
+                }
+                this._renderCollabModal();
+            }
+
+            // ══ 마감 지정 경고: 전체 마감보다 늦음 · 단계 순서와 어긋남 · 주말·공휴일 ══
+            // 공휴일은 날짜가 고정된 날만 안다(설·추석·부처님오신날·대체공휴일은 해마다 달라 빠짐)
+            _collabDeadlineWarnings(wf, sid, date) {
+                if (!date) return [];
+                const out = [];
+                const d = new Date(date + 'T00:00:00');
+                const md = date.slice(5);
+                const HOLI = { '01-01': '신정', '03-01': '삼일절', '05-05': '어린이날', '06-06': '현충일', '08-15': '광복절', '10-03': '개천절', '10-09': '한글날', '12-25': '성탄절' };
+                if (HOLI[md]) out.push(`${HOLI[md]}(공휴일)입니다`);
+                else if (d.getDay() === 0 || d.getDay() === 6) out.push(`${d.getDay() === 0 ? '일' : '토'}요일입니다`);
+                if (wf.deadline && date > String(wf.deadline).slice(0, 10)) out.push(`업무 전체 마감(${String(wf.deadline).slice(0, 10)})보다 늦습니다`);
+                const cl = wf.checklist || [];
+                const order = cl.map((it, i) => ({ it, i })).filter(({ it }) => !this._isSubEntry(it) && it.skipped !== true);
+                const pos = order.findIndex(({ it }) => it.itemId === sid);
+                const dlOf = it => (wf.collab && wf.collab.steps && wf.collab.steps[it.itemId] && wf.collab.steps[it.itemId].deadline) || it.deadline || null;
+                const nums = this._stageInfo(cl).numbers;
+                const before = order.slice(0, pos).filter(({ it }) => dlOf(it) && dlOf(it) > date).pop();
+                const after = order.slice(pos + 1).find(({ it }) => dlOf(it) && dlOf(it) < date);
+                if (before) out.push(`앞 ${nums.get(before.i)}단계 마감(${dlOf(before.it)})보다 빠릅니다`);
+                if (after) out.push(`뒤 ${nums.get(after.i)}단계 마감(${dlOf(after.it)})보다 늦습니다`);
+                return out;
+            }
+
+            // ══ 신호등 현황판: 누가 늦고 있는지 한눈에 (기한 지남 → 임박 → 여유 → 회신 반영 순) ══
+            _collabBoardRows(wf) {
+                const c = wf.collab;
+                if (!c || !c.steps) return [];
+                const cl = wf.checklist || [];
+                return Object.entries(c.steps).filter(([sid, st]) => st.assignee && (st.status === 'sent' || st.status === 'replied') && cl.some(it => it.itemId === sid))
+                    .map(([sid, st]) => {
+                        const d = st.deadline ? this.calculateDaysLeft(st.deadline) : 999;
+                        const light = st.status === 'replied' ? 'done' : d < 0 ? 'red' : d <= 2 ? 'yellow' : 'green';
+                        return { sid, st, d, light, rank: { red: 0, yellow: 1, green: 2, done: 3 }[light] };
+                    })
+                    .sort((a, b) => a.rank - b.rank || a.d - b.d);
+            }
+            _collabBoardHtml(wf) {
+                const rows = this._collabBoardRows(wf);
+                if (!rows.length) return '';
+                const esc = s => this.escapeHtml(String(s ?? ''));
+                const today = new Date(); today.setHours(0, 0, 0, 0);
+                const icon = { red: '🔴', yellow: '🟡', green: '🟢', done: '✅' };
+                const cl = wf.checklist || [];
+                const body = rows.map(({ sid, st, d, light }) => {
+                    const i = cl.findIndex(it => it.itemId === sid);
+                    const stepTitle = this._collabStepTitle(wf, sid);
+                    const dlText = st.status === 'replied'
+                        ? `${st.round > 1 ? st.round + '차 ' : ''}회신 반영 (${esc(fmtDate(st.repliedAt, { short: true }))}${st.deadline && String(st.repliedAt).slice(0, 10) <= st.deadline ? ', 기한 내' : st.deadline ? ', 기한 후' : ''})`
+                        : !st.deadline ? '기한 없음' : d < 0 ? `기한 ${Math.abs(d)}일 지남 (${esc(st.deadline.slice(5).replace('-', '/'))})` : d === 0 ? '오늘까지' : `D-${d} (${esc(st.deadline.slice(5).replace('-', '/'))})`;
+                    // 기간 막대: 보낸 날 → 마감일, 오늘 위치까지 채움
+                    let bar = '';
+                    if (st.deadline && st.sentAt && st.status !== 'replied') {
+                        const s0 = new Date(st.sentAt); s0.setHours(0, 0, 0, 0);
+                        const e0 = new Date(st.deadline + 'T00:00:00');
+                        const span = Math.max(e0 - s0, 86400000);
+                        const pct = d < 0 ? 100 : Math.max(0, Math.min(100, Math.round((today - s0) / span * 100)));  /* 기한이 지나면 꽉 찬 빨간 막대 */
+                        bar = `<div class="cb-bar" title="${esc(fmtDate(st.sentAt, { short: true }))} 보냄 → ${esc(st.deadline)} 마감"><i class="${light}" style="width:${pct}%"></i></div>`;
+                    }
+                    return `<div class="cb-board-row ${light}">
+                        <span class="cb-light">${icon[light]}</span>
+                        <span class="cb-board-who"><b>${esc(st.assignee)}</b><small>${esc(stepTitle)}</small></span>
+                        <span class="cb-board-dl">${dlText}${st.interim ? `<small>중간 회신 · 항목 ${st.interim.done}/${st.interim.total} (${esc(fmtDate(st.interim.at, { short: true }))})</small>` : ''}${st.nudgedAt ? `<small>재촉 ${esc(fmtDateTime(st.nudgedAt, { short: true }))}</small>` : ''}${bar}</span>
+                        <span>${st.status === 'sent' ? `<button class="cb-mini" onclick="app.collabCopyNudge(${wf.id},'${sid}')" title="메신저에 붙여 넣을 재촉 문구를 복사합니다">재촉 문구 복사</button>` : ''}</span>
+                    </div>`;
+                }).join('');
+                const late = rows.filter(r => r.light === 'red').length, soon = rows.filter(r => r.light === 'yellow').length, done = rows.filter(r => r.light === 'done').length;
+                return `<div class="cb-sec cb-board">
+                    <div class="cb-sec-title">📋 회신 현황 <span class="cb-hint">오늘 ${today.getMonth() + 1}/${today.getDate()} · ${late ? `기한 지남 ${late} · ` : ''}${soon ? `임박 ${soon} · ` : ''}반영 ${done}/${rows.length}</span></div>
+                    ${body}
+                </div>`;
+            }
+
+            // ══ 재촉 문구 원클릭 복사 — 오프라인이라 자동 알림을 보낼 수 없으니, 메신저에 붙여 넣을 정중한 문구를 만들어 준다 ══
+            async collabCopyNudge(workflowId, sid) {
+                const wf = this.allData.workflows.find(w => w.id === workflowId);
+                const st = wf && wf.collab && wf.collab.steps && wf.collab.steps[sid];
+                if (!st) return;
+                const d = st.deadline ? this.calculateDaysLeft(st.deadline) : 999;
+                const date = st.deadline ? (() => { const x = new Date(st.deadline + 'T00:00:00'); return `${x.getMonth() + 1}/${x.getDate()}(${'일월화수목금토'[x.getDay()]})`; })() : '';
+                const step = this._collabStepTitle(wf, sid);
+                const head = `${st.assignee} 님, 「${wf.title}」 ${step}`;
+                const tail = '업무 내비게이터에서 [관리자에게 회신]으로 회신 파일을 보내 주세요.';
+                const text = !st.deadline ? `${head} 진행 상황을 공유해 주시면 감사하겠습니다. ${tail}`
+                    : d < 0 ? `${head} 회신 기한(${date})이 ${Math.abs(d)}일 지났습니다. 다 못 했더라도 [중간 회신]으로 진행 상황만이라도 보내 주시면 감사하겠습니다.`
+                    : d === 0 ? `${head} 회신 기한이 오늘(${date})입니다. ${tail}`
+                    : d === 1 ? `${head} 회신 기한이 내일(${date})입니다. ${tail}`
+                    : `${head} 회신 기한은 ${date}입니다. 진행 중이시면 [중간 회신]으로 진행 상황을 알려 주셔도 됩니다.`;
+                let copied = false;
+                try { await navigator.clipboard.writeText(text); copied = true; } catch (e) {}
+                st.nudgedAt = new Date().toISOString();
+                await this._collabStamp(wf, this._collabMyName() || '관리자', 'nudge', `${st.assignee} 님에게 ${this._collabStepLabel(wf, [sid])} 재촉 문구 복사${d < 0 ? ` (기한 ${Math.abs(d)}일 지남)` : d !== 999 ? ` (D-${d})` : ''}`);
+                this.saveData();
+                this._renderCollabModal();
+                if (copied) this.showToast('success', '📋', '재촉 문구를 복사했습니다. 메신저 대화창에 붙여 넣으세요 (Ctrl+V).', 5000);
+                else this._showChoiceDialog('재촉 문구', text + '\n\n(자동 복사가 막혀 있습니다. 위 문구를 마우스로 골라 복사해 주세요)', [{ label: '확인', primary: true, onClick: () => {} }], null, '닫기');
+            }
+
+            // ══ 업무 목록 카드의 협업 상태 한 줄 ══
+            _collabCardBadgeHtml(wf) {
+                const c = wf.collab;
+                if (!c) return '';
+                const chip = (cls, text, title = '') => `<span class="cb-card-badge ${cls}" title="${this.escapeHtml(title)}">${text}</span>`;
+                if (c.role === 'handedOver') return chip('gray', `🔁 ${this.escapeHtml(c.handedOverTo || '')}에게 인계`);
+                if (c.role === 'assignee') {
+                    const rs = this._collabReplyState(wf);
+                    if (rs === 'send') return chip('blue', '📩 회신할 차례', '할 일은 다 끝났습니다. 회신을 보내 주세요');
+                    if (rs === 'resend') return chip('amber', '📩 다시 회신', '회신한 뒤 바뀐 내용이 있습니다');
+                    if (rs === 'sent') return chip('green', `✅ 회신함 ${fmtDate(c.finalAt, { short: true })}`);
+                    return chip('blue', '★ 담당 업무');
+                }
+                const rows = this._collabBoardRows(wf);
+                if (!rows.length) return '';
+                const late = rows.filter(r => r.light === 'red').length;
+                const soon = rows.filter(r => r.light === 'yellow');
+                const wait = rows.filter(r => r.light !== 'done').length;
+                if (late) return chip('red', `🔴 회신 ${late}건 기한 지남`);
+                if (soon.length) return chip('amber', `🟡 회신 ${soon[0].d === 0 ? '오늘까지' : 'D-' + soon[0].d}`);
+                if (wait) return chip('amber', `⏳ 회신 대기 ${wait}`);
+                return chip('green', '✅ 회신 모두 반영');
+            }
+
+            // ══ 파일 열기 분기: 요청·회신·인수인계 파일이면 협업 처리 후 true ══
+            _routeCollabFile(imported) {
+                if (!imported || typeof imported !== 'object') return false;
+                const run = (fn) => fn.call(this, imported).catch(err => {
+                    console.error('협업 파일 처리 오류:', err);
+                    this._hideProgress?.();
+                    this.showToast('error', '❌', '협업 파일 처리 실패: ' + err.message);
+                });
+                if (imported.type === 'collab_reply') { run(this._collabReceiveReply); return true; }
+                if (imported.type === 'workflow_package' && Array.isArray(imported.workflows) && imported.workflows.length) {
+                    if (imported.collabRequest) { run(this._collabReceiveRequest); return true; }
+                    if (imported.collabHandover) { run(this._collabReceiveHandover); return true; }
+                }
+                return false;
+            }
+
+            // ── 담당자: 요청 파일을 열면 본인 이름 고르기 ──
+            async _collabReceiveRequest(pkg) {
+                const req = pkg.collabRequest;
+                const esc = s => this.escapeHtml(String(s ?? ''));
+                if (this._collabFindByUid(req.uid, 'owner')) {
+                    this._showChoiceDialog('관리자 PC에서 연 요청 파일입니다', '이 파일은 담당자에게 보내는 파일입니다.\n메신저로 담당자에게 보내 주세요.', [{ label: '확인', primary: true, onClick: () => {} }]);
+                    return;
+                }
+                const wfData = pkg.workflows[0];
+                const cl = wfData.checklist || [];
+                const nums = this._stageInfo(cl).numbers;
+                const byName = new Map();
+                Object.entries(req.steps || {}).forEach(([sid, st]) => {
+                    const i = cl.findIndex(it => it && it.itemId === sid);
+                    if (!byName.has(st.assignee)) byName.set(st.assignee, { dept: st.dept, steps: [] });
+                    byName.get(st.assignee).steps.push({ label: i >= 0 ? `${nums.get(i) || i + 1}단계 ${(cl[i].text || '').trim()}` : '단계', deadline: st.deadline });
+                });
+                const names = [...byName.keys()];
+                const remembered = this._collabMyName();
+                const pre = names.includes(remembered) ? remembered : names.length === 1 ? names[0] : '';
+                document.getElementById('collabPickModal')?.remove();
+                const modal = document.createElement('div');
+                modal.className = 'modal show';
+                modal.id = 'collabPickModal';
+                modal.innerHTML = `<div class="modal-content cb-modal" style="max-width:520px;">
+                    <div class="modal-header"><div class="modal-title">📨 업무 요청 받음</div><button class="close-btn" onclick="document.getElementById('collabPickModal').remove();app.restoreBodyScroll()">&times;</button></div>
+                    <div class="cb-body">
+                        <div class="cb-note"><b>${esc(wfData.title)}</b><br>보낸 사람: ${esc(req.owner)} · ${esc(fmtDateTime(req.sentAt, { short: true }))}${req.memo ? `<br>💬 ${esc(req.memo)}` : ''}</div>
+                        <div class="cb-sec-title" style="margin-top:12px;">이 파일을 받은 분은 본인 이름을 골라 주세요</div>
+                        <div class="cb-pick">${names.map(n => `<label class="cb-pick-row"><input type="radio" name="cbPickName" value="${esc(n)}" ${n === pre ? 'checked' : ''}>
+                            <span><b>${esc(n)}</b>${byName.get(n).dept ? ` <small>${esc(byName.get(n).dept)}</small>` : ''}<br>
+                            ${byName.get(n).steps.map(s => `<small>· ${esc(s.label)}${s.deadline ? ` (${esc(s.deadline)}까지)` : ''}</small>`).join('<br>')}</span></label>`).join('')}</div>
+                        <div class="cb-actions">
+                            <button class="btn btn-secondary" onclick="document.getElementById('collabPickModal').remove();app.restoreBodyScroll();app._collabImportAsPlain()">목록에 제 이름이 없습니다</button>
+                            <button class="btn btn-primary" onclick="app._collabConfirmPick()">선택</button>
+                        </div>
+                    </div></div>`;
+                document.body.appendChild(modal);
+                this._collabPendingRequest = pkg;
+            }
+            _collabImportAsPlain() {
+                const pkg = this._collabPendingRequest;
+                this._collabPendingRequest = null;
+                if (!pkg) return;
+                const plain = { ...pkg };
+                delete plain.collabRequest;
+                this._showPackageImportChoice(plain);
+            }
+            _collabConfirmPick() {
+                const name = document.querySelector('input[name="cbPickName"]:checked')?.value;
+                if (!name) { this.showToast('info', 'ℹ️', '본인 이름을 골라 주세요'); return; }
+                const pkg = this._collabPendingRequest;
+                const req = pkg.collabRequest;
+                const mine = Object.values(req.steps || {}).filter(s => s.assignee === name);
+                this._showChoiceDialog(`${name} 님 맞으세요?`, `${name} 님 담당 단계 ${mine.length}개를 받습니다.\n다른 사람 이름을 고르면 그 사람의 일을 대신 하게 되니 꼭 확인해 주세요.`,
+                    [{ label: `네, ${name}입니다`, primary: true, onClick: () => {
+                        document.getElementById('collabPickModal')?.remove();
+                        this._collabPendingRequest = null;
+                        this._collabImportRequestAs(pkg, name).catch(err => { this._hideProgress?.(); this.showToast('error', '❌', '요청 가져오기 실패: ' + err.message); });
+                    } }]);
+            }
+            async _collabImportRequestAs(pkg, name) {
+                const req = pkg.collabRequest;
+                const existing = this._collabFindByUid(req.uid, 'assignee');
+                const go = async () => {
+                    const before = new Set(this.allData.workflows.map(w => w.id));
+                    const plain = { ...pkg, importMode: 'asIs', skipDupCheck: true };
+                    delete plain.collabRequest;
+                    await this._processImportedPackage(plain);
+                    const wf = this.allData.workflows.find(w => !before.has(w.id));
+                    if (!wf) throw new Error('업무를 가져오지 못했습니다');
+                    const src = (pkg.workflows[0].collab) || {};
+                    const steps = JSON.parse(JSON.stringify(src.steps || {}));
+                    Object.entries(req.steps || {}).forEach(([sid, s]) => { steps[sid] = { ...(steps[sid] || {}), ...s, status: 'sent', sendId: req.sendId }; });
+                    wf.collab = {
+                        uid: req.uid, role: 'assignee', owner: req.owner, me: name, sendId: req.sendId,
+                        receivedAt: new Date().toISOString(), round: 0, steps,
+                        history: JSON.parse(JSON.stringify(src.history || []))
+                    };
+                    // 맡은 단계의 마감일을 그 단계에 표시 (D-day 배지·마감 임박에 함께 잡히게)
+                    const mine = Object.keys(req.steps).filter(sid => req.steps[sid].assignee === name);
+                    mine.forEach(sid => {
+                        const i = (wf.checklist || []).findIndex(it => it.itemId === sid);
+                        if (i >= 0 && req.steps[sid].deadline) wf.checklist[i].deadline = req.steps[sid].deadline;
+                    });
+                    // 업무 전체 마감일은 관리자의 날짜 대신 "본인 마감일"(맡은 단계 중 가장 늦은 날) — 지킬 날짜가 하나만 보이게
+                    wf.deadline = mine.map(sid => req.steps[sid].deadline).filter(Boolean).sort().pop() || null;
+                    if (existing) { existing.isDeleted = true; existing.deletedAt = new Date().toISOString(); }
+                    this._collabSetMyName(name);
+                    const label = this._collabStepLabel(wf, mine);
+                    await this._collabStamp(wf, name, 'receive', `${req.owner} 님의 요청 받음 (${label})`);
+                    await this.saveDataImmediate();
+                    const dl = mine.map(sid => req.steps[sid].deadline).filter(Boolean).sort()[0];
+                    this.fireInAppNotification('업무 요청 받음', `「${wf.title}」 ${label}을(를) ${dl ? dl + '까지 ' : ''}진행해 주세요 (요청: ${req.owner})`,
+                        { type: 'info', category: 'task', action: { kind: 'workflow', id: wf.id }, key: `collab-req-${req.uid}`, skipToast: true, sound: false });
+                    this.displayWorkflows();
+                    this.showToast('success', '✅', `${label}을(를) 받았습니다. ★ 표시된 단계를 처리한 뒤 [관리자에게 회신]을 눌러 주세요.`, 6000);
+                    this.focusWorkflow(wf.id);
+                };
+                if (existing) {
+                    const same = existing.collab.sendId === req.sendId;
+                    this._showChoiceDialog(same ? '이미 받은 요청입니다' : '같은 업무를 전에 받은 적이 있습니다',
+                        same ? '이 요청을 다시 가져오면 이 PC에서 입력한 내용은 사라지고 받은 파일 내용으로 바뀝니다.\n(이전 업무는 휴지통으로 옮깁니다)'
+                             : '관리자가 새로 보낸 요청입니다. 새 요청으로 바꿀까요?\n(이전에 받은 업무는 휴지통으로 옮깁니다)',
+                        [{ label: same ? '다시 가져오기' : '새 요청으로 바꾸기', primary: true, onClick: () => go().catch(err => this.showToast('error', '❌', err.message)) }]);
+                    return;
+                }
+                await go();
+            }
+
+            // ══ 담당자: 회신 파일 만들기 ══
+            _collabMyStepIds(wf) {
+                const c = wf.collab;
+                return Object.keys(c.steps || {}).filter(sid => c.steps[sid].assignee === c.me && (wf.checklist || []).some(it => it.itemId === sid));
+            }
+            _collabResultKey(workflowId, itemId) { return `${workflowId}-r-${itemId}`; }
+            _collabResultFiles(workflowId, itemId) {
+                return ((this.checklistDetails[this._collabResultKey(workflowId, itemId)] || {}).attachments || []);
+            }
+            _collabMyAttachBytes(wf) {
+                if (!wf.collab || wf.collab.role !== 'assignee') return 0;
+                const cl = wf.checklist || [];
+                let total = 0;
+                this._collabMyStepIds(wf).forEach(sid => this._collabStepIndices(cl, sid).forEach(i => {
+                    this._collabResultFiles(wf.id, cl[i].itemId).forEach(a => { total += a.size || 0; });
+                }));
+                return total;
+            }
+            openCollabReplyModal(workflowId) {
+                const wf = this.allData.workflows.find(w => w.id === workflowId);
+                if (!wf || !wf.collab || wf.collab.role !== 'assignee') return;
+                const c = wf.collab;
+                const esc = s => this.escapeHtml(String(s ?? ''));
+                const cl = wf.checklist || [];
+                const mine = this._collabMyStepIds(wf);
+                let total = 0, done = 0;
+                mine.forEach(sid => this._collabStepIndices(cl, sid).forEach(i => {
+                    total++;
+                    if (this.normalizeCompleted(cl[i]) || cl[i].skipped === true) done++;
+                }));
+                const bytes = this._collabMyAttachBytes(wf);
+                const limit = this._collabLimitBytes();
+                document.getElementById('collabReplyModal')?.remove();
+                const modal = document.createElement('div');
+                modal.className = 'modal show';
+                modal.id = 'collabReplyModal';
+                modal.innerHTML = `<div class="modal-content cb-modal" style="max-width:520px;">
+                    <div class="modal-header"><div class="modal-title">📩 관리자에게 회신</div><button class="close-btn" onclick="document.getElementById('collabReplyModal').remove();app.restoreBodyScroll()">&times;</button></div>
+                    <div class="cb-body">
+                        <div class="cb-note"><b>${esc(wf.title)}</b><br>${esc(c.me)} 님 → ${esc(c.owner || '관리자')} 님 · ${esc(this._collabStepLabel(wf, mine))}${c.round ? ` · ${c.round + 1}차 회신 (수정본)` : ''}</div>
+                        <div class="cb-row" style="margin-top:10px;"><span>처리한 항목</span><b>${done} / ${total}</b></div>
+                        <div class="cb-row"><span>조치결과 첨부</span><b class="${bytes > limit ? 'cb-bad' : ''}">${fmtBytes(bytes)} / ${fmtBytes(limit)}</b></div>
+                        ${done < total ? `<div class="cb-warn">아직 처리하지 않은 항목이 ${total - done}개 있습니다. 그래도 지금까지 한 내용을 회신할 수 있습니다.</div>` : ''}
+                        <div class="cb-sec-title" style="margin-top:12px;">회신 의견 (선택)</div>
+                        <textarea id="cbReplyComment" class="cb-input" style="width:100%;min-height:70px;" placeholder="예: B동 일부는 다음 주 재점검이 필요합니다">${esc(c.lastComment || '')}</textarea>
+                        <p class="cb-hint">회신 파일에는 맡은 단계의 체크 상태·해당 없음·조치결과·조치결과 첨부만 담깁니다. 법령·서식은 담지 않습니다.</p>
+                        <div class="cb-actions">
+                            <button class="btn ${done < total ? 'btn-primary' : 'btn-secondary'}" ${bytes > limit ? 'disabled' : ''} onclick="app.collabMakeReply(${wf.id}, 'interim')" title="다 끝나지 않았어도 지금까지 한 내용을 보내 진행 상황을 알립니다">중간 회신 (진행 상황)</button>
+                            <button class="btn ${done < total ? 'btn-secondary' : 'btn-primary'}" ${bytes > limit ? 'disabled' : ''} onclick="app.collabMakeReply(${wf.id}, 'final')">최종 회신</button>
+                        </div>
+                    </div></div>`;
+                document.body.appendChild(modal);
+            }
+            // kind: 'final'(최종 회신 — 관리자 쪽에서 「회신 반영」) / 'interim'(중간 회신 — 진행 상황만 반영, 맡긴 단계는 계속 회신 대기)
+            async collabMakeReply(workflowId, kind = 'final') {
+                const wf = this.allData.workflows.find(w => w.id === workflowId);
+                if (!wf || !wf.collab || wf.collab.role !== 'assignee') return;
+                const c = wf.collab;
+                const comment = (document.getElementById('cbReplyComment')?.value || '').trim();
+                const bytes = this._collabMyAttachBytes(wf);
+                if (bytes > this._collabLimitBytes()) { this.showToast('error', '⚠️', `조치결과 첨부가 ${fmtBytes(this._collabLimitBytes())}를 넘습니다. 파일을 줄여 주세요.`); return; }
+                const cl = wf.checklist || [];
+                const mine = this._collabMyStepIds(wf);
+                const items = [], files = {};
+                this._showProgress?.('회신 파일 만드는 중...');
+                try {
+                    for (const sid of mine) {
+                        for (const i of this._collabStepIndices(cl, sid)) {
+                            const it = cl[i];
+                            const itemId = this.ensureChecklistItemId(it);
+                            items.push({
+                                itemId, stepId: sid, text: it.text,
+                                completed: this.normalizeCompleted(it), completedAt: it.completedAt || null,
+                                completedViaSubItems: !!it.completedViaSubItems,
+                                skipped: it.skipped === true, skipReason: it.skipReason || '', skipManual: !!it.skipManual,
+                                skipActionId: it.skipActionId || null, branchActionTaken: it.branchActionTaken || null, branchOnly: !!it.branchOnly,
+                                result: { text: it.result?.text || '', summary: it.result?.summary || '' }
+                            });
+                            for (const a of this._collabResultFiles(wf.id, itemId)) {
+                                const rec = await this.dbManager.getFile('projectFiles', a.id).catch(() => null);
+                                if (!rec || !rec.blob) continue;
+                                (files[itemId] || (files[itemId] = [])).push({ name: a.name, type: a.type, size: a.size, uploadDate: a.uploadDate, base64Data: await this._blobToBase64(rec.blob) });
+                            }
+                        }
+                    }
+                } finally { this._hideProgress?.(); }
+                const round = (c.round || 0) + 1;
+                const body = {
+                    type: 'collab_reply', version: 1, appVersion: APP_VERSION,
+                    uid: c.uid, sendId: c.sendId, from: c.me, owner: c.owner, title: wf.title,
+                    round, kind, repliedAt: new Date().toISOString(), steps: mine, items, files, comment
+                };
+                body.hash = await this._collabHash(JSON.stringify(body));
+                const label = this._collabStepLabel(wf, mine);
+                const fileName = `[${kind === 'interim' ? '중간회신' : '회신'}] ${this._collabSafeName(wf.title)}_${label}_${this._collabSafeName(c.me)}_${this._collabMMDD()}.json`;
+                const saved = await this._saveFileWithPicker(new Blob([JSON.stringify(body)], { type: 'application/json' }), fileName);
+                if (!saved) return;
+                c.round = round;
+                c.repliedAt = body.repliedAt;
+                c.lastComment = comment;
+                if (kind === 'final') { c.finalAt = body.repliedAt; c.replySig = this._collabReplySig(wf); }
+                await this._collabStamp(wf, c.me, 'reply', `${label} ${round}차 ${kind === 'interim' ? '중간 회신' : '회신'} 파일 만듦${comment ? ` — 의견: ${comment}` : ''}`);
+                this.saveData();
+                document.getElementById('collabReplyModal')?.remove();
+                this.restoreBodyScroll();
+                this.displayWorkflows();
+                this.showToast('success', '📩', `${kind === 'interim' ? '중간 회신' : '회신'} 파일을 만들었습니다. 메신저로 ${c.owner || '관리자'} 님께 보내 주세요.${kind === 'interim' ? ' 다 끝나면 [최종 회신]을 보내 주세요.' : ' 고칠 게 생기면 다시 회신하면 됩니다.'}`, 7000);
+            }
+
+            // ══ 관리자: 회신 파일을 열면 맡긴 단계만 원본에 합치기 ══
+            async _collabReceiveReply(pkg) {
+                const { hash, ...rest } = pkg;
+                if (hash) {
+                    const h2 = await this._collabHash(JSON.stringify(rest));
+                    if (h2 && h2 !== hash) {
+                        const ok = await new Promise(res => this._showChoiceDialog('회신 파일 내용이 바뀌었습니다', '만든 뒤에 내용이 바뀌었거나 손상된 파일입니다.\n그래도 반영할까요?',
+                            [{ label: '그래도 반영', primary: true, onClick: () => res(true) }], () => res(false)));
+                        if (!ok) return;
+                    }
+                }
+                const info = (t, m) => this._showChoiceDialog(t, m, [{ label: '확인', primary: true, onClick: () => {} }]);
+                const wf = this._collabFindByUid(pkg.uid, 'owner');
+                if (!wf) {
+                    const handed = this._collabFindByUid(pkg.uid, 'handedOver');
+                    if (handed) { info('인수인계한 업무의 회신입니다', `이 업무는 ${handed.collab.handedOverTo} 님에게 인수인계되었습니다.\n회신 파일을 ${handed.collab.handedOverTo} 님께 전달해 주세요.`); return; }
+                    if (this._collabFindByUid(pkg.uid, 'assignee')) { info('담당자 PC입니다', `회신 파일은 관리자(${pkg.owner || ''}) 님께 보내 주세요.`); return; }
+                    info('업무를 찾을 수 없습니다', `이 회신에 해당하는 업무가 이 PC에 없습니다.\n업무: ${pkg.title || ''}\n보낸 사람: ${pkg.from || ''}`);
+                    return;
+                }
+                const c = wf.collab;
+                const cl = wf.checklist || [];
+                const applied = [], skippedOld = [], refused = [];
+                this._showProgress?.('회신 반영 중...');
+                try {
+                    for (const sid of pkg.steps || []) {
+                        const st = c.steps && c.steps[sid];
+                        if (!st || st.assignee !== pkg.from || st.sendId !== pkg.sendId) { refused.push(sid); continue; }
+                        if ((st.round || 0) >= pkg.round) { skippedOld.push(sid); continue; }  // 이미 반영한 회신(같은 차수 이하)
+                        const idxs = this._collabStepIndices(cl, sid);
+                        const allowed = new Map(idxs.map(i => [cl[i].itemId, i]));
+                        for (const r of (pkg.items || []).filter(x => x.stepId === sid)) {
+                            const i = allowed.get(r.itemId);
+                            if (i === undefined) continue;
+                            const it = cl[i];
+                            it.completed = !!r.completed;
+                            it.completedAt = r.completed ? (r.completedAt || new Date().toISOString()) : null;
+                            if (r.completedViaSubItems) it.completedViaSubItems = true; else delete it.completedViaSubItems;
+                            if (r.skipped) { it.skipped = true; it.skipReason = r.skipReason || ''; if (r.skipManual) it.skipManual = true; if (r.skipActionId) it.skipActionId = r.skipActionId; }
+                            else { delete it.skipped; delete it.skipReason; delete it.skipManual; delete it.skipActionId; }
+                            if (r.branchActionTaken) it.branchActionTaken = r.branchActionTaken; else delete it.branchActionTaken;
+                            if (r.branchOnly) it.branchOnly = true; else delete it.branchOnly;
+                            it.result = { text: r.result?.text || '', summary: r.result?.summary || '' };
+                            // 조치결과 첨부: 이전 회신의 첨부를 지우고 새 회신의 첨부로 바꾼다
+                            const key = this._collabResultKey(wf.id, r.itemId);
+                            for (const old of this._collabResultFiles(wf.id, r.itemId)) { await this.dbManager.deleteFile('projectFiles', old.id).catch(() => {}); }
+                            const restored = [];
+                            for (const f of (pkg.files || {})[r.itemId] || []) {
+                                const blob = await this._base64ToBlob(f.base64Data);
+                                const id = await this.dbManager.saveFile('projectFiles', { projectKey: key, fileName: f.name, fileType: f.type, fileSize: blob.size, blob, uploadDate: f.uploadDate || new Date().toISOString() });
+                                restored.push({ id, name: f.name, type: f.type, size: blob.size, uploadDate: f.uploadDate, inIndexedDB: true, storeName: 'projectFiles', from: pkg.from });
+                            }
+                            this.checklistDetails[key] = { ...(this.checklistDetails[key] || {}), attachments: restored };
+                            await this.dbManager.saveChecklistDetails(key, this.checklistDetails[key]).catch(() => {});
+                        }
+                        if (pkg.kind === 'interim') {
+                            const stageIds = idxs.filter(i => !this._isSubEntry(cl[i]));
+                            const tot = idxs.length, dn = idxs.filter(i => this.normalizeCompleted(cl[i]) || cl[i].skipped === true).length;
+                            Object.assign(st, { round: pkg.round, comment: pkg.comment || st.comment || '', interim: { done: dn, total: tot, at: pkg.repliedAt } });
+                            void stageIds;
+                        } else {
+                            Object.assign(st, { status: 'replied', round: pkg.round, repliedAt: pkg.repliedAt, comment: pkg.comment || '' });
+                            delete st.interim;
+                        }
+                        applied.push(sid);
+                    }
+                } finally { this._hideProgress?.(); }
+                const esc = s => this.escapeHtml(String(s ?? ''));
+                if (!applied.length) {
+                    info(skippedOld.length ? '이미 반영된 회신입니다' : '반영할 단계가 없습니다',
+                        skippedOld.length ? `${pkg.from} 님의 ${pkg.round}차 회신은 이미 반영되어 있습니다.`
+                            : `이 회신은 지금 맡겨 둔 요청과 맞지 않습니다.\n(회수했거나 다시 맡긴 단계의 예전 회신일 수 있습니다)`);
+                    return;
+                }
+                const label = this._collabStepLabel(wf, applied);
+                const kindLabel = pkg.kind === 'interim' ? '중간 회신' : '회신';
+                await this._collabStamp(wf, this._collabMyName() || c.owner || '관리자', 'merge', `${pkg.from} 님 ${label} ${pkg.round}차 ${kindLabel} 반영${pkg.comment ? ` — 의견: ${pkg.comment}` : ''}`);
+                this._markProgress?.(wf);
+                await this.saveDataImmediate();
+                this.checkCollabDeadlines(wf);  // 회신이 와서 더는 기한이 걸린 단계가 없으면 기한 알림을 지움
+                const fileCount = Object.values(pkg.files || {}).reduce((s, a) => s + a.length, 0);
+                this.fireInAppNotification(`${kindLabel} 반영됨`, `「${wf.title}」 ${pkg.from} 님 ${label} ${pkg.round}차 ${kindLabel}을 반영했습니다${fileCount ? ` (첨부 ${fileCount}개)` : ''}.${pkg.comment ? ` 의견: ${pkg.comment}` : ''}`,
+                    { type: 'success', category: 'task', action: { kind: 'workflow', id: wf.id }, skipToast: true });
+                this.displayWorkflows();
+                this._showChoiceDialog(`${kindLabel}을 반영했습니다`,
+                    `${pkg.from} 님 · ${label} · ${pkg.round}차 ${kindLabel}${pkg.kind === 'interim' ? ' (단계는 계속 회신 대기)' : ''}\n첨부 ${fileCount}개${pkg.comment ? `\n💬 ${pkg.comment}` : ''}${refused.length ? `\n(맡기지 않은 단계 ${refused.length}개는 반영하지 않았습니다)` : ''}`,
+                    [{ label: '업무 열기', primary: true, onClick: () => this.focusWorkflow(wf.id) }], null, '닫기');
+            }
+
+            // ══ 인수인계 ══
+            async collabMakeHandover(workflowId, toName) {
+                const wf = this.allData.workflows.find(w => w.id === workflowId);
+                const me = this._collabMyName();
+                if (!wf || !toName || !me) return;
+                const ok = await new Promise(res => this._showChoiceDialog(`${toName} 님에게 인수인계`,
+                    `「${wf.title}」 업무 전체와 관리자 자격을 ${toName} 님에게 넘깁니다.\n파일을 만든 뒤 이 PC의 업무는 보기 전용이 됩니다.\n맡겨 둔 단계의 회신은 ${toName} 님이 받게 됩니다.`,
+                    [{ label: '인수인계 파일 만들기', primary: true, onClick: () => res(true) }], () => res(false)));
+                if (!ok) return;
+                const c = this._collabEnsureOwner(wf);
+                const snapshot = JSON.stringify(c);
+                c.owner = me;
+                await this._collabStamp(wf, me, 'handover', `${toName} 님에게 인수인계`);
+                await this.saveDataImmediate();
+                const saved = await this.exportMultipleWorkflowPackages([wf.id], {
+                    extra: { collabHandover: { uid: c.uid, from: me, to: toName, at: new Date().toISOString(), minVersion: '1.3.0' } },
+                    fileName: `[인수인계] ${this._collabSafeName(wf.title)}_${this._collabSafeName(me)}→${this._collabSafeName(toName)}_${this._collabMMDD()}.json`,
+                    successText: `인수인계 파일을 만들었습니다. 메신저로 ${toName} 님에게 보내 주세요.`
+                });
+                if (!saved) { wf.collab = JSON.parse(snapshot); this.saveData(); return; }
+                c.role = 'handedOver';
+                c.handedOverTo = toName;
+                c.handedOverAt = new Date().toISOString();
+                this.saveData();
+                this._renderCollabModal();
+                this.displayWorkflows();
+            }
+            async _collabReceiveHandover(pkg) {
+                const h = pkg.collabHandover;
+                const wfData = pkg.workflows[0];
+                const ok = await new Promise(res => this._showChoiceDialog('인수인계 받기',
+                    `${h.from} 님이 ${h.to} 님에게 넘긴 업무입니다.\n「${wfData.title}」\n\n받으면 ${h.to} 님이 이 업무의 관리자가 되어 이어서 진행합니다.`,
+                    [{ label: `${h.to}(으)로 받기`, primary: true, onClick: () => res(true) }], () => res(false)));
+                if (!ok) return;
+                const olds = this.allData.workflows.filter(w => !w.isDeleted && w.collab && w.collab.uid === h.uid);
+                const before = new Set(this.allData.workflows.map(w => w.id));
+                const plain = { ...pkg, importMode: 'asIs', skipDupCheck: true };
+                delete plain.collabHandover;
+                await this._processImportedPackage(plain);
+                const wf = this.allData.workflows.find(w => !before.has(w.id));
+                if (!wf) throw new Error('업무를 가져오지 못했습니다');
+                const src = JSON.parse(JSON.stringify(wfData.collab || {}));
+                wf.collab = { ...src, uid: h.uid, role: 'owner', owner: h.to, steps: src.steps || {}, history: src.history || [] };
+                delete wf.collab.handedOverTo; delete wf.collab.handedOverAt; delete wf.collab.me; delete wf.collab.sendId; delete wf.collab.round;
+                olds.forEach(o => { o.isDeleted = true; o.deletedAt = new Date().toISOString(); });  // 이 PC에 있던 같은 업무(예전 사본)는 휴지통으로
+                if (!this._collabMyName()) this._collabSetMyName(h.to);
+                await this._collabStamp(wf, h.to, 'takeover', `${h.from} 님에게서 인수인계 받음`);
+                await this.saveDataImmediate();
+                this.fireInAppNotification('인수인계 받음', `「${wf.title}」을(를) ${h.from} 님에게서 넘겨받았습니다. 이제 이 업무의 관리자입니다.`,
+                    { type: 'info', category: 'task', action: { kind: 'workflow', id: wf.id }, key: `collab-ho-${h.uid}`, skipToast: true, sound: false });
+                this.displayWorkflows();
+                this.showToast('success', '✅', `인수인계를 받았습니다. 맡겨 둔 단계가 있으면 담당자의 회신 파일을 받아 [가져오기]로 열면 됩니다.`, 6000);
+                this.focusWorkflow(wf.id);
+            }
+
+            // ══ 마감 알림: 관리자는 회신 기한, 담당자는 내 단계 기한 (같은 업무는 알림 1건으로 갱신) ══
+            // onlyWf를 주면 그 업무만 다시 계산 — 회신 반영·회수로 기한이 걸린 단계가 없어지면 알림을 지운다
+            checkCollabDeadlines(onlyWf = null) {
+                for (const wf of onlyWf ? [onlyWf] : (this.allData.workflows || [])) {
+                    const c = wf.collab;
+                    if (!c || wf.isDeleted || !c.steps) continue;
+                    const parts = [];
+                    let late = false;
+                    for (const [sid, st] of Object.entries(c.steps)) {
+                        if (!st.deadline) continue;
+                        const target = c.role === 'owner' ? st.status === 'sent' : (c.role === 'assignee' && st.assignee === c.me && !c.finalAt);
+                        if (!target) continue;
+                        const d = this.calculateDaysLeft(st.deadline);
+                        if (d === 999 || d > (c.role === 'assignee' ? 2 : 1)) continue;
+                        if (d < 0) late = true;
+                        const when = d < 0 ? `기한 ${Math.abs(d)}일 지남` : d === 0 ? '오늘까지' : d === 1 ? '내일까지' : `D-${d}`;
+                        parts.push(c.role === 'owner' ? `${st.assignee} 님 ${this._collabStepLabel(wf, [sid])} ${when}` : `${this._collabStepLabel(wf, [sid])} ${when}`);
+                    }
+                    if (!parts.length) {
+                        const key = `collab-due-${c.uid}`;
+                        if ((this.notifyLog || []).some(n => n.key === key)) {
+                            this.notifyLog = this.notifyLog.filter(n => n.key !== key);
+                            this.saveNotifyLog();
+                            this.renderNotifyCenter();
+                        }
+                        continue;
+                    }
+                    const owner = c.role === 'owner';
+                    this.fireInAppNotification(owner ? (late ? '회신 기한 지남' : '회신 기한 임박') : (late ? '내 담당 기한 지남' : '내 담당 기한 임박'),
+                        `「${wf.title}」 ${parts.join(', ')}${owner ? ' — 회신을 확인해 주세요 (협업 창에서 재촉 문구를 복사할 수 있습니다)' : (this._collabReplyState(wf) === 'none' ? ' — 다 못 했으면 [중간 회신]으로 진행 상황을 알려 주세요' : ' — 관리자에게 회신해 주세요')}`,
+                        { type: 'warning', category: 'task', action: { kind: 'workflow', id: wf.id }, key: `collab-due-${c.uid}`, skipToast: true });
+                }
+            }
+
+            // ══ 조치결과 첨부 (조치결과 탭) ══
+            _resultFilesHtml(workflow, index, locked) {
+                const item = workflow.checklist[index];
+                if (!item) return '';
+                const itemId = this.ensureChecklistItemId(item);
+                const files = this._collabResultFiles(workflow.id, itemId);
+                const esc = s => this.escapeHtml(String(s ?? ''));
+                const isAssignee = workflow.collab && workflow.collab.role === 'assignee';
+                const used = isAssignee ? this._collabMyAttachBytes(workflow) : files.reduce((s, a) => s + (a.size || 0), 0);
+                const usage = isAssignee ? `${esc(workflow.collab.me)} 님 사용량 ${fmtBytes(used)} / ${fmtBytes(this._collabLimitBytes())}` : (files.length ? fmtBytes(used) : '');
+                return `<div class="rf-box" id="rf-${workflow.id}-${index}">
+                    <div class="rf-head"><span>📎 조치결과 첨부</span><span class="rf-usage">${usage}</span></div>
+                    ${files.length ? files.map((f, fi) => `<div class="rf-row">
+                        <button class="rf-name" onclick="app.openResultFile(${workflow.id},${index},${fi})" title="열기">${esc(f.name)}</button>
+                        <span class="rf-size">${fmtBytes(f.size)}${f.from ? ` · ${esc(f.from)}` : ''}</span>
+                        ${locked ? '' : `<button class="rf-del" onclick="app.removeResultFile(${workflow.id},${index},${fi})" title="지우기">✕</button>`}
+                    </div>`).join('') : `<div class="rf-empty">${locked ? '첨부한 파일이 없습니다.' : '조치 내용을 보여 줄 문서·사진을 첨부하세요 (예: 결과 공문, 점검 사진).'}</div>`}
+                    ${locked ? '' : `<div class="rf-add">
+                        <label class="btn btn-secondary btn-small" style="cursor:pointer;">+ 파일 첨부<input type="file" multiple hidden onchange="app.addResultFiles(${workflow.id},${index},this)"></label>
+                        <label class="rf-shrink"><input type="checkbox" id="rf-shrink-${workflow.id}-${index}" checked> 사진 크기 줄이기</label>
+                    </div>`}
+                </div>`;
+            }
+            _refreshResultFiles(workflowId, index) {
+                const wf = this.allData.workflows.find(w => w.id === workflowId);
+                const box = document.getElementById(`rf-${workflowId}-${index}`);
+                if (!wf || !box) return;
+                const locked = this.isReferenceLocked(wf) || !!this._collabLock(wf, index);
+                box.outerHTML = this._resultFilesHtml(wf, index, locked);
+            }
+            // 휴대폰 사진(장당 4~8MB)도 보내기 좋게 긴 변 1600px JPEG로 줄인다 — 줄여도 더 크면 원본 유지
+            async _shrinkImage(file) {
+                if (!/^image\/(jpeg|png|webp)$/.test(file.type) || file.size < 1024 * 1024 || typeof createImageBitmap !== 'function') return file;
+                try {
+                    const bmp = await createImageBitmap(file);
+                    const scale = Math.min(1, 1600 / Math.max(bmp.width, bmp.height));
+                    const canvas = document.createElement('canvas');
+                    canvas.width = Math.round(bmp.width * scale);
+                    canvas.height = Math.round(bmp.height * scale);
+                    canvas.getContext('2d').drawImage(bmp, 0, 0, canvas.width, canvas.height);
+                    const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg', 0.85));
+                    if (!blob || blob.size >= file.size) return file;
+                    return new File([blob], file.name.replace(/\.(png|webp|jpe?g)$/i, '') + '.jpg', { type: 'image/jpeg' });
+                } catch (e) { return file; }
+            }
+            async addResultFiles(workflowId, index, inputEl) {
+                const files = Array.from(inputEl.files || []);
+                inputEl.value = '';
+                if (!files.length) return;
+                if (this.guardReferenceLock(workflowId, '첨부') || this._collabGuard(workflowId, index, '첨부')) return;
+                const wf = this.allData.workflows.find(w => w.id === workflowId);
+                const item = wf?.checklist?.[index];
+                if (!item) return;
+                const itemId = this.ensureChecklistItemId(item);
+                const key = this._collabResultKey(workflowId, itemId);
+                const shrink = document.getElementById(`rf-shrink-${workflowId}-${index}`)?.checked !== false;
+                const isAssignee = wf.collab && wf.collab.role === 'assignee';
+                const limit = this._collabLimitBytes();
+                let used = isAssignee ? this._collabMyAttachBytes(wf) : 0;
+                const detail = this.checklistDetails[key] || (this.checklistDetails[key] = { attachments: [] });
+                if (!detail.attachments) detail.attachments = [];
+                let added = 0;
+                for (let f of files) {
+                    if (shrink) f = await this._shrinkImage(f);
+                    if (isAssignee && used + f.size > limit) {
+                        this.showToast('error', '⚠️', `「${f.name}」(${fmtBytes(f.size)})을(를) 넣으면 회신 첨부 한도 ${fmtBytes(limit)}를 넘습니다 (남은 용량 ${fmtBytes(Math.max(limit - used, 0))}). PDF로 줄이거나 사진 크기를 줄여 주세요.`, 7000);
+                        continue;
+                    }
+                    const id = await this.dbManager.saveFile('projectFiles', { projectKey: key, fileName: f.name, fileType: f.type, fileSize: f.size, blob: f, uploadDate: new Date().toISOString() });
+                    detail.attachments.push({ id, name: f.name, type: f.type, size: f.size, uploadDate: new Date().toISOString(), inIndexedDB: true, storeName: 'projectFiles' });
+                    used += f.size;
+                    added++;
+                }
+                await this.dbManager.saveChecklistDetails(key, detail).catch(() => {});
+                this.saveData();
+                this._refreshResultFiles(workflowId, index);
+                if (added) this.showToast('success', '📎', `조치결과에 파일 ${added}개를 첨부했습니다`, 2500);
+            }
+            async removeResultFile(workflowId, index, fileIdx) {
+                if (this.guardReferenceLock(workflowId, '삭제') || this._collabGuard(workflowId, index, '삭제')) return;
+                const wf = this.allData.workflows.find(w => w.id === workflowId);
+                const item = wf?.checklist?.[index];
+                if (!item) return;
+                const key = this._collabResultKey(workflowId, item.itemId);
+                const detail = this.checklistDetails[key];
+                const att = detail?.attachments?.[fileIdx];
+                if (!att) return;
+                await this.dbManager.deleteFile('projectFiles', att.id).catch(() => {});
+                detail.attachments.splice(fileIdx, 1);
+                await this.dbManager.saveChecklistDetails(key, detail).catch(() => {});
+                this.saveData();
+                this._refreshResultFiles(workflowId, index);
+            }
+            async openResultFile(workflowId, index, fileIdx) {
+                const wf = this.allData.workflows.find(w => w.id === workflowId);
+                const item = wf?.checklist?.[index];
+                const att = item && this._collabResultFiles(workflowId, item.itemId)[fileIdx];
+                if (!att) return;
+                const rec = await this.dbManager.getFile('projectFiles', att.id).catch(() => null);
+                if (!rec || !rec.blob) { this.showToast('error', '❌', '파일을 찾을 수 없습니다'); return; }
+                const url = URL.createObjectURL(rec.blob);
+                const viewable = /^(image\/|application\/pdf|text\/plain)/.test(att.type || rec.blob.type || '');
+                if (viewable) window.open(url, '_blank');
+                else { const a = document.createElement('a'); a.href = url; a.download = att.name; a.click(); }
+                setTimeout(() => URL.revokeObjectURL(url), 60000);
+            }
+
             // 최초 실행 시 사용자가 따로 클릭하지 않아도 마감일 알림을 자동으로 켬.
             // 시작 배너·알림센터는 OS 알림 권한과 무관하게 동작하므로 기본값은 항상 '하루에 한 번'이고,
             // OS 데스크톱 알림 권한은 보조로만 물어본다(거부·차단돼도 배너·알림센터는 그대로 동작).
@@ -11248,6 +12680,9 @@
                     if (editMode) this._beginFocusEditDraft();  // 업무관리에서 바로 편집으로 연 경우
                     // 뒤로가기 처리: 히스토리 스택에 포커스 상태 추가
                     history.pushState({ focusMode: true, workflowId }, '');
+                    // 다시 열면 마지막으로 보던 곳, 처음이면 진행중 단계(협업 담당자는 내 차례 단계)부터
+                    setTimeout(() => this._focusRestoreEntry(workflowId), 60);
+                    if (entryWork && entryWork.collab && entryWork.collab.role === 'assignee') setTimeout(() => this._collabNudge(workflowId), 900);
                 });
             }
 
@@ -11354,6 +12789,7 @@
 
             // 편집 모드 진입
             enterFocusEditMode() {
+                if (this._collabGuardStructure(this.focusedWorkflowId)) return;
                 // 레퍼런스(보기 전용)도 [편집]으로는 고칠 수 있다 — 편집 중에만 수정 허용, [저장]해야 반영
                 this.focusEditMode = true;
                 this.displayWorkflows();
@@ -11418,6 +12854,7 @@
                 const closedWorkflow = this.focusMode
                     ? this.allData.workflows.find(w => w.id === this.focusedWorkflowId)
                     : null;
+                if (closedWorkflow && !this.focusEditMode) this._focusSaveLastPos(closedWorkflow.id);  // 다시 열면 이 자리로
                 const hasActualChange = closedWorkflow && this._focusEntrySnapshot !== null
                     && this._snapshotForFocusCompare(closedWorkflow) !== this._focusEntrySnapshot;
                 this._focusEntrySnapshot = null;
@@ -11508,19 +12945,14 @@
                 const hasTip     = !!(item.tip?.content);
                 const hasFormats = (item.formats && item.formats.length > 0) || (item.linkedDocs && item.linkedDocs.length > 0);
                 const hasAny     = hasResult || hasTip || hasFormats;
+                // 편집 화면: 항목마다 [⚙ 설정] 메뉴 하나 (건너뛰기 규칙·서식·업무팁) — 점은 이미 들어 있는 것 표시
                 const detailBtn  = !isSkipped ? (() => {
-                    if (hasAny) {
-                        const dots = [
-                            hasResult  ? '<span style="width:6px;height:6px;border-radius:50%;background:#8b5cf6;display:inline-block;" title="조치결과"></span>' : '',
-                            hasTip     ? '<span style="width:6px;height:6px;border-radius:50%;background:#f59e0b;display:inline-block;" title="업무팁"></span>' : '',
-                            hasFormats ? '<span style="width:6px;height:6px;border-radius:50%;background:#10b981;display:inline-block;" title="서식"></span>' : '',
-                        ].filter(Boolean).join('');
-                        return `<button class="fci-detail-btn fci-detail-btn--has" onclick="event.stopPropagation();app.showChecklistItemModal(${workflow.id},${index})" title="서식·업무팁·조치결과 편집">
-                                    <span style="display:flex;align-items:center;gap:3px;">${dots}</span>
-                                </button>`;
-                    } else {
-                        return `<button class="fci-detail-btn" onclick="event.stopPropagation();app.showChecklistItemModal(${workflow.id},${index})" title="서식·업무팁·조치결과 추가">⋯</button>`;
-                    }
+                    const dots = [
+                        hasResult  ? '<span style="width:6px;height:6px;border-radius:50%;background:#8b5cf6;display:inline-block;" title="조치결과"></span>' : '',
+                        hasTip     ? '<span style="width:6px;height:6px;border-radius:50%;background:#f59e0b;display:inline-block;" title="업무팁"></span>' : '',
+                        hasFormats ? '<span style="width:6px;height:6px;border-radius:50%;background:#10b981;display:inline-block;" title="서식"></span>' : '',
+                    ].filter(Boolean).join('');
+                    return `<button class="fci-settings-btn" onclick="event.stopPropagation();app.openItemSettingsMenu(event,${workflow.id},${index})" title="이 항목의 건너뛰기 규칙·서식·업무팁 설정">⚙ 설정 ▾${dots ? `<span class="fci-settings-dots">${dots}</span>` : ''}</button>`;
                 })() : '';
 
                 // 건너뛰기 표시: 버튼이 달린 항목은 "건너뛰기 n"(누르면 설정 창), 건너뛰어질 수 있는 항목은 "조건부"
@@ -11558,6 +12990,7 @@
 
             // 포커스모드 체크박스 토글
             focusToggleCheck(workflowId, index) {
+                if (this._collabGuard(workflowId, index, '체크 변경')) return;
                 const workflow = this.allData.workflows.find(w => w.id === workflowId);
                 if (!workflow || !workflow.checklist[index]) return;
                 const item = workflow.checklist[index];
@@ -11707,6 +13140,7 @@
                 // forcedScrollTop이 전달되면 우선 사용 (confirm() 등으로 이미 초기화된 경우 대비)
                 const scrollEl = document.getElementById(`focus-checklist-scroll-${workflow.id}`);
                 const savedScrollTop = forcedScrollTop !== null ? forcedScrollTop : (scrollEl ? scrollEl.scrollTop : 0);
+                const anchorState = forcedScrollTop !== null ? null : this._focusScrollCapture(workflow.id);
 
                 this.normalizeWorkflowChecklist(workflow);
                 const cl = workflow.checklist || [];
@@ -11731,12 +13165,16 @@
                 const fapProg = document.querySelector('.fap-progress-bar-fill');
                 if (fapProg) fapProg.style.width = progress + '%';
                 const fapText = document.querySelector('.fap-progress-text');
-                if (fapText) fapText.textContent = `${progress}% 완료 · ${doneCount}/${checklistTotalCount} 단계`;
+                if (fapText) fapText.innerHTML = this._collabMineStageSet(workflow)
+                    ? `내 담당 ${progress}% 완료 · ${doneCount}/${checklistTotalCount} 단계 <span style="opacity:0.7;">(전체 ${this._collabMineProgress(workflow).overallPct}%)</span>`
+                    : `${progress}% 완료 · ${doneCount}/${checklistTotalCount} 단계`;
 
-                // 레이아웃 완료 후 스크롤 위치 복원
+                // 레이아웃 완료 후 스크롤 위치 복원 — 기준 항목이 같은 높이에 오도록
                 if (scrollEl) {
                     requestAnimationFrame(() => {
-                        scrollEl.scrollTop = savedScrollTop;
+                        if (anchorState) this._focusScrollRestore(workflow.id, anchorState);
+                        else scrollEl.scrollTop = savedScrollTop;
+                        this._updateFocusJump(workflow.id);
                     });
                 }
             }
@@ -11745,7 +13183,8 @@
             // refreshFocusChecklist가 innerHTML을 통째로 갈아끼우기 때문에, 애니메이션은 그 이후
             // 새로 생긴 노드를 대상으로 걸어야 한다. 체크 해제 시에는 "다음으로 넘어간다"는 맥락이
             // 아니므로 완료(justCompleted)일 때만 동작한다.
-            _animateChecklistCheck(workflowId, itemIndex, justCompleted) {
+            // opts.noScroll: 단계가 끝나 할 일이 곧 접히는 경우 — 접힌 뒤(_releaseStageHold)에 위치를 맞추므로 여기서는 움직이지 않음
+            _animateChecklistCheck(workflowId, itemIndex, justCompleted, opts = {}) {
                 if (!justCompleted) return;
                 requestAnimationFrame(() => {
                     const card = document.querySelector(`.checklist-card[data-workflow-id="${workflowId}"][data-index="${itemIndex}"]`);
@@ -11754,7 +13193,9 @@
                         setTimeout(() => card.classList.remove('just-completed'), 900);
                     }
 
-                    // 다음 미완료·미건너뜀 항목을 찾아 부드럽게 스크롤 + 짧은 펄스로 시선 유도
+                    // 다음 미완료·미건너뜀 항목을 짧은 펄스로 강조. 화면은 그 항목이 아래로 벗어났을 때만 필요한 만큼 내린다
+                    // (예전엔 보이든 말든 매번 화면 가운데로 끌어와, 체크할 때마다 화면이 위아래로 출렁였다)
+                    if (opts.noScroll) return;
                     const workflow = this.allData.workflows.find(w => w.id === workflowId);
                     if (!workflow || !workflow.checklist) return;
                     let nextIndex = -1;
@@ -11765,7 +13206,7 @@
                     if (nextIndex === -1) return;
                     const nextCard = document.querySelector(`.checklist-card[data-workflow-id="${workflowId}"][data-index="${nextIndex}"]`);
                     if (nextCard) {
-                        nextCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        this._scrollIntoViewMinimal(workflowId, nextCard);
                         nextCard.classList.add('next-focus-pulse');
                         setTimeout(() => nextCard.classList.remove('next-focus-pulse'), 700);
                     }
@@ -11930,9 +13371,15 @@
                 if (!workflow || !workflow.checklist) return;
                 const item = workflow.checklist[index];
                 if (!item) return;
-                const locked = this.isReferenceLocked(workflow);
+                const collabLock = this._collabLock(workflow, index);   // 협업: 다른 사람 담당 단계면 보기 전용
+                const refLocked = this.isReferenceLocked(workflow);
+                const locked = refLocked || !!collabLock;
                 const editing = this._branchEditingNow(workflowId);   // 체크리스트 편집 중 ([저장]해야 반영)
                 const setupOnly = this._branchSetupOnly(workflow);    // 편집 중·레퍼런스: 건너뛰기는 설정만, 실행은 안 함
+                // 건너뛰기 "규칙"은 체크리스트를 설계하는 일이라 편집 화면에서만 탭을 보인다(일하는 화면에서는 줄의 버튼을 누르기만).
+                // 일하는 화면에서 가장 많이 쓰는 건 조치결과라 처음 여는 탭도 조치결과.
+                const showBranchTab = setupOnly;
+                if (!initialTab || (initialTab === 'branch' && !showBranchTab)) initialTab = setupOnly ? 'formats' : 'result';
 
                 // 건너뛰기 항목 선택기의 임시 선택 상태 초기화 (모달을 새로 열 때마다 새 세션으로 취급)
                 this._branchPendingSelections = {};
@@ -12158,7 +13605,8 @@
                             </div>
                         </div>
 
-                        ${locked ? `<div style="padding:8px 18px;background:rgba(217,119,6,0.08);border-bottom:1px solid rgba(217,119,6,0.2);flex-shrink:0;display:flex;align-items:center;gap:7px;font-size:0.78rem;color:#92400e;">
+                        ${collabLock ? `<div class="cb-lock-banner">🔒 ${this.escapeHtml(collabLock)}</div>` : ''}
+                        ${refLocked ? `<div style="padding:8px 18px;background:rgba(217,119,6,0.08);border-bottom:1px solid rgba(217,119,6,0.2);flex-shrink:0;display:flex;align-items:center;gap:7px;font-size:0.78rem;color:#92400e;">
                             <span style="display:inline-flex;color:#d97706;">${this._refIco(14)}</span>
                             <span style="flex:1;">레퍼런스(본보기)는 보기 전용입니다. 고치려면 [편집]을 누르세요.</span>
                             <button onclick="event.stopPropagation();app.closeChecklistItemModal();app.editReference(${workflowId});" style="padding:3px 10px;font-size:0.76rem;background:#d97706;color:#fff;border:none;border-radius:5px;font-weight:600;cursor:pointer;font-family:inherit;flex-shrink:0;">편집</button>
@@ -12169,10 +13617,10 @@
                         <!-- 탭 -->
                         <div style="padding:0 16px;background:var(--white);border-bottom:1px solid var(--border-light);flex-shrink:0;">
                             <div style="display:flex;gap:0;">
-                                <button id="checklist-tab-formats-${workflowId}-${index}" class="cim-tab cim-tab-active" style="display:flex;align-items:center;gap:4px;" onclick="app.switchChecklistItemTab(${workflowId},${index},'formats')"><span style="width:5px;height:5px;border-radius:50%;background:#10b981;display:inline-block;flex-shrink:0;"></span>서식</button>
-                                <button id="checklist-tab-tip-${workflowId}-${index}" class="cim-tab" style="display:flex;align-items:center;gap:4px;" onclick="app.switchChecklistItemTab(${workflowId},${index},'tip')"><span style="width:5px;height:5px;border-radius:50%;background:#f59e0b;display:inline-block;flex-shrink:0;"></span>업무팁</button>
                                 <button id="checklist-tab-result-${workflowId}-${index}" class="cim-tab" style="display:flex;align-items:center;gap:4px;" onclick="app.switchChecklistItemTab(${workflowId},${index},'result')"><span style="width:5px;height:5px;border-radius:50%;background:#8b5cf6;display:inline-block;flex-shrink:0;"></span>조치결과</button>
-                                <button id="checklist-tab-branch-${workflowId}-${index}" class="cim-tab" style="display:flex;align-items:center;gap:4px;" onclick="app.switchChecklistItemTab(${workflowId},${index},'branch')"><span style="width:5px;height:5px;border-radius:50%;background:#64748b;display:inline-block;flex-shrink:0;"></span>건너뛰기${this._branchTabBadge(item)}</button>
+                                <button id="checklist-tab-tip-${workflowId}-${index}" class="cim-tab" style="display:flex;align-items:center;gap:4px;" onclick="app.switchChecklistItemTab(${workflowId},${index},'tip')"><span style="width:5px;height:5px;border-radius:50%;background:#f59e0b;display:inline-block;flex-shrink:0;"></span>업무팁</button>
+                                <button id="checklist-tab-formats-${workflowId}-${index}" class="cim-tab" style="display:flex;align-items:center;gap:4px;" onclick="app.switchChecklistItemTab(${workflowId},${index},'formats')"><span style="width:5px;height:5px;border-radius:50%;background:#10b981;display:inline-block;flex-shrink:0;"></span>서식</button>
+                                ${showBranchTab ? `<button id="checklist-tab-branch-${workflowId}-${index}" class="cim-tab" style="display:flex;align-items:center;gap:4px;" onclick="app.switchChecklistItemTab(${workflowId},${index},'branch')"><span style="width:5px;height:5px;border-radius:50%;background:#64748b;display:inline-block;flex-shrink:0;"></span>건너뛰기${this._branchTabBadge(item)}</button>` : ''}
                             </div>
                         </div>
 
@@ -12186,6 +13634,7 @@
                             </div>
                             <div id="checklist-panel-result-${workflowId}-${index}" style="display:none;flex:1;overflow-y:auto;padding:14px 18px;">
                                 ${resultHtml}
+                                ${this._resultFilesHtml(workflow, index, locked)}
                             </div>
                             <div id="checklist-panel-branch-${workflowId}-${index}" style="display:none;flex:1;overflow-y:auto;padding:14px 18px;">
                                 ${locked ? `<div style="text-align:center;padding:28px 20px;color:var(--text-muted);font-size:0.87rem;background:var(--bg-light);border-radius:8px;border:1px dashed var(--border-light);">레퍼런스(본보기)에서는 건너뛰기 설정을 바꿀 수 없습니다. [편집] 중에는 바꿀 수 있습니다.</div>` : `
@@ -12502,6 +13951,13 @@
                     return;
                 }
                 if (this.guardReferenceLock(workflowId, '체크 변경')) return;
+                if (this._collabGuard(workflowId, itemIndex, '체크 변경')) return;
+                this._lastCheckAt = Date.now();
+                // 체크 전 진행중 단계 — 이 체크로 단계가 끝나 다음으로 넘어가는지 판단용.
+                // 앞 단계가 접히기를 기다리는 중에 또 체크하면 기다리지 않고 바로 접는다
+                if (this._stageHold && this._stageHold.wfId === workflowId) this._releaseStageHold(workflowId, true);
+                const prevStageIdxBefore = this._stageInfo(workflow.checklist, workflow).currentIdx;
+                const prevStageId = prevStageIdxBefore >= 0 ? this.ensureChecklistItemId(workflow.checklist[prevStageIdxBefore]) : null;
 
                 const currentItem = workflow.checklist[itemIndex];
                 const willComplete = !this.normalizeCompleted(currentItem);
@@ -12536,7 +13992,7 @@
 
                 // 순서 안내: 앞 단계가 아직 진행중인데 뒤 단계를 체크하면 알려만 준다 (현장 사정으로 순서가 바뀔 수 있어 막지는 않음)
                 if (willComplete && currentItem.skipped !== true) {
-                    const { currentIdx } = this._stageInfo(workflow.checklist);
+                    const { currentIdx } = this._stageInfo(workflow.checklist, workflow);
                     const myStage = this._stageIndexOf(workflow.checklist, itemIndex);
                     if (currentIdx >= 0 && myStage > currentIdx) {
                         const cur = workflow.checklist[currentIdx];
@@ -12614,8 +14070,19 @@
                     const newProgress = this.calculateProgress(workflow);
                     const prevProgress = this._prevFocusProgress !== undefined ? this._prevFocusProgress : -1;
                     this._prevFocusProgress = newProgress;
+                    // 할 일이 있는 단계가 방금 끝나 진행중 단계가 넘어갔으면: 끝난 단계를 잠깐 펼친 채 두었다가(체크된 모습 확인) 접는다
+                    const nowStage = this._stageInfo(workflow.checklist, workflow).currentIdx;
+                    const nowStageId = nowStage >= 0 ? workflow.checklist[nowStage].itemId : null;
+                    const prevStageIdx = prevStageId ? workflow.checklist.findIndex(it => it.itemId === prevStageId) : -1;
+                    const stageAdvanced = currentItem.completed && prevStageIdx >= 0 && nowStageId !== prevStageId
+                        && this.normalizeCompleted(workflow.checklist[prevStageIdx]) && this.findSubItems(workflow.checklist, prevStageIdx).length > 0;
                     if (newProgress === 100 || prevProgress === 100) {
                         this.displayWorkflows();
+                    } else if (stageAdvanced) {
+                        this._stageHold = { wfId: workflowId, itemId: prevStageId };
+                        this.refreshFocusChecklist(workflow);
+                        this._animateChecklistCheck(workflowId, itemIndex, true, { noScroll: true });
+                        this._stageHoldTimer = setTimeout(() => this._releaseStageHold(workflowId), 550);
                     } else {
                         this.refreshFocusChecklist(workflow);
                         this._animateChecklistCheck(workflowId, itemIndex, currentItem.completed);
@@ -14395,15 +15862,107 @@ ${GOVERNMENT_DOCUMENT_GUIDELINES}
             }
 
             // 단계 정보: 상위항목마다 단계 번호, 지금 진행할 단계(건너뛰지 않은 첫 미완료 상위)의 인덱스
-            _stageInfo(checklist) {
+            // workflow를 함께 주면 협업 담당자 PC에서는 "진행중"을 내 담당 단계 중 안 끝난 첫 단계로 잡는다
+            // (관리자가 아직 안 끝낸 앞 단계에 「진행중」이 붙어 담당자가 헷갈리지 않게)
+            _stageInfo(checklist, workflow = null) {
                 const numbers = new Map();
+                const mine = workflow ? this._collabMineStageSet(workflow) : null;
                 let n = 0, currentIdx = -1;
                 (checklist || []).forEach((item, i) => {
                     if (this._isSubEntry(item)) return;
                     numbers.set(i, ++n);
+                    if (mine && !mine.has(i)) return;
                     if (currentIdx < 0 && item.skipped !== true && !this.normalizeCompleted(item)) currentIdx = i;
                 });
                 return { numbers, currentIdx };
+            }
+
+            // ── 협업 담당자 화면 도우미 ──
+            // 내 담당 단계(상위 항목)의 인덱스 집합 — 담당자 PC가 아니면 null
+            _collabMineStageSet(wf) {
+                const c = wf && wf.collab;
+                if (!c || c.role !== 'assignee') return null;
+                const set = new Set();
+                (wf.checklist || []).forEach((it, i) => {
+                    if (!this._isSubEntry(it) && c.steps && c.steps[it.itemId] && c.steps[it.itemId].assignee === c.me) set.add(i);
+                });
+                return set;
+            }
+            _collabStageOwnerName(wf, stageIdx) {
+                const it = (wf.checklist || [])[stageIdx];
+                const st = it && wf.collab && wf.collab.steps ? wf.collab.steps[it.itemId] : null;
+                return st && st.assignee ? st.assignee : `${(wf.collab && wf.collab.owner) || '관리자'}(관리자)`;
+            }
+            // 내 담당 진행 (진행률과 같은 기준: 단계 수) + 업무 전체 진행률(요청 받을 때 기준)
+            _collabMineProgress(wf) {
+                if (!this._collabMineStageSet(wf)) return null;
+                const { completed, total } = this.getChecklistStats(wf);
+                const all = this.getChecklistStats(wf, { overall: true });
+                return { done: completed, total, overallPct: all.total ? Math.round(all.completed / all.total * 100) : 100 };
+            }
+            // 회신이 필요한지: 'none'(아직 할 일 남음) · 'send'(다 했는데 회신 안 함) · 'resend'(회신 뒤 바뀜) · 'sent'(최종 회신 그대로)
+            _collabReplySig(wf) {
+                const cl = wf.checklist || [];
+                const parts = [];
+                this._collabMyStepIds(wf).forEach(sid => this._collabStepIndices(cl, sid).forEach(i => {
+                    const it = cl[i];
+                    parts.push([it.itemId, this.normalizeCompleted(it) ? 1 : 0, it.skipped ? 1 : 0, it.result?.text || '', it.result?.summary || '',
+                        this._collabResultFiles(wf.id, it.itemId).map(a => a.id).join(',')].join('|'));
+                }));
+                return parts.join('§');
+            }
+            _collabReplyState(wf) {
+                const p = this._collabMineProgress(wf);
+                if (!p) return 'none';
+                const c = wf.collab;
+                if (c.finalAt && c.replySig === this._collabReplySig(wf)) return 'sent';
+                if (c.finalAt) return 'resend';
+                return p.total && p.done >= p.total ? 'send' : 'none';
+            }
+            // 담당자가 업무를 열 때: 할 일은 다 했는데 회신을 안 보냈으면 알려 준다 (가장 흔한 지연 원인)
+            _collabNudge(workflowId) {
+                const wf = this.allData.workflows.find(w => w.id === workflowId);
+                const st = wf ? this._collabReplyState(wf) : 'none';
+                if (st !== 'send' && st !== 'resend') return;
+                this.showToast('info', '📩', st === 'send' ? '할 일은 다 끝났습니다. 회신을 보내야 관리자에게 전달됩니다.' : '회신한 뒤 바뀐 내용이 있습니다. 다시 회신해 주세요.', 9000,
+                    { actionLabel: '회신하기', onAction: () => this.openCollabReplyModal(workflowId) });
+            }
+            _collabAssigneeBannerHtml(wf) {
+                const p = this._collabMineProgress(wf);
+                if (!p) return '';
+                const only = this._collabIsMineOnly(wf);
+                const hidden = (wf.checklist || []).filter((it, i) => !this._isSubEntry(it) && it.skipped !== true && !this._collabMineStageSet(wf).has(i)).length;
+                const when = wf.collab.receivedAt ? fmtDate(wf.collab.receivedAt, { short: true }) : '';
+                const rs = this._collabReplyState(wf);
+                const c = wf.collab;
+                const replyBox = rs === 'send' ? `<div class="cb-reply-cta"><b>✅ 내 담당 완료</b> — 회신을 보내야 관리자에게 전달됩니다 <button type="button" class="btn btn-primary btn-small" onclick="app.openCollabReplyModal(${wf.id})">📩 관리자에게 회신</button></div>`
+                    : rs === 'resend' ? `<div class="cb-reply-cta warn"><b>회신한 뒤 바뀐 내용이 있습니다</b> — 다시 회신해 주세요 <button type="button" class="btn btn-primary btn-small" onclick="app.openCollabReplyModal(${wf.id})">📩 다시 회신</button></div>`
+                    : rs === 'sent' ? `<div class="cb-reply-cta done">📩 ${c.round}차 회신함 (${fmtDate(c.finalAt, { short: true })}) — 고칠 게 생기면 다시 회신하면 됩니다</div>` : '';
+                return replyBox + `<div class="cb-mine-bar">
+                        <span class="cb-mine-prog">★ 내 담당 <b>${p.done}/${p.total}</b>단계</span>
+                        <span class="cb-hint">항목 제목을 누르면 조치결과를 입력할 수 있습니다 · 전체 ${p.overallPct}%${only && hidden ? ` · 다른 단계 ${hidden}개 숨김` : ` · 다른 단계는 ${when ? when + ' ' : ''}요청 받을 때 기준이며 보기만 됩니다`}</span>
+                        ${hidden ? `<button type="button" class="cb-mini" onclick="app.toggleCollabMineOnly(${wf.id})">${only ? '전체 단계 보기' : '내 담당만 보기'}</button>` : ''}
+                    </div>`;
+            }
+            // 담당자 화면은 기본이 [내 담당만 보기] — 진행률·마감·회신이 모두 내 담당 기준이라 목록도 내 단계만.
+            // 다른 단계(앞 단계 조치결과 등)는 [전체 단계 보기]로 본다. 고른 보기는 업무마다 기억(collab.viewAll)
+            _collabIsMineOnly(wf) {
+                return !!(wf && this._collabMineStageSet(wf) && !wf.collab.viewAll);
+            }
+            toggleCollabMineOnly(workflowId) {
+                const wf = this.allData.workflows.find(w => w.id === workflowId);
+                if (!wf || !wf.collab) return;
+                wf.collab.viewAll = !wf.collab.viewAll;
+                this.saveData();
+                this.refreshFocusChecklist(wf);
+                this.refreshAIPanelDashboardIfNeeded?.();
+            }
+            // 담당자가 업무를 열면 내 차례 단계로 바로 이동
+            _collabScrollToMine(workflowId) {
+                const wf = this.allData.workflows.find(w => w.id === workflowId);
+                if (!wf || !this._collabMineStageSet(wf)) return;
+                const { currentIdx } = this._stageInfo(wf.checklist, wf);
+                if (currentIdx >= 0) this.scrollToMainChecklistItem?.(workflowId, currentIdx);
             }
 
             // 항목이 속한 단계(상위)의 인덱스
@@ -16208,7 +17767,8 @@ ${item.result.text}
             }
 
             // 여러 업무를 단일 패키지 파일로 내보내기 (서식·첨부·진행 상태 모두 포함)
-            async exportMultipleWorkflowPackages(workflowIds) {
+            // opts: { extra: 파일에 더할 정보(협업 요청 등), fileName, successText } — 저장했으면 true를 돌려준다
+            async exportMultipleWorkflowPackages(workflowIds, opts = {}) {
                 this.showToast('info', '⏳', `${workflowIds.length}개 업무 파일 생성 중...`);
                 try {
                     const workflows = [];
@@ -16268,17 +17828,19 @@ ${item.result.text}
                         attachmentsData: allAttachmentsData,
                         lawLibraryData: allLawLibraryData,
                         repoDocumentsData: allRepoDocumentsData,
-                        docSummaries: await this._collectDocSummaries(workflows.map(w => w.id))  // 첨부파일 AI 요약(받는 쪽에서 다시 만들지 않게)
+                        docSummaries: await this._collectDocSummaries(workflows.map(w => w.id)),  // 첨부파일 AI 요약(받는 쪽에서 다시 만들지 않게)
+                        ...(opts.extra || {})
                     };
 
                     const jsonStr = JSON.stringify(packageData, null, 2);
                     const blob = new Blob([jsonStr], { type: 'application/json' });
                     const dateStr = localDateStr();
-                    const fileName = workflows.length === 1
+                    const fileName = opts.fileName || (workflows.length === 1
                         ? `업무_${sanitizeFileName(workflows[0].title || '업무', 60)}_${dateStr}.json`
-                        : `업무묶음_${workflows.length}개_${dateStr}.json`;
+                        : `업무묶음_${workflows.length}개_${dateStr}.json`);
                     const saved = await this._saveFileWithPicker(blob, fileName);
-                    if (!saved) return;
+                    if (!saved) return false;
+                    if (opts.successText) { this.showToast('success', '✅', opts.successText, 7000); return true; }
 
                     const formCount = Object.values(allFormsData).flat().length;
                     const attachCount = Object.values(allAttachmentsData).flat().length;
@@ -16505,6 +18067,8 @@ ${item.result.text}
                             if (!confirm(`예전 버전의 연도별 백업 파일입니다.\n업무 ${imported.projects.length}건을 지금 자료에 더합니다. (지금 자료는 그대로 둡니다)\n\n가져올까요?`)) return;
                             await this.executeImportProjectPackage(imported, 'asIs', null);
                             this._refreshPrefsIfOpen('backup', 'storage');
+                        } else if (this._routeCollabFile(imported)) {
+                            // 협업 파일(요청·회신·인수인계): 각자 처리
                         } else if (imported.type === 'workflow_package' && Array.isArray(imported.workflows) && imported.workflows.length > 0) {
                             // 업무 파일: 그대로 가져오기 / 복사하여 시작 선택
                             this._showPackageImportChoice(imported);
@@ -19806,6 +21370,11 @@ ${docScope === 'internal' ? `[내부결재 — 보고·검토·승인용]
                 reader.onload = (e) => {
                     try {
                         const imported = JSON.parse(e.target.result);
+                        if (this._routeCollabFile(imported)) {  // 협업 파일(요청·회신·인수인계)
+                            const fi = document.getElementById('templateFileInput');
+                            if (fi) fi.value = '';
+                            return;
+                        }
                         if (imported.type === 'workflow_package' && Array.isArray(imported.workflows) && imported.workflows.length > 0) {
                             this._showPackageImportChoice(imported);  // 업무 파일은 가져오기 방식 선택
                             const fi = document.getElementById('templateFileInput');
@@ -20027,7 +21596,7 @@ ${docScope === 'internal' ? `[내부결재 — 보고·검토·승인용]
 
                     // 중복 감지 — 동료의 업무 파일을 가져올 때만 묻는다. 전체 백업 복원은 자료를 비운 뒤 채우므로
                     // 같은 제목이어도 서로 다른 업무(예: 해마다 복사해 쓰는 업무)라 그대로 모두 되살린다.
-                    const dup = !isBackupRestore && this.allData.workflows.find(w => w.title === wf.title && !w.isDeleted);
+                    const dup = !isBackupRestore && !imported.skipDupCheck && this.allData.workflows.find(w => w.title === wf.title && !w.isDeleted);
                     if (dup) {
                         const choice = confirm(`"${wf.title}" 업무가 이미 있습니다.\n\n확인: 새 이름으로 추가\n취소: 건너뜀`);
                         if (!choice) continue;
@@ -20083,6 +21652,7 @@ ${docScope === 'internal' ? `[내부결재 — 보고·검토·승인용]
                     if (!isBackupRestore) {
                         delete newWorkflow.completedDate;
                         delete newWorkflow.lastWorkedAt;  // 보낸 사람의 작업 기록은 받는 쪽 "최근 작업순"과 무관
+                        delete newWorkflow.collab;        // 협업 정보는 요청·인수인계 파일로 받을 때만 따로 붙인다 (일반 공유 파일로 관리자가 둘이 되지 않게)
                         if (startFresh) {
                             // 복사하여 시작: 화면 생성일·내부 생성일을 모두 오늘로, 마감일은 새로 지정한 값
                             newWorkflow.createdAt = new Date().toISOString();
@@ -20443,13 +22013,17 @@ ${docScope === 'internal' ? `[내부결재 — 보고·검토·승인용]
                     return;
                 }
 
+                // 협업 담당자: 현재 위치(진행중)는 내 단계 기준, 다른 사람 단계는 흐리게 담당자 이름과 함께
+                const procMine = this._collabMineStageSet(workflow);
+                const procMineOnly = !!procMine && this._collabIsMineOnly(workflow);
                 // 건너뛴(미완료) 항목은 실제로 진행할 절차가 아니므로 타임라인에서 제외 — 원래 인덱스는 보존(항목 이동에 필요)
                 // 하위 항목(1-1 등)은 큰 원형 마커가 붙는 독립된 절차 단계로는 취급하지 않되(상위 항목 밑에
                 // 작게 들여써서 표시), 절차의 일부이므로 완전히 숨기지는 않는다.
                 const steps = workflow.checklist
                     .map((item, idx) => ({ item, idx }))
                     .filter(({ item }) => !(item.skipped && !this.normalizeCompleted(item)))
-                    .filter(({ item }) => !(this._isSubEntry(item)));
+                    .filter(({ item }) => !(this._isSubEntry(item)))
+                    .filter(({ idx }) => !(procMineOnly && !procMine.has(idx)));
                 if (steps.length === 0) {
                     container.innerHTML = `
                         <div style="padding:48px 24px;text-align:center;color:var(--text-muted,#8899aa);">
@@ -20461,7 +22035,9 @@ ${docScope === 'internal' ? `[내부결재 — 보고·검토·승인용]
                 const total = steps.length;
                 const completed = steps.filter(({ item }) => this.normalizeCompleted(item)).length;
                 const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
-                const currentStepPos = steps.findIndex(({ item }) => !this.normalizeCompleted(item));
+                const currentStepPos = procMine
+                    ? steps.findIndex(({ item, idx }) => procMine.has(idx) && !this.normalizeCompleted(item))
+                    : steps.findIndex(({ item }) => !this.normalizeCompleted(item));
 
                 // "진행중" 단계가 실제로 바뀌는 순간(체크 직후)인지 미리 판단해둔다 — 그래야 아래에서
                 // 새 진행중 단계의 서식·팁 상세박스를 지금 바로 다 그리지 않고, 배가 도착한 뒤에
@@ -20513,7 +22089,9 @@ ${docScope === 'internal' ? `[내부결재 — 보고·검토·승인용]
 
                 let deadlineHtml = '';
                 if (currentStepPos === -1) {
-                    deadlineHtml = `<span style="font-size:0.78rem;font-weight:700;color:#10b981;">🎉 완료</span>`;
+                    deadlineHtml = procMine
+                        ? `<span style="font-size:0.78rem;font-weight:700;color:#10b981;">✅ 내 담당 완료</span>`
+                        : `<span style="font-size:0.78rem;font-weight:700;color:#10b981;">🎉 완료</span>`;
                 } else if (workflow.deadline) {
                     const today = new Date(); today.setHours(0, 0, 0, 0);
                     const dl = new Date(workflow.deadline); dl.setHours(0, 0, 0, 0);
@@ -20523,10 +22101,11 @@ ${docScope === 'internal' ? `[내부결재 — 보고·검토·승인용]
                     deadlineHtml = `<span style="font-size:0.78rem;font-weight:700;color:${dColor};">마감 ${dText}</span>`;
                 }
 
-                const stepsHtml = steps.map(({ item, idx }, pos) => {
+                const procRows = steps.map(({ item, idx }, pos) => {
                     const isDone = this.normalizeCompleted(item);
                     const isCurrent = pos === currentStepPos;
                     const isLast = pos === steps.length - 1;
+                    const procOther = procMine && !procMine.has(idx) ? this._collabStageOwnerName(workflow, idx) : '';
 
                     let iconHtml, textColor, lineColor;
                     if (isDone) {
@@ -20576,7 +22155,7 @@ ${docScope === 'internal' ? `[내부결재 — 보고·검토·승인용]
                         </div>` : '';
 
                     return `
-                        <div data-step-idx="${idx}" class="proc-step-row" style="display:flex;gap:9px;cursor:pointer;" onclick="app.scrollToMainChecklistItem(${workflowId},${idx})">
+                        <div data-step-idx="${idx}" class="proc-step-row${procOther ? ' cb-proc-other' : ''}${isCurrent ? ' is-current' : ''}" style="display:flex;gap:9px;cursor:pointer;" onclick="app.scrollToMainChecklistItem(${workflowId},${idx})">
                             <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">
                                 ${iconHtml}
                                 ${isLast
@@ -20588,23 +22167,37 @@ ${docScope === 'internal' ? `[내부결재 — 보고·검토·승인용]
                                         : `width:0;flex:1;min-height:14px;border-left:2px dashed ${lineColor};margin-top:2px;`}"></div>`}
                             </div>
                             <div style="flex:1;min-width:0;padding-bottom:${isLast ? '2px' : '14px'};">
-                                <div class="proc-step-title" style="font-size:${isCurrent ? '0.9rem' : '0.86rem'};font-weight:${isCurrent ? '700' : '500'};color:${textColor};line-height:1.5;${isDone ? 'text-decoration:line-through;text-decoration-color:var(--border-light,#dde3ee);' : ''}">${esc(item.text || '')}${isCurrent ? ' <span style="font-size:0.7rem;font-weight:700;color:#8b5cf6;">▶ 진행중</span>' : ''}</div>
+                                <div class="proc-step-title" style="font-size:${isCurrent ? '0.9rem' : '0.86rem'};font-weight:${isCurrent ? '700' : '500'};color:${textColor};line-height:1.5;${isDone ? 'text-decoration:line-through;text-decoration-color:var(--border-light,#dde3ee);' : ''}">${esc(item.text || '')}${isCurrent ? ` <span style="font-size:0.7rem;font-weight:700;color:#8b5cf6;">${procMine ? '▶ 내 차례' : '▶ 진행중'}</span>` : ''}${procMine && !procOther ? ' <span class="cb-proc-who mine">★ 내 담당</span>' : ''}${procOther ? ` <span class="cb-proc-who">${esc(procOther)}</span>` : ''}</div>
                                 ${subItemsHtml}
                                 ${detailHtml}
                             </div>
                         </div>
                     `;
-                }).join('');
+                });
+                // 진행중 단계가 항상 맨 위에 오도록, 그 앞 단계들은 「✓ 완료 n단계」 한 줄로 접는다(누르면 펼침).
+                // 방금 완료한 단계는 배가 출발할 수 있게 이번에는 펼쳐 두고, 배가 도착한 뒤 접힌 줄로 넣는다(_procFoldArrived).
+                const foldUpTo = currentStepPos > 0 ? currentStepPos : 0;
+                const keepOpenIdx = isTransitioning ? prevStepIdxForTransition : null;
+                const foldedRows = [], shownRows = [], foldedIdx = [];
+                procRows.forEach((html, pos) => {
+                    if (pos < foldUpTo && steps[pos].idx !== keepOpenIdx) { foldedRows.push(html); foldedIdx.push(steps[pos].idx); }
+                    else shownRows.push(html);
+                });
+                const procFoldOpen = !!(this._procDoneOpen && this._procDoneOpen[workflowId]);
+                const stepsHtml = (foldedRows.length ? `<div class="proc-fold${procFoldOpen ? ' open' : ''}" id="procFold">
+                        <button type="button" class="proc-fold-btn" onclick="app.toggleProcFold(${workflowId})"><span class="proc-fold-ico">✓</span><span id="procFoldLabel">${this._procFoldLabel(workflow, foldedIdx)}</span><span class="proc-fold-arrow">▾</span></button>
+                        <div class="proc-fold-list" id="procFoldList">${foldedRows.join('')}</div>
+                    </div>` : '') + shownRows.join('');
 
                 container.innerHTML = `
                     <div style="padding:16px 18px 20px;">
-                        <div style="font-size:0.7rem;font-weight:700;color:var(--text-muted,#8899aa);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:5px;">현재 업무 절차</div>
+                        <div style="font-size:0.7rem;font-weight:700;color:var(--text-muted,#8899aa);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:5px;display:flex;align-items:center;justify-content:space-between;gap:6px;">현재 업무 절차${procMine ? `<button type="button" class="cb-mini" style="text-transform:none;letter-spacing:0;" onclick="app.toggleCollabMineOnly(${workflowId})">${procMineOnly ? '전체 단계 보기' : '내 담당만 보기'}</button>` : ''}</div>
                         <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:18px;">
                             <div style="font-size:1rem;font-weight:700;color:var(--text-dark,#1e2d47);line-height:1.45;">${esc(workflow.title || '(제목 없음)')}</div>
                             ${deadlineHtml}
                         </div>
                         <div id="procStepsTrack" class="proc-steps-track">${stepsHtml}</div>
-                        <div style="margin-top:2px;padding-top:12px;border-top:1px solid var(--border-light,#e8edf5);font-size:0.78rem;color:var(--text-muted,#8899aa);text-align:center;">${completed}/${total}단계 완료 · ${pct}%</div>
+                        <div style="margin-top:2px;padding-top:12px;border-top:1px solid var(--border-light,#e8edf5);font-size:0.78rem;color:var(--text-muted,#8899aa);text-align:center;">${procMine ? (() => { const p = this._collabMineProgress(workflow); return `★ 내 담당 ${p.done}/${p.total}단계 · 전체 ${p.overallPct}% (다른 단계는 요청 받을 때 기준)`; })() : `${completed}/${total}단계 완료 · ${pct}%`}</div>
                     </div>
                 `;
 
@@ -20617,6 +22210,8 @@ ${docScope === 'internal' ? `[내부결재 — 보고·검토·승인용]
                 // → 행 전체가 아니라 "제목" 요소만 기준으로 block:'start' 정렬해서, 업무팁이 아무리
                 // 길어도 제목만큼은 항상 패널 상단 근처에 고정되도록 한다.
                 this._prevProcStepIdx[workflowId] = currentStepIdxPreview;
+                this._bindProcUserScroll();
+                if (!isTransitioning) requestAnimationFrame(() => this._procScrollCurrentTop(workflowId));
                 // 진행중 단계가 바뀌면(체크·체크 취소 모두) 이전 단계 업무팁 읽기는 끝낸다.
                 // 다시 그리면서 재생 중이던 듣기 버튼이 화면에서 사라져, 그대로 두면 패널을 닫아도 멈출 수 없었다.
                 if (prevStepIdxForTransition !== undefined && prevStepIdxForTransition !== currentStepIdxPreview
@@ -20635,9 +22230,11 @@ ${docScope === 'internal' ? `[내부결재 — 보고·검토·승인용]
                             // 스크롤에 묻혀버렸다. 배가 다 도착한 뒤에야 화면을 옮긴다.
                             const boatDuration = this._animateProcSailboat(prevStepIdxForTransition, currentStepIdxPreview);
                             setTimeout(() => {
-                                if (titleEl) {
+                                if (titleEl && Date.now() - (this._procUserScrollAt || 0) > 4000) {
                                     titleEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
                                 }
+                                // 방금 완료한 단계를 접힌 「✓ 완료」 줄로 넣어, 진행중 단계가 맨 위로 올라오게 한다
+                                setTimeout(() => this._procFoldArrived(workflowId, prevStepIdxForTransition), 450);
                                 if (pendingDetailForBoat) {
                                     const slot = document.getElementById(`proc-detail-slot-${pendingDetailForBoat.idx}`);
                                     if (slot) slot.outerHTML = pendingDetailForBoat.html;
@@ -27647,8 +29244,13 @@ ${aiPartnerCitationFirstRules}
 
                 // 단계별 접기: 진행중 단계만 할 일을 펼치고, 끝난 단계·다음 단계는 "할 일 n/m" 배지만 보인다
                 // (배지를 눌러 직접 펼치거나 접을 수 있음)
-                const { currentIdx } = this._stageInfo(cl);
+                const { currentIdx } = this._stageInfo(cl, workflow);
+                // 협업 담당자: [내 담당만 보기]면 다른 사람 단계는 목록에서 뺀다
+                const mineSet = this._collabMineStageSet(workflow);
+                const mineOnly = !!mineSet && this._collabIsMineOnly(workflow);
+                const collabBanner = this._collabAssigneeBannerHtml(workflow);
                 const renderEntry = (item, idx) => {
+                    if (mineOnly && !mineSet.has(this._stageIndexOf(cl, idx))) return '';
                     if (this._isSubEntry(item)) {
                         const p = this.findParentItem(cl, idx);
                         if (p && !this._isStageOpen(workflow, p.index, currentIdx)) return '';
@@ -27660,7 +29262,7 @@ ${aiPartnerCitationFirstRules}
                 };
 
                 if (skippedEntries.length === 0) {
-                    return cl.map((item, idx) => renderEntry(item, idx)).join('');
+                    return collabBanner + cl.map((item, idx) => renderEntry(item, idx)).join('');
                 }
 
                 const expanded = !!(this._skippedGroupExpanded && this._skippedGroupExpanded[workflow.id]);
@@ -27686,7 +29288,7 @@ ${aiPartnerCitationFirstRules}
                         html += renderEntry(item, idx);
                     }
                 });
-                return html;
+                return collabBanner + html;
             }
 
             // 건너뛴 항목 그룹 펼치기/접기
@@ -27697,27 +29299,158 @@ ${aiPartnerCitationFirstRules}
                 if (workflow) this.refreshFocusChecklist(workflow);
             }
 
-            // 단계(상위)의 할 일 목록을 펼쳐 보일지: 사용자가 직접 펼치거나 접은 적이 있으면 그대로, 아니면 진행중 단계만 펼침
+            // 단계(상위)의 할 일 목록을 펼쳐 보일지 — 아코디언 방식: 진행중 단계만 자동으로 펼친다.
+            // 직접 펼치거나 접은 것은 "진행중 단계가 바뀌기 전까지만" 유지하고, 다음 단계로 넘어가면 다시 자동 규칙으로 돌아간다
+            // (예전엔 한 번 직접 펼친 단계가 계속 펼쳐져 있고, 직접 접었던 단계는 진행중이 되어도 펼쳐지지 않았다).
+            // 방금 끝난 단계는 체크된 모습을 잠깐 보여 준 뒤 접는다(_stageHold → _releaseStageHold).
             _isStageOpen(workflow, stageIdx, currentIdx) {
                 const id = this.ensureChecklistItemId(workflow.checklist[stageIdx]);
-                const saved = this._stageOpen?.[workflow.id]?.[id];
+                const hold = this._stageHold;
+                if (hold && hold.wfId === workflow.id && hold.itemId === id) return true;
+                const curId = currentIdx >= 0 && workflow.checklist[currentIdx] ? this.ensureChecklistItemId(workflow.checklist[currentIdx]) : '';
+                const m = this._stageOpen && this._stageOpen[workflow.id];
+                const saved = m && m.__cur === curId ? m[id] : undefined;
                 return saved !== undefined ? saved : (!!workflow.isReference || stageIdx === currentIdx);
             }
 
             toggleStageOpen(workflowId, index) {
                 const workflow = this.allData.workflows.find(w => w.id === workflowId);
                 if (!workflow || !workflow.checklist[index]) return;
-                const { currentIdx } = this._stageInfo(workflow.checklist);
+                const { currentIdx } = this._stageInfo(workflow.checklist, workflow);
                 const open = this._isStageOpen(workflow, index, currentIdx);
+                const curId = currentIdx >= 0 && workflow.checklist[currentIdx] ? this.ensureChecklistItemId(workflow.checklist[currentIdx]) : '';
                 if (!this._stageOpen) this._stageOpen = {};
-                if (!this._stageOpen[workflowId]) this._stageOpen[workflowId] = {};
+                // 진행중 단계가 바뀐 뒤 처음 직접 펼치거나 접으면 예전 기록은 버리고 새로 시작
+                if (!this._stageOpen[workflowId] || this._stageOpen[workflowId].__cur !== curId) this._stageOpen[workflowId] = { __cur: curId };
                 this._stageOpen[workflowId][this.ensureChecklistItemId(workflow.checklist[index])] = !open;
+                this._focusTouch = { wfId: workflowId, itemId: this.ensureChecklistItemId(workflow.checklist[index]), at: Date.now() };  // 누른 단계를 기준으로 제자리
                 this.refreshFocusChecklist(workflow);
+            }
+
+            // 단계가 끝나면: 체크된 모습을 0.55초 보여 준 뒤 그 단계의 할 일을 부드럽게 접는다.
+            // 기준은 그 단계 제목 — 할 일은 제목 "아래"에서 접히므로 제목과 그 위쪽 화면은 움직이지 않는다.
+            _releaseStageHold(workflowId, immediate = false) {
+                const hold = this._stageHold;
+                clearTimeout(this._stageHoldTimer);
+                if (!hold || hold.wfId !== workflowId) return;
+                const wf = this.allData.workflows.find(w => w.id === workflowId);
+                const sc = document.getElementById(`focus-checklist-scroll-${workflowId}`);
+                const si = wf ? (wf.checklist || []).findIndex(it => it.itemId === hold.itemId) : -1;
+                const finish = () => {
+                    this._stageHold = null;
+                    if (!wf) return;
+                    this._focusTouch = { wfId: workflowId, itemId: hold.itemId, at: Date.now() };
+                    this.refreshFocusChecklist(wf);
+                    if (!immediate) requestAnimationFrame(() => requestAnimationFrame(() => {
+                        // 새로 펼쳐진 진행중 단계가 화면 아래로 벗어났을 때만 필요한 만큼 내려 준다
+                        const { currentIdx } = this._stageInfo(wf.checklist, wf);
+                        const cur = currentIdx >= 0 && sc ? document.querySelector(`#focus-checklist-scroll-${workflowId} .checklist-card[data-index="${currentIdx}"]`) : null;
+                        if (cur) { this._scrollIntoViewMinimal(workflowId, cur); cur.classList.add('next-focus-pulse'); setTimeout(() => cur.classList.remove('next-focus-pulse'), 700); }
+                    }));
+                };
+                const subs = !immediate && sc && si >= 0 ? this.findSubItems(wf.checklist, si)
+                    .map(s => sc.querySelector(`.checklist-card[data-index="${s.index}"]`)).filter(Boolean) : [];
+                if (!subs.length || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) { finish(); return; }
+                subs.forEach(el => {
+                    el.style.overflow = 'hidden';
+                    el.style.maxHeight = el.offsetHeight + 'px';
+                    el.style.transition = 'max-height 0.25s ease, opacity 0.2s ease, margin 0.25s ease, padding 0.25s ease';
+                });
+                requestAnimationFrame(() => requestAnimationFrame(() => subs.forEach(el => {
+                    el.style.maxHeight = '0px'; el.style.opacity = '0';
+                    el.style.marginTop = '0px'; el.style.marginBottom = '0px'; el.style.paddingTop = '0px'; el.style.paddingBottom = '0px';
+                })));
+                setTimeout(finish, 270);
+            }
+
+            // 항목이 화면 "아래"로 벗어났을 때만 필요한 만큼 내린다 — 이미 보이거나 위쪽에 있으면 그대로(화면이 출렁이지 않게)
+            _scrollIntoViewMinimal(workflowId, el, margin = 16) {
+                const sc = document.getElementById(`focus-checklist-scroll-${workflowId}`);
+                if (!sc || !el) return;
+                const r = el.getBoundingClientRect(), b = sc.getBoundingClientRect();
+                if (r.bottom <= b.bottom - margin || r.top < b.top) return;
+                const by = Math.min(r.bottom - (b.bottom - margin), r.top - b.top - margin);  // 제목이 위로 넘어가지 않을 만큼만
+                if (by > 0) sc.scrollBy({ top: by, behavior: 'smooth' });
+            }
+
+            // ══ 체크리스트 줄 미리보기 (제목을 누르면 줄 아래로 펼침) ══
+            // 예전엔 줄의 빈 곳 어디를 눌러도 큰 창(서식·업무팁·조치결과)이 떠서, 체크하려다·스크롤하려다·글자를 고르려다
+            // 창이 열리는 일이 잦았다. 이제 ① 왼쪽 체크 구역은 넓게 체크만 ② 제목은 줄 아래 미리보기(빠른 버튼) ③ 버튼을 눌러야 해당 탭 창.
+            toggleChecklistPeek(workflowId, index, ev) {
+                this._bindFocusTouchTracking();
+                if (ev) {
+                    const sel = window.getSelection ? String(window.getSelection()) : '';
+                    if (sel.trim()) return;                                        // 글자를 고르던 중
+                    const p = this._lastPointerDown;
+                    if (p && Math.hypot(ev.clientX - p.x, ev.clientY - p.y) > 6) return;  // 끌어서 스크롤하던 중
+                }
+                if (Date.now() - (this._lastCheckAt || 0) < 400) return;           // 체크 직후 두 번째 누름(더블클릭 오작동)
+                const wf = this.allData.workflows.find(w => w.id === workflowId);
+                const item = wf && wf.checklist ? wf.checklist[index] : null;
+                if (!item) return;
+                const id = this.ensureChecklistItemId(item);
+                const same = this._clPeek && this._clPeek.wfId === workflowId && this._clPeek.itemId === id;
+                this._clPeek = same ? null : { wfId: workflowId, itemId: id };    // 한 번에 한 줄만 펼침
+                this._focusTouch = { wfId: workflowId, itemId: id, at: Date.now() };
+                this._rerenderChecklist(wf);
+            }
+            _rerenderChecklist(wf) {
+                if (this.focusMode && this.focusedWorkflowId === wf.id) this.refreshFocusChecklist(wf);
+                else if (this.selectedWorkflowId === wf.id && this.showProjectDetail) this.showProjectDetail(wf.id);
+                else this.displayWorkflows();
+            }
+            _clAutoGrow(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 220) + 'px'; }
+            // 조치결과 입력칸 (미리보기·담당자 줄 공용) — 입력 중에는 화면을 다시 그리지 않고 저장만 한다
+            _clResultInputHtml(workflow, index, compact) {
+                const item = workflow.checklist[index];
+                const files = this._collabResultFiles(workflow.id, this.ensureChecklistItemId(item));
+                const hint = workflow.collab && workflow.collab.role === 'assignee' ? '조치결과 입력 (회신에 담깁니다)' : '조치결과 입력';
+                return `<div class="cl-result-row${compact ? ' compact' : ''}" onclick="event.stopPropagation()">
+                    ${compact ? '' : '<span class="cl-result-label">조치결과</span>'}
+                    <textarea class="cl-result-input" rows="1" placeholder="✎ ${hint}"
+                        oninput="app._clAutoGrow(this);app.updateMainChecklistResult(${workflow.id},${index},this.value)"
+                        onfocus="app._clAutoGrow(this)"
+                        onblur="app.saveMainChecklistResultOnBlur(${workflow.id},${index},this)">${this.escapeHtml(item.result?.text || '')}</textarea>
+                    <label class="cl-attach-btn" title="결과 파일 첨부 (결과 공문·사진 등)">📎${files.length ? ` <b>${files.length}</b>` : ''}<input type="file" multiple hidden onchange="app.addResultFilesInline(${workflow.id},${index},this)"></label>
+                </div>`;
+            }
+            async addResultFilesInline(workflowId, index, inputEl) {
+                await this.addResultFiles(workflowId, index, inputEl);
+                const wf = this.allData.workflows.find(w => w.id === workflowId);
+                if (wf) this._rerenderChecklist(wf);
+            }
+            // 줄 아래 미리보기: 조치결과(바로 입력) · 업무팁 · 서식 개수 등 빠른 버튼 — 버튼을 누르면 그 탭이 열린 창
+            _clPeekHtml(workflow, item, index, ctx) {
+                const peek = this._clPeek;
+                const open = peek && peek.wfId === workflow.id && peek.itemId === item.itemId;
+                const editable = !ctx.isSkipped && !ctx.locked;
+                // 조치결과 입력칸은 제목을 눌렀을 때만 — 항목마다 늘 보이면 목록이 두 배로 길어지고 복잡해 보인다
+                if (!open) return '';
+                const w = workflow.id, i = index;
+                const tipOn = !!(item.tip && item.tip.content);
+                const fmtN = (item.formats || []).length + (item.linkedDocs || []).length;
+                const files = this._collabResultFiles(w, item.itemId).length;
+                const canNA = editable && !workflow.isReference && !workflow.completedProcessed && !this.normalizeCompleted(item);
+                const resultBlock = editable && !ctx.asTemplate ? this._clResultInputHtml(workflow, index, false)
+                    : (item.result?.text ? `<div class="cl-peek-text">${this.escapeHtml(item.result.text)}</div>` : '');
+                const chip = (tab, icon, label, on) => `<button type="button" class="cl-chip${on ? ' on' : ''}" onclick="event.stopPropagation();app.showChecklistItemModal(${w},${i},'${tab}')">${icon} ${label}</button>`;
+                return `<div class="cl-peek" onclick="event.stopPropagation()">
+                    ${ctx.locked ? `<div class="cl-peek-lock">🔒 ${this.escapeHtml(ctx.locked)}</div>` : ''}
+                    ${resultBlock}
+                    ${item.result?.summary ? `<div class="cl-peek-sum">요약: ${this.escapeHtml(item.result.summary)}</div>` : ''}
+                    <div class="cl-chips">
+                        ${chip('result', '📝', `조치결과 자세히${files ? ` · 첨부 ${files}` : ''}`, !!(item.result?.text || files))}
+                        ${chip('tip', '💡', tipOn ? '업무팁' : '업무팁 없음', tipOn)}
+                        ${chip('formats', '📄', `서식 ${fmtN}`, fmtN > 0)}
+                        ${!ctx.isSkipped ? `<button type="button" class="cl-chip" onclick="event.stopPropagation();app.showChecklistHelp(${w},${i})">✨ ${this.isAIAvailable() ? 'AI 길잡이' : '업무 길잡이'}</button>` : ''}
+                        ${canNA ? `<button type="button" class="cl-chip" onclick="event.stopPropagation();app.markNotApplicable(${w},[${i}])" title="이번 업무에서는 할 필요가 없는 항목으로 뺍니다 (할 일 포함)">⊘ 해당 없음으로 빼기</button>` : ''}                    </div>
+                </div>`;
             }
 
             // 체크리스트 항목 렌더링 (고급 카드 형태 - 수정 모달 스타일)
             // opts.collapsible: 할 일 접기/펼치기 버튼 표시(포커스 모드 목록), opts.collapsed: 지금 접혀 있음
             renderChecklistItem(workflow, item, index, opts = {}) {
+                this._bindFocusTouchTracking();
                 // 데이터 구조 초기화
                 if (!item.text) item.text = '';
                 item.completed = this.normalizeCompleted(item);
@@ -27733,6 +29466,7 @@ ${aiPartnerCitationFirstRules}
                 const isCompleted = !asTemplate && this.normalizeCompleted(item);
                 const isSkipped = item.skipped === true; // 건너뛰기 상태 확인
                 const checkboxId = `main-checkbox-${workflow.id}-${index}`;
+                const collabLockMsg = this._collabLock(workflow, index);  // 협업: 다른 사람 담당 단계면 체크 잠금
                 
                 // 마감일 배지 생성 (건너뛴 항목은 표시 안 함)
                 let deadlineBadge = '';
@@ -27776,7 +29510,7 @@ ${aiPartnerCitationFirstRules}
 
                 // 단계 상태: 완료 / 진행중(건너뛰지 않은 첫 미완료 단계) / 대기. 할 일은 자기 단계의 상태를 따른다.
                 const cl = workflow.checklist || [];
-                const stage = this._stageInfo(cl);
+                const stage = this._stageInfo(cl, workflow);
                 const stageIdx = this._stageIndexOf(cl, index);
                 const stageItem = cl[stageIdx] || item;
                 const stageState = asTemplate || isSkipped || stageItem.skipped === true ? ''
@@ -27805,7 +29539,7 @@ ${aiPartnerCitationFirstRules}
                 // 건너뛰기 스타일 및 클래스 설정
                 const cardClass = isSkipped
                     ? 'checklist-card skipped'
-                    : `checklist-card ${isExpanded ? 'expanded' : ''} ${isCompleted ? 'completed' : ''} ${isSub ? 'sub-item' : ''} ${stageState}`;
+                    : `checklist-card ${isExpanded ? 'expanded' : ''} ${isCompleted ? 'completed' : ''} ${isSub ? 'sub-item' : ''} ${stageState}${collabLockMsg ? ' collab-locked' : ''}${collabLockMsg && workflow.collab && workflow.collab.role === 'assignee' ? ' cb-others' : ''}`;
                 const headerClass = isSkipped ? 'checklist-card-header skipped' : `checklist-card-header ${isExpanded ? 'expanded' : ''} ${isCompleted ? 'completed' : ''}`;
                 const textStyle = isSkipped
                     ? 'flex: 1; text-decoration: line-through; color: #b0b8c8; font-size:0.88rem;'
@@ -27819,8 +29553,8 @@ ${aiPartnerCitationFirstRules}
                 const numStr = isSub ? '' : String(stage.numbers.get(index) || index + 1).padStart(2, '0');
                 const checkboxHtml = isSkipped
                     ? `<span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#e5e7eb;color:#9ca3af;font-size:0.8rem;flex-shrink:0;" title="건너뜀">✕</span>`
-                    : `<label for="${checkboxId}" style="display:flex;align-items:center;gap:7px;cursor:pointer;flex-shrink:0;" onclick="event.stopPropagation();">
-                            <input type="checkbox" id="${checkboxId}" class="checkbox" ${isCompleted ? 'checked' : ''}
+                    : `<label for="${checkboxId}" class="cl-check-zone" title="${collabLockMsg ? this.escapeHtml(collabLockMsg) : '체크'}" style="display:flex;align-items:center;gap:7px;cursor:pointer;flex-shrink:0;" onclick="event.stopPropagation();">
+                            <input type="checkbox" id="${checkboxId}" class="checkbox" ${isCompleted ? 'checked' : ''} ${collabLockMsg ? `disabled title="${this.escapeHtml(collabLockMsg)}"` : ''}
                                    onclick="event.stopPropagation(); app.toggleChecklistItem(${workflow.id}, ${index})">
                             ${numStr ? `<span class="item-number">${numStr}</span>` : ''}
                        </label>`;
@@ -27840,8 +29574,9 @@ ${aiPartnerCitationFirstRules}
                          data-workflow-id="${workflow.id}" data-index="${index}"
                          style="${isSkipped ? 'opacity:0.6;' : ''}">
                         <div class="${headerClass}"
-                             onclick="app.showChecklistItemModal(${workflow.id}, ${index})"
+                             onclick="app.toggleChecklistPeek(${workflow.id}, ${index}, event)"
                              oncontextmenu="app.openChecklistItemMenu(event, ${workflow.id}, ${index})"
+                             title="눌러서 조치결과·업무팁·서식 보기"
                              style="cursor:pointer;">
                             ${checkboxHtml}
                             ${subItemIcon}
@@ -27853,18 +29588,19 @@ ${aiPartnerCitationFirstRules}
                                 ${stageChip}
                             </span>
                             <div style="display:flex;align-items:center;gap:4px;flex-shrink:0;margin-left:auto;">
+                                ${!isSub ? this._collabChipHtml(workflow, item, index) : ''}
                                 ${stageBadge}
                                 ${branchButtons}
                                 ${deadlineBadge}
-                                ${!isSkipped ? `<button class="ai-guide-btn" onclick="event.stopPropagation();app.showChecklistHelp(${workflow.id},${index})" title="${this.isAIAvailable() ? 'AI 길잡이' : '업무 길잡이'}"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M9 4.5a.75.75 0 01.721.544l.813 2.846a3.75 3.75 0 002.576 2.576l2.846.813a.75.75 0 010 1.442l-2.846.813a3.75 3.75 0 00-2.576 2.576l-.813 2.846a.75.75 0 01-1.442 0l-.813-2.846a3.75 3.75 0 00-2.576-2.576l-2.846-.813a.75.75 0 010-1.442l2.846-.813A3.75 3.75 0 007.466 7.89l.813-2.846A.75.75 0 019 4.5zM18 1.5a.75.75 0 01.728.568l.258 1.036c.236.94.97 1.674 1.91 1.91l1.036.258a.75.75 0 010 1.456l-1.036.258a2.25 2.25 0 00-1.91 1.91l-.258 1.036a.75.75 0 01-1.456 0l-.258-1.036a2.25 2.25 0 00-1.91-1.91l-1.036-.258a.75.75 0 010-1.456l1.036-.258a2.25 2.25 0 001.91-1.91l.258-1.036A.75.75 0 0118 1.5z" clip-rule="evenodd"/></svg><span class="ai-guide-label">${this.isAIAvailable() ? 'AI 길잡이' : '업무 길잡이'}</span></button>` : ''}
+                                ${false /* 길잡이 버튼은 줄 미리보기(cl-peek)의 빠른 버튼으로 옮김 — 작은 버튼이 붙어 있어 잘못 눌리던 문제 */ && !isSkipped ? `<button class="ai-guide-btn" onclick="event.stopPropagation();app.showChecklistHelp(${workflow.id},${index})" title="${this.isAIAvailable() ? 'AI 길잡이' : '업무 길잡이'}"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M9 4.5a.75.75 0 01.721.544l.813 2.846a3.75 3.75 0 002.576 2.576l2.846.813a.75.75 0 010 1.442l-2.846.813a3.75 3.75 0 00-2.576 2.576l-.813 2.846a.75.75 0 01-1.442 0l-.813-2.846a3.75 3.75 0 00-2.576-2.576l-2.846-.813a.75.75 0 010-1.442l2.846-.813A3.75 3.75 0 007.466 7.89l.813-2.846A.75.75 0 019 4.5zM18 1.5a.75.75 0 01.728.568l.258 1.036c.236.94.97 1.674 1.91 1.91l1.036.258a.75.75 0 010 1.456l-1.036.258a2.25 2.25 0 00-1.91 1.91l-.258 1.036a.75.75 0 01-1.456 0l-.258-1.036a2.25 2.25 0 00-1.91-1.91l-1.036-.258a.75.75 0 010-1.456l1.036-.258a2.25 2.25 0 001.91-1.91l.258-1.036A.75.75 0 0118 1.5z" clip-rule="evenodd"/></svg><span class="ai-guide-label">${this.isAIAvailable() ? 'AI 길잡이' : '업무 길잡이'}</span></button>` : ''}
                                 ${isCompleted && item.branchOnly && !isSkipped ? `<span style="font-size:0.68rem;font-weight:700;color:#8b5cf6;background:rgba(139,92,246,0.1);padding:1px 6px;border-radius:4px;flex-shrink:0;" title="분기 처리로 완료됨 (실제 작업 내용 아님)">🔀 분기</span>` : ''}
                                 ${isSkipped && item.branchActionTaken ? `<button onclick="event.stopPropagation();app.undoBranchOption(${workflow.id},${index})" style="flex-shrink:0;padding:2px 7px;font-size:0.73rem;background:transparent;color:#6b7280;border:1px solid rgba(107,114,128,0.25);border-radius:5px;cursor:pointer;font-family:inherit;">실행취소</button>` : ''}
                                 ${isSkipped && !item.branchActionTaken && item.skipActionId ? `<button onclick="event.stopPropagation();app.undoBranchOptionFromSkippedItem(${workflow.id},${index})" title="이 항목을 건너뛰게 한 분기 처리를 취소합니다" style="flex-shrink:0;padding:2px 7px;font-size:0.73rem;background:transparent;color:#6b7280;border:1px solid rgba(107,114,128,0.25);border-radius:5px;cursor:pointer;font-family:inherit;">실행취소</button>` : ''}
                                 ${isSkipped && item.skipManual && !asTemplate ? `<button class="na-restore-btn" onclick="event.stopPropagation();app.restoreNotApplicable(${workflow.id},${index})" title="해당 없음을 풀고 다시 할 항목으로 되돌립니다">되살리기</button>` : ''}
                                 ${isCompleted && item.branchActionTaken && !isSkipped ? `<button onclick="event.stopPropagation();app.undoBranchOption(${workflow.id},${index})" style="flex-shrink:0;padding:2px 7px;font-size:0.73rem;background:transparent;color:#6b7280;border:1px solid rgba(107,114,128,0.25);border-radius:5px;cursor:pointer;font-family:inherit;">실행취소</button>` : ''}
-                                ${indicatorDots ? `<span style="display:flex;align-items:center;gap:3px;">${indicatorDots}</span>` : ''}
-                            </div>
+                                ${indicatorDots ? `<span class="cl-dots" style="display:flex;align-items:center;gap:3px;">${indicatorDots}</span>` : ''}                            </div>
                         </div>
+                        ${this._clPeekHtml(workflow, item, index, { isSkipped, locked: collabLockMsg, asTemplate })}
                     </div>
                 `;
             }
@@ -27945,6 +29681,7 @@ ${aiPartnerCitationFirstRules}
             // 분기 옵션 처리 — 실행 전 무엇이 건너뛰어지는지 미리보기로 확인받은 뒤 실행
             handleBranchOption(workflowId, index, optionIndex) {
                 if (this.guardReferenceLock(workflowId, '건너뛰기 처리')) return;
+                if (this._collabGuard(workflowId, index, '건너뛰기 처리')) return;
                 const workflow = this.allData.workflows.find(w => w.id === workflowId);
                 if (!workflow || !workflow.checklist) return;
                 const currentItem = workflow.checklist[index];
@@ -28228,6 +29965,7 @@ ${aiPartnerCitationFirstRules}
             // [되살리기]로 언제든 되돌린다. skipManual = 한 번에 뺀 묶음 ID (토스트 [되돌리기]용)
             markNotApplicable(workflowId, indices, reason = '') {
                 if (this.guardReferenceLock(workflowId, '해당 없음 처리')) return;
+                if (this._collabGuardAny(workflowId, indices, '해당 없음 처리')) return;
                 const workflow = this.allData.workflows.find(w => w.id === workflowId);
                 if (!workflow || !workflow.checklist || workflow.isReference || this._branchEditingNow(workflowId)) return;
                 const cl = workflow.checklist;
@@ -28264,6 +30002,7 @@ ${aiPartnerCitationFirstRules}
             // [되살리기]: 단계를 되살리면 함께 뺀 할 일도, 할 일을 되살리면 빠져 있던 그 단계도 함께 되살린다
             restoreNotApplicable(workflowId, index) {
                 if (this.guardReferenceLock(workflowId, '되살리기')) return;
+                if (this._collabGuard(workflowId, index, '되살리기')) return;
                 const workflow = this.allData.workflows.find(w => w.id === workflowId);
                 const cl = workflow?.checklist;
                 const it = cl?.[index];
@@ -28340,15 +30079,21 @@ ${aiPartnerCitationFirstRules}
                     entries.push([hasSubs ? '해당 없음으로 빼기 (할 일 포함)' : '해당 없음으로 빼기', () => this.markNotApplicable(workflowId, [index])]);
                 }
                 entries.push(['여러 항목 해당 없음…', () => this.openNotApplicablePicker(workflowId, (!isSkipped && !done) ? [index] : [])]);
-                entries.push(['자세히 (서식·업무팁·조치결과)', () => this.showChecklistItemModal(workflowId, index)]);
+                entries.push(['자세히 (조치결과·업무팁·서식)', () => this.showChecklistItemModal(workflowId, index)]);
+                this._openCiMenu(e.clientX, e.clientY, entries);
+            }
+
+            // 작은 메뉴 띄우기 (entries: [[이름, 동작], ...]) — 밖을 누르거나 Esc·스크롤이면 닫힘
+            _openCiMenu(x, y, entries) {
+                this._closeChecklistItemMenu();
                 const menu = document.createElement('div');
                 menu.id = 'checklistItemMenu';
                 menu.className = 'ci-menu';
                 menu.innerHTML = entries.map((en, i) => `<button type="button" data-i="${i}">${this.escapeHtml(en[0])}</button>`).join('');
                 document.body.appendChild(menu);
                 const r = menu.getBoundingClientRect();
-                menu.style.left = Math.max(8, Math.min(e.clientX, window.innerWidth - r.width - 8)) + 'px';
-                menu.style.top = Math.max(8, Math.min(e.clientY, window.innerHeight - r.height - 8)) + 'px';
+                menu.style.left = Math.max(8, Math.min(x, window.innerWidth - r.width - 8)) + 'px';
+                menu.style.top = Math.max(8, Math.min(y, window.innerHeight - r.height - 8)) + 'px';
                 menu.addEventListener('click', (ev) => {
                     const b = ev.target.closest('button[data-i]');
                     if (!b) return;
@@ -28362,6 +30107,24 @@ ${aiPartnerCitationFirstRules}
                     window.addEventListener('wheel', this._ciMenuOff, true);
                 }, 0);
                 this._ciMenuUnbindEsc = this._bindDialogEsc(() => this._closeChecklistItemMenu());
+            }
+
+            // 체크리스트 편집 화면: 항목의 [⚙ 설정] 메뉴 (MS Forms의 질문 ⋯ → "분기 추가"처럼 규칙은 만드는 화면에서)
+            openItemSettingsMenu(e, workflowId, index) {
+                e.preventDefault();
+                e.stopPropagation();
+                const workflow = this.allData.workflows.find(w => w.id === workflowId);
+                const item = workflow?.checklist?.[index];
+                if (!item) return;
+                const branchN = (item.branchOptions || []).filter(o => this.isBranchOptionConfigured(o)).length;
+                const fmtN = (item.formats || []).length + (item.linkedDocs || []).length;
+                const hasTip = !!(item.tip && item.tip.content);
+                const r = e.currentTarget.getBoundingClientRect();
+                this._openCiMenu(r.left, r.bottom + 4, [
+                    [`🔀 건너뛰기 규칙 ${branchN ? `고치기 (${branchN}개)` : '만들기'}`, () => this.showChecklistItemModal(workflowId, index, 'branch')],
+                    [`📄 서식 붙이기${fmtN ? ` (${fmtN}개)` : ''}`, () => this.showChecklistItemModal(workflowId, index, 'formats')],
+                    [`💡 업무팁 ${hasTip ? '고치기' : '쓰기'}`, () => this.showChecklistItemModal(workflowId, index, 'tip')]
+                ]);
             }
 
             _closeChecklistItemMenu() {
@@ -28937,6 +30700,7 @@ ${aiPartnerCitationFirstRules}
 
             // 인라인 달력에서 직접 마감일 저장 (모달 없음)
             saveChecklistItemDeadlineDirect(workflowId, index, value) {
+                if (this._collabGuard(workflowId, index, '마감일 변경')) { this.displayWorkflows(); return; }
                 const workflow = this.allData.workflows.find(w => w.id === workflowId);
                 if (!workflow || !workflow.checklist || !workflow.checklist[index]) return;
                 const item = workflow.checklist[index];
@@ -29175,6 +30939,7 @@ ${aiPartnerCitationFirstRules}
             // label input onchange 핸들러 (CIM 서식 탭 파일 추가)
             async addMainChecklistFormatFromInput(workflowId, index, inputEl) {
                 if (this.guardReferenceLock(workflowId, '편집')) { inputEl.value = ''; return; }
+                if (this._collabGuard(workflowId, index, '서식 추가', { materials: true })) { inputEl.value = ''; return; }
                 const files = inputEl.files;
                 if (!files || files.length === 0) return;
                 for (const file of files) {
@@ -29191,6 +30956,7 @@ ${aiPartnerCitationFirstRules}
             // 서식 제거 (메인)
             async removeMainChecklistFormat(workflowId, index, formatIndex) {
                 if (this.guardReferenceLock(workflowId, '삭제')) return;
+                if (this._collabGuard(workflowId, index, '서식 삭제', { materials: true })) return;
                 const workflow = this.allData.workflows.find(w => w.id === workflowId);
                 if (!workflow || !workflow.checklist) return;
 
@@ -29233,6 +30999,7 @@ ${aiPartnerCitationFirstRules}
 
             // 조치결과 업데이트 (메인) - 원본 텍스트 저장만
             updateMainChecklistResult(workflowId, index, text) {
+                if (this._collabGuard(workflowId, index, '조치결과 입력')) return;
                 const workflow = this.allData.workflows.find(w => w.id === workflowId);
                 if (!workflow || !workflow.checklist) return;
                 
@@ -29246,6 +31013,7 @@ ${aiPartnerCitationFirstRules}
             
             // 조치결과 포커스 아웃 시 즉시 저장 및 피드백
             async saveMainChecklistResultOnBlur(workflowId, index, textarea) {
+                if (this._collabGuard(workflowId, index, '조치결과 입력')) return;
                 const workflow = this.allData.workflows.find(w => w.id === workflowId);
                 if (!workflow || !workflow.checklist) return;
                 
@@ -29285,6 +31053,7 @@ ${aiPartnerCitationFirstRules}
             
             // AI 요약 생성 (메인) - 원본 텍스트 기준
             async generateMainChecklistSummary(workflowId, index) {
+                if (this._collabGuard(workflowId, index, '요약 생성')) return;
                 if (!this.checkApiKey()) return;
                 const workflow = this.allData.workflows.find(w => w.id === workflowId);
                 if (!workflow || !workflow.checklist) return;
@@ -29446,6 +31215,7 @@ ${item.result.text}
             // 조치결과 저장 + 1.5초 버튼 피드백
             async saveResultWithFeedback(workflowId, index) {
                 if (this.guardReferenceLock(workflowId, '편집')) return;
+                if (this._collabGuard(workflowId, index, '조치결과 저장')) return;
                 const workflow = this.allData.workflows.find(w => w.id === workflowId);
                 if (!workflow?.checklist) return;
                 const btn = document.getElementById(`save-result-btn-${workflowId}-${index}`);
@@ -29608,6 +31378,7 @@ ${item.result.text}
             // 업무팁 저장 + 1.5초 버튼 피드백 → 뷰 모드 전환
             async saveTipWithFeedback(workflowId, index) {
                 if (this.guardReferenceLock(workflowId, '편집')) return;
+                if (this._collabGuard(workflowId, index, '업무팁 저장', { materials: true })) return;
                 const textarea = document.getElementById(`main-checklist-tip-content-${workflowId}-${index}`);
                 const btn = document.getElementById(`save-tip-btn-${workflowId}-${index}`);
                 if (!textarea) return;
@@ -30660,6 +32431,8 @@ ${originalContent}`;
                     deadlineNotifyMode: ls('deadlineNotifyMode'),
                     deadlineNotifyUserChoice: ls('deadlineNotifyUserChoice'),
                     ttsAuto: this.allData.ttsAuto || null,
+                    collabMyName: ls('collabMyName'),
+                    collabPeople: ls('collabPeople'),
                     notifyCenterLog: (this.notifyLog || []).slice(0, 50)
                 };
             }
@@ -30678,6 +32451,8 @@ ${originalContent}`;
                     set('darkMode', s.darkMode);
                     document.documentElement.classList.toggle('dark-mode', s.darkMode === 'true');
                 }
+                if (s.collabMyName) set('collabMyName', s.collabMyName);
+                if (s.collabPeople) set('collabPeople', s.collabPeople);
                 if (s.deadlineNotifyMode) {
                     set('deadlineNotifyMode', s.deadlineNotifyMode);
                     set('deadlineNotifyUserChoice', s.deadlineNotifyUserChoice);
