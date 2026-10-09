@@ -1625,6 +1625,71 @@
         .fci-settings-btn { flex-shrink: 0; display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border: 1px solid var(--border-light); border-radius: 6px; background: var(--white); color: var(--text-gray); font-family: inherit; font-size: 0.74rem; font-weight: 600; cursor: pointer; white-space: nowrap; }
         .fci-settings-btn:hover { border-color: var(--accent); color: var(--accent); }
         .fci-settings-dots { display: inline-flex; gap: 3px; }
+        /* 편집 화면 줄: 표시 칸(제목 뒤) · 동작 칸(오른쪽 끝, ⚙ 고정) */
+        .fci-marks { display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0; }
+        .fci-mark-branch { display: inline-flex; align-items: center; gap: 2px; padding: 1px 6px; border: none; border-radius: 999px; background: rgba(139,92,246,0.12); color: #7c3aed; font-family: inherit; font-size: 0.72rem; font-weight: 700; cursor: pointer; line-height: 1.5; }
+        .fci-mark-branch:hover { background: rgba(139,92,246,0.22); }
+        .fci-mark-branch.as-legend { cursor: default; padding: 0 4px; }
+        .fci-mark-target { display: inline-block; width: 11px; height: 11px; border: 2px dashed #a78bfa; border-radius: 50%; flex-shrink: 0; cursor: help; }
+        .fci-mark-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+        .fci-mark-gear { font-size: 0.8rem; color: var(--text-gray); }
+        .fci-indent-btn { font-size: 0.95rem !important; }
+        .fci-editing-chip { display: inline-flex; align-items: center; padding: 1px 8px; border-radius: 999px; background: rgba(37,99,235,0.1); color: var(--accent); font-size: 0.72rem; font-weight: 700; white-space: nowrap; }
+        .cb-target-tip { position: fixed; z-index: 10005; width: 270px; padding: 12px 14px; border-radius: 10px; background: var(--white); border: 1.5px solid #a78bfa; box-shadow: 0 8px 24px rgba(17,31,53,0.18); font-size: 0.8rem; line-height: 1.55; color: var(--text-dark); }
+        .cb-target-tip b { display: inline-flex; align-items: center; gap: 6px; color: #7c3aed; margin-bottom: 2px; }
+        .cb-target-tip .btn { display: block; margin: 8px 0 0 auto; }
+        :root.dark-mode .cb-target-tip { background: var(--bg-card); }
+        .fci-actions { display: inline-flex; align-items: center; gap: 2px; margin-left: auto; flex-shrink: 0; }
+        .fci-gear { width: 28px; height: 26px; display: inline-flex; align-items: center; justify-content: center; border: none; border-radius: 6px; background: transparent; color: var(--text-muted); cursor: pointer; }
+        .fci-gear:hover, .checklist-card:hover .fci-gear { color: var(--text-dark); }
+        .fci-gear:hover { background: var(--bg-light); }
+        .checklist-card.fci-conditional { border-left-style: dashed !important; border-left-color: #a78bfa !important; }
+        /* 표시 뜻은 조작 안내(위 줄)와 나눠 항상 아래 줄 왼쪽에, 조금 연하게 */
+        /* 표시 뜻은 늘 한 줄 — 좁으면 줄을 넘기지 않고 옆으로 넘겨 본다 */
+        .fci-legend { flex: 1; min-width: 0; display: flex; align-items: center; gap: 5px; flex-wrap: nowrap; white-space: nowrap; overflow-x: auto; scrollbar-width: none; padding-left: 10px; border-left: 1px solid rgba(37,99,235,0.25); font-size: 0.7rem; color: var(--text-gray); }
+        .fci-legend::-webkit-scrollbar { display: none; }
+        /* 편집 단축키: 제목 아래 날짜 줄 오른쪽에 작고 흐리게, 줄이 좁으면 「⌨ 단축키」 버튼 하나로 */
+        .fci-date-line { container-type: inline-size; }
+        .fci-kbd-hints { order: 9; margin-left: auto; display: inline-flex; align-items: center; gap: 4px; font-size: 0.7rem; color: var(--text-muted); white-space: nowrap; }
+        .fci-kbd-hints kbd { padding: 0 4px; border: 1px solid var(--border-light); border-radius: 3px; background: var(--white); font-family: inherit; font-size: 0.66rem; color: var(--text-gray); }
+        .fci-kbd-info, .fci-kbd-btn { border: none; background: transparent; color: var(--text-muted); font-family: inherit; font-size: 0.74rem; cursor: pointer; padding: 1px 4px; border-radius: 4px; }
+        .fci-kbd-info:hover, .fci-kbd-btn:hover { color: var(--accent); background: rgba(37,99,235,0.08); }
+        .fci-kbd-btn { order: 9; margin-left: auto; display: none; white-space: nowrap; }
+        @container (max-width: 560px) { .fci-kbd-hints { display: none; } .fci-kbd-btn { display: inline-flex; } }
+        .fci-legend-title { font-weight: 700; color: var(--text-gray); margin-right: 4px; }
+        .fci-mark-more { font-weight: 600; opacity: 0.75; margin-left: 2px; }
+        .ci-menu-ico { display: inline-flex; align-items: center; width: 20px; color: #7c3aed; vertical-align: -2px; }
+        .fci-legend .fci-mark-dot, .fci-legend .fci-mark-target { margin-left: 4px; }
+        /* 다크모드의 「.main-content * { color: inherit }」가 ＋·🗑의 "평소 투명"과 표시 색을 덮어써서 늘 보이던 문제 — 우선순위를 높여 되돌림 */
+        :root.dark-mode .main-content .fci-del, :root.dark-mode .main-content .fci-insert-btn { color: transparent; }
+        :root.dark-mode .main-content .checklist-card:hover .fci-del, :root.dark-mode .main-content .checklist-card:hover .fci-insert-btn { color: var(--text-muted); }
+        :root.dark-mode .main-content .fci-mark-branch { color: #c4b5fd; }
+        :root.dark-mode .main-content .fci-gear { color: var(--text-muted); }
+        :root.dark-mode .main-content .checklist-card:hover .fci-gear, :root.dark-mode .main-content .fci-gear:hover { color: var(--text-dark); }
+        /* 건너뛰기 고르기 모드 */
+        body.branch-picking .fci-add-btn { display: none; }
+        .bp-bar { position: sticky; top: 0; z-index: 6; display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; padding: 10px 12px; border-radius: 10px; background: #f5f3ff; border: 1.5px solid #8b5cf6; box-shadow: 0 4px 14px rgba(139,92,246,0.15); }
+        :root.dark-mode .bp-bar { background: #2a2540; }
+        .bp-ico { font-size: 1rem; }
+        .bp-label { width: 150px; padding: 6px 9px; border: 1px solid #c4b5fd; border-radius: 6px; font-family: inherit; font-size: 0.86rem; font-weight: 700; background: var(--white); color: var(--text-dark); }
+        .bp-hint { flex: 1; min-width: 180px; font-size: 0.8rem; color: var(--text-gray); }
+        .bp-hint b { color: #7c3aed; font-size: 0.9rem; }
+        .bp-actions { display: flex; gap: 6px; }
+        .bp-legacy { flex-basis: 100%; font-size: 0.76rem; color: #92400e; background: rgba(245,158,11,0.12); padding: 5px 8px; border-radius: 6px; }
+        .checklist-card.bp-row .checklist-card-header { cursor: default; gap: 10px; }
+        .bp-num { font-size: 0.78rem; font-weight: 700; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+        .bp-title { flex: 1; min-width: 0; font-size: 0.88rem; color: var(--text-dark); }
+        .checklist-card.bp-base { border: 1.5px solid #8b5cf6; background: rgba(139,92,246,0.06); }
+        .bp-tag { font-size: 0.72rem; font-weight: 700; color: #7c3aed; white-space: nowrap; }
+        .checklist-card.bp-before { opacity: 0.4; }
+        .checklist-card.bp-pick { cursor: pointer; }
+        .checklist-card.bp-pick .checklist-card-header { cursor: pointer; }
+        .checklist-card.bp-pick:hover { border-color: #c4b5fd; }
+        .bp-box { flex-shrink: 0; width: 20px; height: 20px; border: 2px solid #c4b5fd; border-radius: 5px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 900; color: #fff; }
+        .checklist-card.bp-pick.on { background: rgba(139,92,246,0.05); }
+        .checklist-card.bp-pick.on .bp-box { background: #8b5cf6; border-color: #8b5cf6; }
+        .checklist-card.bp-pick.on .bp-title { color: var(--text-muted); text-decoration: line-through; }
+        .bp-skip { font-size: 0.7rem; font-weight: 700; color: #7c3aed; background: rgba(139,92,246,0.12); padding: 1px 7px; border-radius: 999px; }
         .cl-chip.on { color: var(--text-dark); border-color: var(--text-muted); }
         .cl-chip:hover { border-color: var(--accent); color: var(--accent); }
         .cl-result-row { display: flex; align-items: flex-start; gap: 6px; margin-top: 8px; }
@@ -1664,9 +1729,204 @@
         .cb-bar i.yellow { background: #f59e0b; } .cb-bar i.red { background: #ef4444; }
         @media (max-width: 640px) { .cb-board-row { grid-template-columns: 24px 1fr; } .cb-board-row > span:nth-child(3), .cb-board-row > span:nth-child(4) { grid-column: 2; } }
         /* 작업 화면: [진행중 단계로] 버튼 — 스크롤 영역 맨 아래에 붙어 있음 */
-        .focus-jump-wrap { position: sticky; bottom: 0; height: 0; z-index: 5; }
-        .focus-jump-btn { position: absolute; right: 0; bottom: 14px; padding: 7px 14px; border: none; border-radius: 999px; background: var(--accent); color: #fff; font-family: inherit; font-size: 0.8rem; font-weight: 700; cursor: pointer; box-shadow: 0 4px 14px rgba(37,99,235,0.35); }
+        .focus-jump-wrap { position: sticky; height: 0; z-index: 5; pointer-events: none; }
+        .focus-jump-wrap.top { top: 0; }
+        .focus-jump-wrap.bottom { bottom: 0; }
+        .focus-jump-spacer { height: 44px; }
+        .focus-jump-btn { position: absolute; right: 0; pointer-events: auto; padding: 4px 12px; border: none; border-radius: 999px; background: var(--accent); color: #fff; font-family: inherit; font-size: 0.74rem; font-weight: 700; white-space: nowrap; cursor: pointer; box-shadow: 0 3px 10px rgba(37,99,235,0.3); transition: opacity 0.15s; }
+        .focus-jump-wrap.bottom .focus-jump-btn { bottom: 10px; }
+        .focus-jump-btn.near { opacity: 0.3; }
+        :root.dark-mode .main-content .focus-jump-btn { color: #fff; }
         .focus-jump-btn:hover { background: var(--accent-dark, #1d4ed8); }
+        /* ── 업무 화면 왼쪽 마감 카드 (다크 모드의 .main-content * 덮어쓰기를 이기도록 :root:root) ── */
+        .fap-dl-card { --tone: #10b981; position: relative; margin-bottom: 14px; padding: 10px 12px 9px; border-radius: 10px; border: 1px solid var(--border-light); border-left: 4px solid var(--tone); background: color-mix(in srgb, var(--tone) 6%, transparent); cursor: pointer; transition: box-shadow 0.15s, border-color 0.15s; outline: none; }
+        .fap-dl-card:hover, .fap-dl-card:focus-visible { border-color: var(--tone); box-shadow: 0 2px 10px rgba(17,31,53,0.1); }
+        .fap-dl-card.warn { --tone: #f59e0b; }
+        .fap-dl-card.urgent { --tone: #ef4444; }
+        .fap-dl-card.done { --tone: #10b981; }
+        .fap-dl-input.focus-deadline-input { position: absolute; left: 0; top: 0; width: 1px !important; height: 1px !important; min-width: 0 !important; padding: 0 !important; border: 0 !important; opacity: 0; pointer-events: none; }
+        .fap-dl-top { display: flex; align-items: baseline; justify-content: space-between; gap: 6px; }
+        :root:root .fap-dl-label { font-size: 0.72rem; font-weight: 600; color: var(--text-muted); }
+        :root:root .fap-dl-d { font-size: 1.3rem; font-weight: 800; line-height: 1.1; color: var(--tone); font-variant-numeric: tabular-nums; }
+        :root:root .fap-dl-date { margin-top: 3px; font-size: 0.9rem; font-weight: 700; color: var(--text-dark); }
+        :root:root .fap-dl-off { font-size: 0.68rem; font-weight: 600; color: #dc2626; }
+        :root:root .fap-dl-sub { margin-top: 1px; font-size: 0.74rem; color: var(--text-gray); }
+        .fap-dl-bar { height: 5px; margin-top: 8px; border-radius: 3px; background: rgba(100,116,139,0.16); overflow: hidden; }
+        .fap-dl-bar i { display: block; height: 100%; border-radius: 3px; background: var(--tone); }
+        :root:root .fap-dl-range { display: flex; justify-content: space-between; gap: 6px; margin-top: 3px; font-size: 0.68rem; color: var(--text-muted); }
+        :root:root .fap-dl-behind { color: #d97706; font-weight: 700; }
+        :root:root .fap-dl-card.empty { border-style: dashed; border-left-width: 1px; background: transparent; text-align: center; padding: 9px; font-size: 0.8rem; color: var(--text-muted); }
+        :root:root .fap-dl-card.empty:hover { color: var(--accent); border-color: var(--accent); }
+        :root.dark-mode .fap-dl-off { color: #f87171; }
+        :root.dark-mode .fap-dl-behind { color: #fbbf24; }
+
+        /* ── 체크리스트 줄: 마우스를 올린 줄에만 길잡이 버튼 (터치 화면은 제목을 누르면 나오는 빠른 버튼으로) ── */
+        .cl-hover-guide { display: none; align-items: center; gap: 3px; height: 24px; padding: 0 9px; border: 1px solid rgba(139,92,246,0.3); border-radius: 999px; background: rgba(139,92,246,0.08); font-family: inherit; font-size: 0.72rem; font-weight: 700; white-space: nowrap; cursor: pointer; flex-shrink: 0; }
+        :root:root .cl-hover-guide { color: #7c3aed; }
+        .cl-hover-guide:hover { background: rgba(139,92,246,0.16); border-color: #8b5cf6; }
+        @media (hover: hover) {
+            .checklist-card-header:hover .cl-hover-guide, .checklist-card-header:focus-within .cl-hover-guide { display: inline-flex; }
+        }
+        :root.dark-mode:root .cl-hover-guide { color: #c4b5fd; }
+
+        /* ── 업무팁·서식 아이콘 (업무 절차) ── */
+        .cl-ind-btn { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; padding: 0; border: none; border-radius: 5px; background: transparent; font-size: 0.86rem; line-height: 1; cursor: pointer; opacity: 0.95; flex-shrink: 0; transition: opacity 0.12s, background 0.12s, transform 0.12s; }
+        .cl-ind-btn:hover, .cl-ind-btn:focus-visible { opacity: 1; background: rgba(245,158,11,0.15); transform: scale(1.12); outline: none; }
+
+        /* ── 조치결과·업무팁 기호 줄 ── */
+        .ol-bar { display: flex; align-items: center; flex-wrap: wrap; gap: 2px; margin-bottom: 4px; padding: 3px 4px; border: 1px solid var(--border-subtle); border-radius: 8px; background: rgba(100,116,139,0.05); }
+        .ol-bar:has(+ textarea[style*="display:none"]), .ol-bar:has(+ textarea[style*="display: none"]) { display: none; }
+        :root:root .ol-b { min-width: 28px; height: 26px; padding: 0 5px; border: none; border-radius: 6px; background: transparent; font-family: inherit; font-size: 0.82rem; color: var(--text-dark); cursor: pointer; }
+        :root:root .ol-b.ol-num { font-size: 0.74rem; color: var(--text-gray); }
+        :root:root .ol-b.ol-ind { font-size: 0.95rem; color: var(--accent); }
+        :root:root .ol-b.ol-help { margin-left: auto; color: var(--text-muted); }
+        .ol-b:hover { background: rgba(37,99,235,0.1); }
+        .ol-sep { width: 1px; height: 16px; margin: 0 3px; background: var(--border-light); }
+        /* 쓰는 방법 안내 창 */
+        .olh-overlay { position: fixed; inset: 0; z-index: 10020; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(17,31,53,0.45); }
+        .olh-box { width: min(600px, 100%); max-height: calc(100vh - 32px); display: flex; flex-direction: column; border-radius: 14px; background: var(--white); color: var(--text-dark); box-shadow: 0 20px 50px rgba(17,31,53,0.3); overflow: hidden; outline: none; }
+        .olh-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 16px 22px 4px; }
+        .olh-head h3 { margin: 0; font-size: 1.05rem; }
+        .olh-head p { margin: 3px 0 0; font-size: 0.8rem; color: var(--text-muted); }
+        .olh-x { width: 30px; height: 30px; border: none; border-radius: 8px; background: transparent; color: var(--text-muted); font-size: 0.95rem; cursor: pointer; }
+        .olh-x:hover { background: rgba(37,99,235,0.08); color: var(--accent); }
+        .olh-body { padding: 0 22px 14px; overflow-y: auto; }
+        .olh-sec { margin: 12px 0 2px; font-size: 0.74rem; font-weight: 700; color: var(--accent); }
+        .olh-row { display: flex; align-items: center; gap: 14px; padding: 5px 0; border-bottom: 1px solid var(--border-subtle); }
+        .olh-keys { width: 140px; flex-shrink: 0; display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
+        .olh-keys kbd { min-width: 24px; height: 24px; padding: 0 6px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--border-light); border-bottom-width: 2px; border-radius: 6px; background: var(--white); font-family: inherit; font-size: 0.8rem; color: var(--text-dark); }
+        .olh-sel { font-size: 0.72rem; color: var(--text-gray); margin-right: 2px; }
+        .olh-desc { display: flex; align-items: baseline; flex-wrap: wrap; column-gap: 8px; min-width: 0; }
+        .olh-desc b { font-size: 0.86rem; font-weight: 600; }
+        .olh-desc span { font-size: 0.75rem; color: var(--text-muted); }
+        .olh-ex { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .olh-ex > div { padding: 8px 12px; border-radius: 8px; background: rgba(100,116,139,0.07); }
+        .olh-ex small { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); }
+        .olh-ex pre { margin: 3px 0 0; font-family: inherit; font-size: 0.8rem; line-height: 1.5; white-space: pre; color: var(--text-dark); }
+        .olh-foot { display: flex; align-items: center; gap: 12px; padding: 10px 22px; border-top: 1px solid var(--border-subtle); font-size: 0.75rem; color: var(--text-gray); }
+        .olh-foot span { flex: 1; }
+        :root.dark-mode .olh-box, :root.dark-mode .olh-keys kbd { background: var(--bg-card); }
+        @media (max-width: 480px) { .olh-keys { width: 110px; } .olh-ex { grid-template-columns: 1fr; } }
+
+        /* ── 날짜 선택 창 (브라우저 기본 달력 대신) ── */
+        .dp-pop { position: fixed; z-index: 10300; width: 316px; padding: 12px; border-radius: 12px; background: var(--white); border: 1px solid var(--border-light); box-shadow: 0 12px 32px rgba(17,31,53,0.2), 0 2px 6px rgba(17,31,53,0.08); color: var(--text-dark); font-size: 0.82rem; outline: none; }
+        .dp-pop.sheet { left: 0 !important; right: 0; bottom: 0; top: auto !important; width: auto; border-radius: 16px 16px 0 0; padding: 14px 16px 18px; }
+        .dp-pop button { font-family: inherit; color: inherit; }
+        .dp-quick { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--border-subtle); }
+        .dp-q { display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 5px 2px; border: 1px solid var(--border-light); border-radius: 8px; background: transparent; cursor: pointer; font-size: 0.74rem; font-weight: 600; line-height: 1.2; }
+        .dp-q small { font-size: 0.66rem; font-weight: 400; color: var(--text-muted); }
+        .dp-q:hover, .dp-q:focus-visible { border-color: var(--accent); background: rgba(37,99,235,0.07); color: var(--accent); outline: none; }
+        .dp-q.on { border-color: var(--accent); background: var(--accent); color: #fff; }
+        .dp-q.on small { color: rgba(255,255,255,0.85); }
+        .dp-head { display: flex; align-items: center; gap: 4px; margin-bottom: 6px; }
+        .dp-head b { flex: 1; text-align: center; font-size: 0.92rem; }
+        .dp-nav, .dp-todaybtn { min-width: 32px; height: 30px; border: none; border-radius: 8px; background: transparent; cursor: pointer; font-size: 1.1rem; }
+        .dp-todaybtn { font-size: 0.74rem; font-weight: 600; padding: 0 8px; border: 1px solid var(--border-light); }
+        .dp-nav:hover, .dp-todaybtn:hover { background: rgba(37,99,235,0.08); color: var(--accent); }
+        .dp-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+        .dp-w { text-align: center; font-size: 0.7rem; color: var(--text-muted); padding: 2px 0 4px; }
+        .dp-w.red, .dp-pop .red { color: #dc2626; }
+        .dp-w.sat { color: #2563eb; }
+        .dp-day { position: relative; height: 38px; border: none; border-radius: 50%; background: transparent; cursor: pointer; font-size: 0.85rem; font-variant-numeric: tabular-nums; }
+        .dp-day.red { color: #dc2626; }
+        .dp-day.sat { color: #2563eb; }
+        .dp-day.out { opacity: 0.35; }
+        .dp-day.late:not(.sel) { background: repeating-linear-gradient(135deg, transparent 0 4px, rgba(239,68,68,0.07) 4px 8px); border-radius: 8px; }
+        .dp-day:hover:not(:disabled) { background: rgba(37,99,235,0.1); }
+        .dp-day:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+        .dp-day.today { box-shadow: inset 0 0 0 1.5px var(--accent); font-weight: 700; }
+        .dp-day.sel { background: var(--accent) !important; color: #fff !important; font-weight: 700; border-radius: 50%; }
+        .dp-day:disabled { opacity: 0.2; cursor: not-allowed; }
+        .dp-dot { position: absolute; left: 50%; bottom: 4px; width: 5px; height: 5px; margin-left: -2.5px; border-radius: 50%; background: #f59e0b; }
+        .dp-dot.many { box-shadow: -6px 0 0 #f59e0b; margin-left: 0; }
+        .dp-day.sel .dp-dot { background: #fff; }
+        .dp-flag { position: absolute; top: -1px; right: 0; font-size: 0.62rem; font-style: normal; line-height: 1; }
+        .dp-legend .dp-dot { position: static; display: inline-block; margin: 0 1px 1px 0; vertical-align: middle; }
+        .dp-info { min-height: 36px; margin-top: 8px; padding: 6px 8px; border-radius: 8px; background: var(--bg-subtle, rgba(100,116,139,0.07)); font-size: 0.76rem; line-height: 1.5; }
+        .dp-info.warn { background: rgba(245,158,11,0.1); }
+        .dp-warn { color: #b45309; font-weight: 600; }
+        .dp-muted { color: var(--text-muted); }
+        .dp-foot { display: flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 0.7rem; color: var(--text-muted); }
+        .dp-legend { flex: 1; }
+        .dp-help { cursor: help; }
+        .dp-clear { border: none; background: transparent; color: #dc2626; font-size: 0.74rem; font-weight: 600; cursor: pointer; padding: 3px 6px; border-radius: 6px; }
+        .dp-clear:hover { background: rgba(239,68,68,0.08); }
+        :root.dark-mode .dp-pop { background: var(--bg-card); }
+        :root.dark-mode .dp-day.red, :root.dark-mode .dp-w.red, :root.dark-mode .dp-pop .red { color: #f87171; }
+        :root.dark-mode .dp-day.sat, :root.dark-mode .dp-w.sat { color: #60a5fa; }
+        :root.dark-mode .dp-warn { color: #fbbf24; }
+
+        /* ── 일정 보기 ── */
+        .sched-overlay { position: fixed; inset: 0; z-index: var(--z-modal); background: rgba(17,31,53,0.5); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .sched-box { width: min(1180px, 100%); height: min(820px, 100%); display: flex; flex-direction: column; background: var(--white); border-radius: 14px; box-shadow: 0 20px 50px rgba(17,31,53,0.3); overflow: hidden; color: var(--text-dark); outline: none; }
+        .sched-box button, .sched-box select { font-family: inherit; color: inherit; }
+        .sched-top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 12px 16px; border-bottom: 1px solid var(--border-subtle); }
+        .sched-title { font-size: 1.02rem; }
+        .sched-select { max-width: 260px; padding: 5px 8px; border: 1px solid var(--border-light); border-radius: 8px; background: var(--white); font-size: 0.82rem; }
+        .sched-done { display: inline-flex; align-items: center; gap: 4px; font-size: 0.78rem; color: var(--text-gray); cursor: pointer; }
+        .sched-nav { display: flex; align-items: center; gap: 4px; margin-left: auto; }
+        .sched-nav b { min-width: 96px; text-align: center; font-size: 0.98rem; }
+        .sched-nav button, .sched-close { height: 32px; min-width: 32px; border: none; border-radius: 8px; background: transparent; cursor: pointer; font-size: 1.15rem; }
+        .sched-nav .sched-today { font-size: 0.78rem; font-weight: 600; padding: 0 10px; border: 1px solid var(--border-light); }
+        .sched-nav button:hover, .sched-close:hover { background: rgba(37,99,235,0.08); color: var(--accent); }
+        .sched-close { font-size: 1rem; color: var(--text-muted); }
+        .sched-body { flex: 1; min-height: 0; display: flex; }
+        .sched-cal { flex: 1; min-width: 0; display: flex; flex-direction: column; padding: 8px 10px 10px; }
+        .sched-wk { display: grid; grid-template-columns: repeat(7, minmax(0,1fr)); font-size: 0.74rem; color: var(--text-muted); text-align: center; padding-bottom: 4px; }
+        .sched-wk .red, .sched-cell.red .sched-num { color: #dc2626; }
+        .sched-wk .sat, .sched-cell.sat .sched-num { color: #2563eb; }
+        .sched-grid { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(7, minmax(0,1fr)); border-top: 1px solid var(--border-subtle); border-left: 1px solid var(--border-subtle); }
+        .sched-cell { position: relative; min-width: 0; min-height: 0; overflow: hidden; padding: 3px 4px; border-right: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle); cursor: pointer; transition: background 0.1s; }
+        .sched-cell:hover { background: rgba(37,99,235,0.035); }
+        .sched-cell.out { background: rgba(100,116,139,0.05); }
+        .sched-cell.out .sched-dn { opacity: 0.45; }
+        .sched-cell.sel { background: rgba(37,99,235,0.08); box-shadow: inset 0 0 0 2px rgba(37,99,235,0.5); }
+        .sched-cell.drop { background: rgba(37,99,235,0.16); box-shadow: inset 0 0 0 2px var(--accent); }
+        .sched-dn { display: flex; align-items: center; gap: 4px; margin-bottom: 2px; min-width: 0; }
+        .sched-num { display: inline-flex; align-items: center; justify-content: center; min-width: 22px; height: 22px; border-radius: 50%; font-size: 0.78rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+        .sched-cell.today .sched-num { background: var(--accent); color: #fff !important; }
+        .sched-holi { font-size: 0.64rem; color: #dc2626; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .sched-chips { display: flex; flex-direction: column; gap: 2px; }
+        .sched-chip { --cc: #2563eb; padding: 2px 6px; border-radius: 5px; border-left: 3px solid var(--cc); background: color-mix(in srgb, var(--cc) 11%, transparent); font-size: 0.72rem; line-height: 1.35; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; }
+        .sched-chip[draggable="true"] { cursor: grab; }
+        .sched-chip:hover { background: color-mix(in srgb, var(--cc) 22%, transparent); }
+        .sched-chip.work { font-weight: 700; }
+        .sched-chip.late { color: #dc2626; font-weight: 600; }
+        .sched-chip.done { opacity: 0.55; text-decoration: line-through; }
+        .sched-chip.dragging { opacity: 0.4; }
+        .sched-chip.c0 { --cc: #2563eb; } .sched-chip.c1 { --cc: #059669; } .sched-chip.c2 { --cc: #d97706; } .sched-chip.c3 { --cc: #7c3aed; }
+        .sched-chip.c4 { --cc: #db2777; } .sched-chip.c5 { --cc: #0891b2; } .sched-chip.c6 { --cc: #65a30d; } .sched-chip.c7 { --cc: #ea580c; }
+        .sched-more { font-size: 0.68rem; color: var(--text-muted); padding-left: 4px; }
+        .sched-cnt { display: none; }
+        .sched-side { width: 300px; flex-shrink: 0; overflow-y: auto; padding: 12px 14px; border-left: 1px solid var(--border-subtle); display: flex; flex-direction: column; gap: 4px; }
+        .sched-side-h { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-weight: 700; font-size: 0.9rem; margin-bottom: 4px; }
+        .sched-side-h small { font-weight: 400; color: var(--text-muted); font-size: 0.72rem; }
+        .sched-x { margin-left: auto; border: 1px solid var(--border-light); background: transparent; border-radius: 6px; font-size: 0.7rem; padding: 2px 8px; cursor: pointer; }
+        .sched-grp { margin-top: 8px; font-size: 0.74rem; font-weight: 700; color: var(--text-gray); }
+        .sched-grp.late { color: #dc2626; }
+        .sched-grp.now { color: var(--accent); }
+        .sched-chip.row { white-space: normal; padding: 6px 8px; border-radius: 7px; display: flex; flex-direction: column; gap: 1px; }
+        .sched-row-main { font-size: 0.8rem; }
+        .sched-row-sub { font-size: 0.68rem; color: var(--text-muted); font-weight: 400; text-decoration: none; }
+        .sched-empty { padding: 18px 4px; text-align: center; font-size: 0.8rem; color: var(--text-muted); }
+        .sched-hint { padding: 7px 16px; border-top: 1px solid var(--border-subtle); font-size: 0.72rem; color: var(--text-muted); }
+        :root.dark-mode .sched-box { background: var(--bg-card); }
+        :root.dark-mode .sched-select { background: var(--bg-card); }
+        :root.dark-mode .sched-wk .red, :root.dark-mode .sched-cell.red .sched-num, :root.dark-mode .sched-holi, :root.dark-mode .sched-chip.late, :root.dark-mode .sched-grp.late { color: #f87171; }
+        :root.dark-mode .sched-wk .sat, :root.dark-mode .sched-cell.sat .sched-num { color: #60a5fa; }
+        @media (max-width: 760px) {
+            .sched-overlay { padding: 0; }
+            .sched-box { height: 100%; border-radius: 0; }
+            .sched-body { flex-direction: column; overflow-y: auto; }
+            .sched-cal { flex: none; }
+            .sched-grid { grid-template-rows: none !important; grid-auto-rows: 52px; }
+            .sched-chips, .sched-holi { display: none; }
+            .sched-cnt { display: block; position: absolute; left: 50%; bottom: 5px; transform: translateX(-50%); min-width: 16px; padding: 0 4px; border-radius: 8px; background: #f59e0b; color: #fff; font-size: 0.62rem; font-weight: 700; text-align: center; }
+            .sched-side { width: auto; border-left: none; border-top: 1px solid var(--border-subtle); overflow: visible; }
+            .sched-nav { margin-left: 0; }
+            .sched-hint { display: none; }
+        }
+
         .checklist-card.jump-flash { animation: jumpFlash 1.2s ease; }
         @keyframes jumpFlash { 0%, 100% { box-shadow: none; } 25%, 60% { box-shadow: 0 0 0 3px rgba(37,99,235,0.35); } }
         /* 업무 절차: 완료 단계 접기 + 진행중 제목 고정 */
@@ -2805,6 +3065,14 @@
         .skip-group-toggle:hover { background: #e7ecf2; }
         .skip-group-arrow { font-size: 0.75rem; transition: transform 0.15s; display: inline-block; }
         .skip-group-items { padding-top: 6px; }
+        /* 건너뛴 항목: 원래 자리에 얇은 점선 + 작은 「⤼ n」 — 평소엔 흐리게, 마우스를 올리면 진하게 */
+        .skip-run { position: relative; display: flex; align-items: center; justify-content: center; height: 18px; margin: 2px 0 6px; }
+        .skip-run::before { content: ''; position: absolute; left: 12px; right: 12px; top: 50%; border-top: 1px dashed var(--border-light); }
+        .skip-run-pill { position: relative; display: inline-flex; align-items: center; gap: 1px; padding: 0 8px; height: 18px; border: 1px solid var(--border-light); border-radius: 999px; background: var(--white); color: var(--text-muted); font-family: inherit; font-size: 0.68rem; font-weight: 700; cursor: pointer; transition: color 0.12s, border-color 0.12s; }
+        .skip-run-pill:hover, .skip-run.open .skip-run-pill { color: #7c3aed; border-color: #c4b5fd; }
+        :root.dark-mode .main-content .skip-run-pill { color: var(--text-muted); background: var(--bg-card); }
+        :root.dark-mode .main-content .skip-run-pill:hover, :root.dark-mode .main-content .skip-run.open .skip-run-pill { color: #c4b5fd; }
+        .skip-run-items { margin-bottom: 6px; }
         :root.dark-mode .skip-group-toggle { background: rgba(255,255,255,0.05); border-color: var(--border-light); color: var(--text-muted); }
         :root.dark-mode .skip-group-toggle:hover { background: rgba(255,255,255,0.09); }
         /* 하위항목: 상위 카드보다 장식을 줄여(색띠·그림자 없음) "딸린 항목"으로 보이게 하고,
@@ -4578,6 +4846,12 @@
                     업무 관리
                 </button>
 
+                <!-- 일정: 모든 업무의 마감을 달력으로 -->
+                <button class="btn btn-white" onclick="app.openSchedule()" style="gap:5px;" title="진행 중인 모든 업무의 마감을 달력으로 보기">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    일정
+                </button>
+
                 <!-- 문서 관리 -->
                 <div class="dropdown">
                     <button class="btn btn-white" onclick="app.toggleDropdown('toolsMenu')" style="gap:5px;">
@@ -6073,6 +6347,14 @@
         const APP_RELEASE_DATE = '2026-10-09';
         const APP_RELEASE_NOTES = [
             { version: '1.3.0', date: '2026-10-09', notes: [
+                '날짜 선택 창 새로 만듦 — 오늘·내일·이번 주 금·다음 주 월·1주 뒤·근무일 5일 뒤·업무 마감일을 한 번에 고르고, 달력에 주말·공휴일(설·추석·대체공휴일 포함)·다른 마감(점)·업무 마감(🏁) 표시',
+                '날짜에 마우스를 올리면 D-n·근무일 수와 「업무 전체 마감보다 늦습니다」·「공휴일입니다」 경고를 바로 보여 줌 — 프로그램의 모든 날짜 칸에 적용',
+                '업무 화면 왼쪽 마감 표시를 카드로 — D-n을 크게(여유 초록·7일 이내 주황·임박/지남 빨강), 「10월 30일 (금)」·근무일 수·생성일→마감 기간 막대, 진행이 기간보다 많이 늦으면 ⚠, 누르면 날짜 선택 창',
+                '체크리스트 줄에 마우스를 올리면 「✨ 길잡이」 버튼이 나타남 — 그 항목의 업무팁·서식·법령을 한 화면에 모아 보기(하위 할 일도 같음), 업무팁 점에 마우스를 올리면 첫 줄 미리 보기',
+                '업무 절차 패널에서 하위 할 일의 업무팁도 안내 — 진행중 단계의 지금 차례 할 일은 업무팁·서식을 그 아래에 펼치고, 다른 할 일은 💡를 눌러 보기',
+                '조치결과·업무팁 입력칸 위에 기호 줄 — 보고서식 □ ○ - · / 공문식 1. 가. 1) 가)를 누르면 그 줄 앞에 붙고, Enter로 다음 줄에 이어서(번호는 다음 번호), ⇥/⇤(Tab·Shift+Tab)로 단계를 바꾸면 기호도 단계에 맞게 바뀜',
+                '「일정 보기」 추가 — 상단 [일정](모든 업무)·업무 화면 [일정 보기](그 업무만)에서 항목 마감을 월 달력으로, 오른쪽에 「기한 지남 + 이번 주 할 일」',
+                '일정 보기에서 항목을 다른 날로 끌어 놓으면 마감일 변경, 항목을 누르면 그 업무의 그 항목으로 바로 이동',
                 '협업 기능 추가 — 업무 화면의 [협업·인수인계]에서 단계별 담당자·마감일을 정하고 요청 파일을 만들어 내부 메신저로 보냄',
                 '요청 파일 하나를 여러 담당자에게 보내면, 받은 사람이 파일을 열고 본인 이름을 골라 맡은 단계만 처리',
                 '담당자는 [관리자에게 회신]으로 회신 파일을 만듦 — 맡은 단계의 체크·해당 없음·조치결과·조치결과 첨부만 담김(법령·서식 제외)',
@@ -6093,11 +6375,20 @@
                 '중간 회신 추가 — 다 끝나지 않아도 진행 상황을 보내면 관리자 현황에 「중간 회신 · 항목 1/4」로 표시(단계는 계속 회신 대기)',
                 '관리자 협업 창 맨 위에 신호등 회신 현황판(기한 지남→임박→여유→반영 순, 기간 막대), 업무 카드에 「회신 1건 기한 지남」 표시',
                 '[재촉 문구 복사] — 기한에 맞는 정중한 재촉 문구를 만들어 복사(메신저에 붙여 넣기), 재촉 기록은 업무 여권에 남음',
-                '담당자 마감일을 정할 때 경고 — 업무 전체 마감보다 늦음, 앞뒤 단계와 순서가 어긋남, 주말·고정 공휴일',
+                '담당자 마감일을 정할 때 경고 — 업무 전체 마감보다 늦음, 앞뒤 단계와 순서가 어긋남, 주말·공휴일',
                 '체크리스트 줄을 눌렀을 때 창이 잘못 열리던 문제 개선 — 왼쪽 체크 구역을 넓게, 제목을 누르면 줄 아래에 조치결과 입력·업무팁·서식 등 빠른 버튼이 펼쳐지고 버튼을 눌러야 해당 탭 창이 열림',
                 '끌어서 스크롤·글자 고르기·체크 직후 두 번 누름은 무시, 작은 버튼이 붙어 있던 길잡이·해당 없음은 제목을 누르면 나오는 빠른 버튼으로 옮김',
                 '조치결과는 항목 제목을 누르면 줄 아래에서 바로 입력(창을 열지 않음), 📎로 결과 파일 첨부',
-                '건너뛰기 규칙은 체크리스트 편집 화면의 [⚙ 설정] → 「건너뛰기 규칙 만들기」에서만(일하는 화면에서는 줄의 버튼을 누르기만), 서식 붙이기·업무팁 쓰기도 같은 메뉴에',
+                '건너뛰기 버튼 만들기를 쉽게 — 편집 화면 [⚙ 설정] → 「＋ 건너뛰기 버튼 만들기」 → 이름을 적고 체크리스트 위에서 그 자리에서 건너뛸 항목을 체크 → [저장] (단계를 고르면 할 일도 함께, 뒤쪽 항목만)',
+                '한 항목에 건너뛰기 버튼 여러 개, [⚙ 설정]에서 버튼마다 고치기·지우기 — 일하는 화면에서는 줄의 버튼을 누르기만, 서식 붙이기·업무팁 쓰기도 같은 메뉴에',
+                '체크리스트 편집 화면 줄 정리 — 「조건부」 글자 대신 보라 점선 동그라미(◌)·점선 테두리, 「건너뛰기 n」 대신 건너뛰기 아이콘(⤼)과 버튼 이름(「자체 종결 외 1」), ⚙ 설정은 오른쪽 끝 같은 자리, ＋·🗑는 마우스를 올릴 때만(⚙ 메뉴에도 추가·삭제), 편집 모드 안내 아래 줄에 「표시 뜻」',
+                '다크모드에서 편집 화면의 ＋·삭제 버튼이 늘 보이던 문제 수정',
+                '편집 모드 단축키 안내는 제목 아래 날짜 줄 옆에 작게(좁은 화면에서는 「⌨ 단축키」 버튼, ⓘ로 자세히), 날짜 앞에 「✎ 편집 중」 표시, 빈 항목 입력칸에 「Enter: 아래에 추가 · Tab: 하위로」 안내',
+                '편집 모드에 들어가면 항상 체크리스트 맨 위부터, [저장]·[편집 취소]로 나오면 들어가기 전 일하던 자리로',
+                '표시 뜻 안내 상자를 없애고, 처음 보는 ◌(건너뛸 수 있음) 표시만 한 번 말풍선으로 안내',
+                '편집 모드에서 상위(단계)↔하위(할 일) 바꾸기를 Tab 키 외에 줄의 ⇥·⇤ 버튼과 ⚙ 메뉴로도',
+                '[진행중 단계로] 버튼을 작게 하고 목록 끝에 여백을 둬서, 목록 끝에서도 마지막 항목의 마감일·⚙를 누를 수 있게(버튼 가까이 마우스를 대면 흐리게)',
+                '건너뛴 항목은 한곳에 모으지 않고 원래 자리마다 얇은 점선과 작은 「⤼ n」으로 — 마우스를 올리면 무엇을 왜 건너뛰었는지, 누르면 그 자리에 펼침',
                 '일하는 화면의 항목 창은 조치결과·업무팁·서식 3개 탭이고 조치결과가 먼저 열림, 빠른 버튼은 항상 한 줄'
             ] },
             { version: '1.2.0', date: '2026-10-08', notes: [
@@ -6152,6 +6443,89 @@
         // 한국 시간 기준 'YYYY-MM-DD'
         function localDateStr(d = new Date()) {
             return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+        }
+
+        // ── 한국 공휴일 (날짜 선택 창·일정 보기·협업 마감 경고 공용) ──
+        // 양력 고정 공휴일 + 음력 공휴일(설·추석·부처님오신날, 2025~2030년 표) + 대체공휴일(규칙대로 계산)
+        // 선거일·임시공휴일은 그때그때 정해지므로 넣지 않는다
+        const KR_LUNAR_HOLI = {
+            2025: { seol: '01-29', chuseok: '10-06', buddha: '05-05' },
+            2026: { seol: '02-17', chuseok: '09-25', buddha: '05-24' },
+            2027: { seol: '02-07', chuseok: '09-15', buddha: '05-13' },
+            2028: { seol: '01-26', chuseok: '10-03', buddha: '05-02' },
+            2029: { seol: '02-13', chuseok: '09-22', buddha: '05-20' },
+            2030: { seol: '02-03', chuseok: '09-12', buddha: '05-09' },
+        };
+        const KR_LUNAR_YEARS = '2025~2030';
+        const _krHoliCache = {};
+        function _addDays(d, n) { const x = new Date(d); x.setDate(x.getDate() + n); return x; }
+        function _ymdDate(s) { return new Date(String(s).slice(0, 10) + 'T00:00:00'); }
+        function krHolidays(year) {
+            if (_krHoliCache[year]) return _krHoliCache[year];
+            // sub: 'wk' = 토·일과 겹치면 대체, 'sun' = 일요일과 겹치면 대체(설·추석), '' = 대체 없음(신정·현충일)
+            const list = [];
+            const put = (date, name, sub, blockEnd) => list.push({ date, name, sub, blockEnd: blockEnd || date });
+            [['01-01', '신정', ''], ['03-01', '삼일절', 'wk'], ['05-05', '어린이날', 'wk'], ['06-06', '현충일', ''],
+             ['08-15', '광복절', 'wk'], ['10-03', '개천절', 'wk'], ['10-09', '한글날', 'wk'], ['12-25', '성탄절', 'wk']]
+                .forEach(([md, n, sub]) => put(`${year}-${md}`, n, sub));
+            const L = KR_LUNAR_HOLI[year];
+            if (L) {
+                [['seol', '설날'], ['chuseok', '추석']].forEach(([k, n]) => {
+                    const c = _ymdDate(`${year}-${L[k]}`);
+                    const end = localDateStr(_addDays(c, 1));
+                    [-1, 0, 1].forEach(o => put(localDateStr(_addDays(c, o)), n, 'sun', end));
+                });
+                put(`${year}-${L.buddha}`, '부처님오신날', 'wk');
+            }
+            const map = {};
+            list.forEach(h => { (map[h.date] = map[h.date] || []).push(h); });
+            // 대체공휴일: 겹친 날 수만큼(같은 날 공휴일 2개 → 1일) + 주말과 겹치면 1일, 공휴일 뒤 첫 평일
+            const reqs = [];
+            Object.keys(map).forEach(date => {
+                const hs = map[date], eligible = hs.filter(h => h.sub);
+                if (!eligible.length) return;
+                const dow = _ymdDate(date).getDay();
+                const wk = eligible.some(h => (h.sub === 'wk' && (dow === 0 || dow === 6)) || (h.sub === 'sun' && dow === 0));
+                const n = Math.min(eligible.length, (hs.length - 1) + (wk ? 1 : 0));
+                const after = eligible.reduce((m, h) => h.blockEnd > m ? h.blockEnd : m, date);
+                for (let i = 0; i < n; i++) reqs.push({ after, name: eligible[0].name });
+            });
+            const out = {};
+            Object.keys(map).forEach(d => { out[d] = [...new Set(map[d].map(h => h.name))].join('·'); });
+            reqs.sort((a, b) => a.after < b.after ? -1 : 1).forEach(r => {
+                let d = _addDays(_ymdDate(r.after), 1);
+                while (d.getDay() === 0 || d.getDay() === 6 || out[localDateStr(d)]) d = _addDays(d, 1);
+                out[localDateStr(d)] = `대체공휴일(${r.name})`;
+            });
+            return (_krHoliCache[year] = out);
+        }
+        function krHolidayName(dateStr) {
+            if (!dateStr) return '';
+            const s = String(dateStr).slice(0, 10);
+            return krHolidays(Number(s.slice(0, 4)))[s] || '';
+        }
+        function isOffDay(dateStr) {
+            const d = _ymdDate(dateStr).getDay();
+            return d === 0 || d === 6 || !!krHolidayName(dateStr);
+        }
+        // 오늘(제외) 다음 날부터 그날(포함)까지의 근무일 수 — 지난 날이면 음수
+        function workdaysUntil(dateStr, from = localDateStr()) {
+            const a = _ymdDate(from), b = _ymdDate(dateStr);
+            if (isNaN(a) || isNaN(b)) return 0;
+            const sign = b < a ? -1 : 1;
+            let n = 0, d = new Date(a);
+            while (localDateStr(d) !== localDateStr(b)) {
+                d = _addDays(d, sign);
+                if (!isOffDay(localDateStr(d))) n++;
+                if (Math.abs(n) > 4000) break;
+            }
+            return sign * n;
+        }
+        // 근무일 n일 뒤
+        function addWorkdays(n, from = new Date()) {
+            let d = new Date(from); d.setHours(0, 0, 0, 0);
+            while (n > 0) { d = _addDays(d, 1); if (!isOffDay(localDateStr(d))) n--; }
+            return localDateStr(d);
         }
 
         // 용량 표시: 1MB 미만은 KB, 1GB 미만은 MB, 이상은 GB (예: 11KB, 312.4MB, 128.5GB)
@@ -8912,14 +9286,6 @@
                             <div id="checklist-bar-${workflow.id}" style="width:${progress}%;height:100%;background:var(--accent);transition:width 0.3s;"></div>
                         </div>
                         ` : `
-                        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;padding:7px 10px;background:rgba(37,99,235,0.06);border-radius:8px;border-left:3px solid var(--accent);">
-                            <span style="font-size:0.78rem;font-weight:700;color:var(--accent);flex-shrink:0;">편집 모드</span>
-                            <span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-                                <span style="font-size:0.72rem;color:var(--text-gray);display:flex;align-items:center;gap:3px;"><kbd style="background:var(--white);border:1px solid var(--border-light);border-radius:3px;padding:1px 5px;font-size:0.67rem;font-family:inherit;color:var(--text-dark);">Enter</kbd>아래 추가</span>
-                                <span style="font-size:0.72rem;color:var(--text-gray);display:flex;align-items:center;gap:3px;"><kbd style="background:var(--white);border:1px solid var(--border-light);border-radius:3px;padding:1px 5px;font-size:0.67rem;font-family:inherit;color:var(--text-dark);">Tab</kbd>상위/하위 전환</span>
-                                <span style="font-size:0.72rem;color:var(--text-gray);display:flex;align-items:center;gap:3px;"><kbd style="background:var(--white);border:1px solid var(--border-light);border-radius:3px;padding:1px 5px;font-size:0.67rem;font-family:inherit;color:var(--text-dark);">Bksp</kbd>빈칸에서 항목 삭제</span>
-                                <span style="font-size:0.72rem;color:var(--text-gray);display:flex;align-items:center;gap:3px;"><kbd style="background:var(--white);border:1px solid var(--border-light);border-radius:3px;padding:1px 5px;font-size:0.67rem;font-family:inherit;color:var(--text-dark);">⠿</kbd>순서 변경</span>
-                            </span>
                         </div>
                         `}
                         <div id="checklist-items-${workflow.id}">
@@ -8948,16 +9314,8 @@
                             if (isNaN(d)) return '';
                             return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
                         })() : '';
-                        let deadlineHtml = '';
-                        if (workflow.deadline) {
-                            // 완료된(또는 완료 처리된) 업무는 마감일이 지났어도 "지연"으로 표시하지 않는다
-                            const isDone = isCompleted || workflow.completedProcessed;
-                            const dlColor = isDone ? '#10b981' : daysLeft < 0 ? '#ef4444' : daysLeft <= 2 ? '#ef4444' : daysLeft <= 7 ? '#f59e0b' : '#10b981';
-                            const dlText = isDone ? '완료' : daysLeft < 0 ? `지연 ${Math.abs(daysLeft)}일` : daysLeft === 0 ? '오늘 마감' : `${daysLeft}일 남음`;
-                            deadlineHtml = `<div class="fap-deadline-row"><div class="fap-deadline-input-line"><span style="color:${dlColor};font-weight:700;">${deadlineIcon}</span>&nbsp;<input class="focus-deadline-input" type="date" value="${dlDeadlineVal}" onchange="app.saveFocusDeadline(${workflow.id}, this.value)"></div><div class="fap-deadline-status" style="color:${dlColor};">${dlText}</div></div>`;
-                        } else {
-                            deadlineHtml = `<div class="fap-deadline-row"><div class="fap-deadline-input-line">마감일: <input class="focus-deadline-input" type="date" value="" onchange="app.saveFocusDeadline(${workflow.id}, this.value)" placeholder="마감일 설정"></div></div>`;
-                        }
+                        // 마감 카드: D-n·날짜·근무일·기간 막대, 누르면 날짜 선택 창 (완료된 업무는 지났어도 「지연」으로 표시하지 않음)
+                        const deadlineHtml = this._focusDeadlineCardHtml(workflow, isCompleted || workflow.completedProcessed);
 
                         const { completed: completedCount, total: totalCount } = this.getChecklistStats(workflow);
 
@@ -8984,6 +9342,7 @@
                             ${!isPackage ? this._collabPanelHtml(workflow) : ''}
                             <button class="fap-btn" onclick="app.generateOfficialDocument(${workflow.id})">AI 기안</button>
                             <button class="fap-btn" onclick="app.openPDFModal(${workflow.id})">출력</button>
+                            ${!isPackage ? `<button class="fap-btn" onclick="app.openSchedule(${workflow.id})" title="이 업무의 항목 마감을 달력으로 보기 · 끌어서 날짜 변경">일정 보기</button>` : ''}
                             <div class="fap-spacer"></div>
                             ${isPackage ? `<button class="fap-btn fap-btn-primary" onclick="app.duplicateWorkflow(${workflow.id})">복사하여 시작</button>` : ''}
                             ${isPackage ? `<button class="fap-btn" style="font-size:0.82rem;" onclick="app.setReference(${workflow.id}, false)" title="레퍼런스에서 빼서 ${workflow.completedProcessed ? '처리완료' : '진행중'} 탭으로 옮깁니다">↩ 레퍼런스 해제 (${workflow.completedProcessed ? '처리완료로' : '진행중으로'})</button>` : ''}
@@ -9013,8 +9372,10 @@
                                             value="${this.escapeHtml(workflow.title)}"
                                             onblur="app.saveFocusTitle(${workflow.id}, this.value)"
                                             onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}">
-                                        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                                            <span style="font-size: 0.77rem; color: var(--text-muted); font-variant-numeric: tabular-nums;">${this._workDateLabel(workflow)}</span>
+                                        <div class="fci-date-line" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                                            <span style="font-size: 0.77rem; color: var(--text-muted); font-variant-numeric: tabular-nums;">${this._workDateLabel(workflow)}</span>${isEditMode ? '<span class="fci-editing-chip" title="체크리스트 편집 중 — 왼쪽의 [저장]을 눌러야 반영됩니다">✎ 편집 중</span>' : ''}
+                                            ${isEditMode ? `<span class="fci-kbd-hints" title="편집 단축키 — 눌러서 자세히">⌨ <kbd>Enter</kbd> 추가 · <kbd>Tab</kbd> 상위↔하위 · <kbd>Bksp</kbd> 삭제 · <kbd>⠿</kbd> 순서 <button type="button" class="fci-kbd-info" onclick="app.showEditShortcuts()" aria-label="단축키 자세히">ⓘ</button></span>
+                                            <button type="button" class="fci-kbd-btn" onclick="app.showEditShortcuts()">⌨ 단축키</button>` : ''}
                                             <div style="display: flex; gap: 5px; margin-left: 4px;">
                                                 <button id="focus-btn-content-${workflow.id}"
                                                         onclick="app.focusToggleSubPanel(${workflow.id}, 'content')"
@@ -9057,6 +9418,7 @@
                     if (clItems) { clItems.style.maxHeight = 'none'; clItems.style.overflowY = 'visible'; }
                     this._focusScrollRestore(workflow.id, _focusScrollState);
                     this._bindFocusJump(workflow.id);
+                    if (this.focusEditMode) setTimeout(() => this._maybeShowTargetTip(workflow.id), 120); else document.getElementById('cbTargetTip')?.remove();
 
                     // 포커스 모드에서는 사이드바 업데이트 생략
                     return;
@@ -10930,6 +11292,7 @@
                 } catch (e) {}
             }
             _focusRestoreEntry(workflowId) {
+                if (this.focusEditMode) { const sc = document.getElementById(`focus-checklist-scroll-${workflowId}`); if (sc) sc.scrollTop = 0; return; }
                 let saved = null;
                 try { saved = JSON.parse(localStorage.getItem('focusLastPos') || '{}')[workflowId] || null; } catch (e) {}
                 if (saved) { this._focusScrollRestore(workflowId, saved); this._updateFocusJump(workflowId); return; }
@@ -10947,31 +11310,51 @@
                 if (smooth) { el.classList.remove('jump-flash'); void el.offsetWidth; el.classList.add('jump-flash'); setTimeout(() => el.classList.remove('jump-flash'), 1200); }
                 setTimeout(() => this._updateFocusJump(workflowId), smooth ? 450 : 0);
             }
-            // 진행중 단계가 화면 밖이면 아래쪽에 [▲/▼ 진행중 단계로] 버튼 (메신저의 "새 메시지로 이동"처럼 자동으로 끌고 가지 않음)
+            // 진행중 단계가 화면 밖이면 오른쪽 아래에 [▲/▼ 진행중 단계로] 버튼 (웹의 「맨 위로」 버튼처럼 익숙한 자리, 자동으로 끌고 가지 않음)
+            // · 목록 끝에 버튼 높이만큼 여백(머티리얼 디자인 지침) — 버튼이 떠 있어도 마지막 항목을 버튼 위로 올려 마감일·⚙를 누를 수 있다
+            // · 버튼 가까이 마우스를 대면 흐리게(아래 항목을 누르기 쉽게)
+            // · 높이 0인 틀에 띄워 버튼이 보이든 숨든 목록 길이는 그대로(다시 그릴 때 위치가 밀리지 않게)
             _bindFocusJump(workflowId) {
                 const sc = document.getElementById(`focus-checklist-scroll-${workflowId}`);
                 if (!sc) return;
-                if (!sc.querySelector('.focus-jump-btn')) {
-                    // 높이 0인 틀에 버튼을 띄워, 버튼이 보이든 숨든 목록 길이가 바뀌지 않게 한다(다시 그릴 때 위치가 밀리지 않도록)
-                    const wrap = document.createElement('div');
-                    wrap.className = 'focus-jump-wrap';
-                    const btn = document.createElement('button');
-                    btn.type = 'button';
-                    btn.className = 'focus-jump-btn';
-                    btn.hidden = true;
-                    btn.onclick = () => this._focusScrollToCurrent(workflowId, true);
-                    wrap.appendChild(btn);
-                    sc.appendChild(wrap);
+                if (!sc.querySelector('.focus-jump-wrap')) {
+                    const make = (pos) => {
+                        const wrap = document.createElement('div');
+                        wrap.className = `focus-jump-wrap ${pos}`;
+                        const btn = document.createElement('button');
+                        btn.type = 'button';
+                        btn.className = 'focus-jump-btn';
+                        btn.hidden = true;
+                        btn.textContent = pos === 'top' ? '▲ 진행중 단계로' : '▼ 진행중 단계로';
+                        btn.onclick = () => this._focusScrollToCurrent(workflowId, true);
+                        wrap.appendChild(btn);
+                        return wrap;
+                    };
+                    const spacer = document.createElement('div');
+                    spacer.className = 'focus-jump-spacer';
+                    sc.appendChild(spacer);
+                    sc.appendChild(make('bottom'));
                 }
                 if (!sc._jumpBound) {
                     sc._jumpBound = true;
                     sc.addEventListener('scroll', () => { cancelAnimationFrame(sc._jumpRaf); sc._jumpRaf = requestAnimationFrame(() => this._updateFocusJump(workflowId)); }, { passive: true });
+                    // 버튼 가까이(아래 항목을 누르려고) 마우스를 대면 흐리게 — 버튼 자체에 올리면 다시 선명
+                    sc.addEventListener('mousemove', (e) => {
+                        sc.querySelectorAll('.focus-jump-btn').forEach(b => {
+                            if (b.hidden) return;
+                            const r = b.getBoundingClientRect();
+                            const near = e.clientX > r.left - 40 && e.clientX < r.right + 40 && e.clientY > r.top - 24 && e.clientY < r.bottom + 24;
+                            const on = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+                            b.classList.toggle('near', near && !on);
+                        });
+                    }, { passive: true });
+                    sc.addEventListener('mouseleave', () => sc.querySelectorAll('.focus-jump-btn').forEach(b => b.classList.remove('near')));
                 }
                 this._updateFocusJump(workflowId);
             }
             _updateFocusJump(workflowId) {
                 const sc = document.getElementById(`focus-checklist-scroll-${workflowId}`);
-                const btn = sc && sc.querySelector('.focus-jump-btn');
+                const btn = sc && sc.querySelector('.focus-jump-wrap.bottom .focus-jump-btn');
                 const wf = this.allData.workflows.find(w => w.id === workflowId);
                 if (!btn || !wf) return;
                 const { currentIdx } = this._stageInfo(wf.checklist || [], wf);
@@ -11463,9 +11846,8 @@
                 if (!date) return [];
                 const out = [];
                 const d = new Date(date + 'T00:00:00');
-                const md = date.slice(5);
-                const HOLI = { '01-01': '신정', '03-01': '삼일절', '05-05': '어린이날', '06-06': '현충일', '08-15': '광복절', '10-03': '개천절', '10-09': '한글날', '12-25': '성탄절' };
-                if (HOLI[md]) out.push(`${HOLI[md]}(공휴일)입니다`);
+                const hn = krHolidayName(date);
+                if (hn) out.push(`${hn}(휴일)입니다`);
                 else if (d.getDay() === 0 || d.getDay() === 6) out.push(`${d.getDay() === 0 ? '일' : '토'}요일입니다`);
                 if (wf.deadline && date > String(wf.deadline).slice(0, 10)) out.push(`업무 전체 마감(${String(wf.deadline).slice(0, 10)})보다 늦습니다`);
                 const cl = wf.checklist || [];
@@ -12790,10 +13172,25 @@
             // 편집 모드 진입
             enterFocusEditMode() {
                 if (this._collabGuardStructure(this.focusedWorkflowId)) return;
+                this._branchPick = null;
+                document.body.classList.remove('branch-picking');
                 // 레퍼런스(보기 전용)도 [편집]으로는 고칠 수 있다 — 편집 중에만 수정 허용, [저장]해야 반영
+                // 편집 화면은 할 일이 모두 펼쳐지는 등 생김새가 달라, "보던 항목 기준"으로 맞추면 시작 위치가 매번 달라져 헷갈린다
+                // → 들어갈 때는 항상 맨 위(전체 구조부터), 나올 때는 들어가기 직전 일하던 자리로 (_restorePreEditScroll)
+                this._preEditScroll = { wfId: this.focusedWorkflowId, st: this._focusScrollCapture(this.focusedWorkflowId) };
                 this.focusEditMode = true;
                 this.displayWorkflows();
                 this._beginFocusEditDraft();  // 화면을 그리며 자동 정리(itemId 등)가 끝난 뒤의 상태를 기준으로
+                const sc = document.getElementById(`focus-checklist-scroll-${this.focusedWorkflowId}`);
+                if (sc) sc.scrollTop = 0;
+            }
+
+            _restorePreEditScroll() {
+                const p = this._preEditScroll;
+                this._preEditScroll = null;
+                document.getElementById('cbTargetTip')?.remove();
+                if (!p || p.wfId !== this.focusedWorkflowId || this.focusEditMode) return;
+                requestAnimationFrame(() => this._focusScrollRestore(p.wfId, p.st));
             }
 
             // 편집을 마친 뒤: 업무관리에서 편집으로 들어왔으면 업무관리로 돌아감
@@ -12814,6 +13211,7 @@
                 const changed = this._focusEditHasChanges();
                 this._commitFocusEdit();
                 this.displayWorkflows();
+                this._restorePreEditScroll();
                 this.showToast('success', '✅', changed ? '저장되었습니다.' : '바뀐 내용 없이 편집을 마쳤습니다.');
                 this._afterFocusEditDone();
             }
@@ -12822,6 +13220,7 @@
             cancelFocusEditMode() {
                 this._confirmLeaveFocusEdit(() => {
                     this.displayWorkflows();
+                    this._restorePreEditScroll();
                     this._afterFocusEditDone();
                 });
             }
@@ -12855,6 +13254,7 @@
                     ? this.allData.workflows.find(w => w.id === this.focusedWorkflowId)
                     : null;
                 if (closedWorkflow && !this.focusEditMode) this._focusSaveLastPos(closedWorkflow.id);  // 다시 열면 이 자리로
+                document.getElementById('cbTargetTip')?.remove();
                 const hasActualChange = closedWorkflow && this._focusEntrySnapshot !== null
                     && this._snapshotForFocusCompare(closedWorkflow) !== this._focusEntrySnapshot;
                 this._focusEntrySnapshot = null;
@@ -12916,6 +13316,7 @@
 
             // ── 포커스모드 Always-Editable 체크리스트 렌더러 ──
             renderFocusChecklistItem(workflow, item, index) {
+                if (this._branchPick && this._branchPick.wfId === workflow.id) return this._renderBranchPickRow(workflow, item, index);
                 if (!item.text) item.text = '';
                 if (!item.formats) item.formats = [];
                 if (!item.result)  item.result  = { text: '', summary: '' };
@@ -12938,32 +13339,36 @@
                            onkeydown="if(event.key==='Enter'){event.preventDefault();app.saveFocusItemText(${workflow.id},${index},this.value);app.focusAddItemAfterLive(${workflow.id},${index});}
                                       if(event.key==='Tab'){event.preventDefault();app.saveFocusItemText(${workflow.id},${index},this.value);app.focusToggleItemIndent(${workflow.id},${index},event.shiftKey);}
                                       if(event.key==='Backspace'&&!this.value.trim()){event.preventDefault();app.focusDeleteItemLive(${workflow.id},${index});}"
-                           placeholder="항목명 입력...">`;
+                           placeholder="항목 이름 입력 · Enter: 아래에 추가 · Tab: 상위↔하위">`;
 
                 // 서식/팁/결과 인디케이터 버튼
                 const hasResult  = !!(item.result?.text || item.result?.summary);
                 const hasTip     = !!(item.tip?.content);
                 const hasFormats = (item.formats && item.formats.length > 0) || (item.linkedDocs && item.linkedDocs.length > 0);
                 const hasAny     = hasResult || hasTip || hasFormats;
-                // 편집 화면: 항목마다 [⚙ 설정] 메뉴 하나 (건너뛰기 규칙·서식·업무팁) — 점은 이미 들어 있는 것 표시
-                const detailBtn  = !isSkipped ? (() => {
-                    const dots = [
-                        hasResult  ? '<span style="width:6px;height:6px;border-radius:50%;background:#8b5cf6;display:inline-block;" title="조치결과"></span>' : '',
-                        hasTip     ? '<span style="width:6px;height:6px;border-radius:50%;background:#f59e0b;display:inline-block;" title="업무팁"></span>' : '',
-                        hasFormats ? '<span style="width:6px;height:6px;border-radius:50%;background:#10b981;display:inline-block;" title="서식"></span>' : '',
-                    ].filter(Boolean).join('');
-                    return `<button class="fci-settings-btn" onclick="event.stopPropagation();app.openItemSettingsMenu(event,${workflow.id},${index})" title="이 항목의 건너뛰기 규칙·서식·업무팁 설정">⚙ 설정 ▾${dots ? `<span class="fci-settings-dots">${dots}</span>` : ''}</button>`;
-                })() : '';
+                // 편집 화면 줄 (Notion·Planner처럼): 평소엔 제목 + 작은 표시만, ⚙는 오른쪽 끝 같은 자리, ＋·🗑는 마우스를 올릴 때만
+                const detailBtn  = !isSkipped ? `<button class="fci-gear" onclick="event.stopPropagation();app.openItemSettingsMenu(event,${workflow.id},${index})" title="설정 — 건너뛰기 버튼·서식·업무팁·항목 추가·삭제" aria-label="설정"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>` : '';
 
                 // 건너뛰기 표시: 버튼이 달린 항목은 "건너뛰기 n"(누르면 설정 창), 건너뛰어질 수 있는 항목은 "조건부"
                 const branchCount = (item.branchOptions || []).filter(o => this.isBranchOptionConfigured(o)).length;
                 const targetOf = !isSkipped ? this._branchTargetMap(workflow).get(this.ensureChecklistItemId(item)) : null;
-                const branchChipsInner = (branchCount && !isSkipped
-                        ? `<button class="fci-branch-chip" onclick="event.stopPropagation();app.showChecklistItemModal(${workflow.id},${index},'branch')" title="건너뛰기 버튼 ${branchCount}개 — 눌러서 설정">${this._skipIco()}건너뛰기 ${branchCount}</button>` : '')
-                    + (targetOf ? `<span class="fci-branch-chip target" title="${this.escapeHtml(targetOf.map(t => t + ' 버튼을 누르면 건너뜀').join('\n'))}">${this._skipIco()}조건부</span>` : '');
-                const branchChips = branchChipsInner ? `<span style="display:inline-flex;align-items:center;gap:4px;margin-left:auto;flex-shrink:0;">${branchChipsInner}</span>` : '';
+                // 표시: ⤼ 이름 = 이 항목의 건너뛰기 버튼 · ◌ = 다른 버튼이 이 항목을 건너뛸 수 있음 · 점 = 서식·업무팁·조치결과 있음
+                // (⤼와 ◌를 같은 보라색으로 — "버튼 ↔ 건너뛰어지는 항목"이 짝이라는 게 색으로 이어진다)
+                const marks = [
+                    branchCount && !isSkipped ? `<button type="button" class="fci-mark-branch" onclick="event.stopPropagation();app.openItemSettingsMenu(event,${workflow.id},${index})" title="건너뛰기 버튼 ${branchCount}개: ${this.escapeHtml((item.branchOptions || []).filter(o => this.isBranchOptionConfigured(o)).map(o => o.label || '(이름 없음)').join(', '))} — 눌러서 설정">${this._skipIco(14)}${(() => {
+                        // 개수 대신 버튼 이름 (상용 양식 도구처럼 "무엇이 일어나는지"를 글자로) — 여러 개면 「불출석 외 1」
+                        const names = (item.branchOptions || []).filter(o => this.isBranchOptionConfigured(o)).map(o => o.label || '(이름 없음)');
+                        const first = names[0].length > 8 ? names[0].slice(0, 8) + '…' : names[0];
+                        return this.escapeHtml(first) + (names.length > 1 ? ` <span class="fci-mark-more">외 ${names.length - 1}</span>` : '');
+                    })()}</button>` : '',
+                    targetOf ? `<span class="fci-mark-target" title="${this.escapeHtml(targetOf.map(t => '「' + t + '」을(를) 누르면 건너뜀').join('\n'))}"></span>` : '',
+                    hasFormats ? '<span class="fci-mark-dot" style="background:#10b981;" title="서식 있음"></span>' : '',
+                    hasTip ? '<span class="fci-mark-dot" style="background:#f59e0b;" title="업무팁 있음"></span>' : '',
+                    hasResult ? '<span class="fci-mark-dot" style="background:#8b5cf6;" title="조치결과 있음"></span>' : ''
+                ].filter(Boolean).join('');
+                const branchChips = marks ? `<span class="fci-marks">${marks}</span>` : '';
 
-                const cardClass = `checklist-card${isSub ? ' sub-item' : ''}${isSkipped ? ' skipped' : ''}`;
+                const cardClass = `checklist-card${isSub ? ' sub-item' : ''}${isSkipped ? ' skipped' : ''}${targetOf ? ' fci-conditional' : ''}`;
                 const cardStyle = isSkipped ? 'opacity:0.55;' : '';
 
                 return `
@@ -12981,9 +13386,12 @@
                             ${subIcon}
                             ${titleHtml}
                             ${branchChips}
-                            ${detailBtn}
-                            ${!isSkipped ? `<button class="fci-insert-btn" onclick="event.stopPropagation();app.focusAddItemAfterLive(${workflow.id},${index})" title="아래에 항목 추가">＋</button>` : ''}
-                            ${!isSkipped ? `<button class="fci-del" onclick="event.stopPropagation();app.focusDeleteItemLive(${workflow.id},${index})" title="항목 삭제">✕</button>` : ''}
+                            <span class="fci-actions">
+                                ${!isSkipped ? `<button class="fci-insert-btn fci-indent-btn" onclick="event.stopPropagation();app.focusToggleItemIndent(${workflow.id},${index},false)" title="${isSub ? '상위(단계)로 올리기 — Tab' : '하위(할 일)로 내리기 — Tab'}">${isSub ? '⇤' : '⇥'}</button>` : ''}
+                                ${!isSkipped ? `<button class="fci-insert-btn" onclick="event.stopPropagation();app.focusAddItemAfterLive(${workflow.id},${index})" title="아래에 항목 추가">＋</button>` : ''}
+                                ${!isSkipped ? `<button class="fci-del" onclick="event.stopPropagation();app.focusDeleteItemLive(${workflow.id},${index})" title="항목 삭제"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>` : ''}
+                                ${detailBtn}
+                            </span>
                         </div>
                     </div>`;
             }
@@ -13100,7 +13508,7 @@
                 });
             }
 
-            // 포커스모드 항목 들여쓰기 토글 (Tab / Shift+Tab)
+            // 포커스모드 항목 들여쓰기 토글 (Tab 하나로 상위↔하위 번갈아)
             focusToggleItemIndent(workflowId, index, shiftKey) {
                 const workflow = this.allData.workflows.find(w => w.id === workflowId);
                 if (!workflow || !workflow.checklist[index]) return;
@@ -13175,6 +13583,7 @@
                         if (anchorState) this._focusScrollRestore(workflow.id, anchorState);
                         else scrollEl.scrollTop = savedScrollTop;
                         this._updateFocusJump(workflow.id);
+                        if (this.focusEditMode) this._maybeShowTargetTip(workflow.id); else document.getElementById('cbTargetTip')?.remove();
                     });
                 }
             }
@@ -13596,7 +14005,7 @@
                                     <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:5px;">
                                         ${isSkipped ? '<span style="font-size:0.7rem;color:var(--text-muted);padding:1px 6px;border-radius:4px;border:1px solid var(--border-light);">건너뜀</span>' : ''}
                                         ${isCompleted && !isSkipped ? '<span style="font-size:0.7rem;color:#10b981;padding:1px 6px;border-radius:4px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);font-weight:600;">완료</span>' : ''}
-                                        ${isCompleted && item.branchOnly && !isSkipped ? '<span style="font-size:0.7rem;color:#8b5cf6;padding:1px 6px;border-radius:4px;background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.2);font-weight:600;" title="분기 처리로 완료됨 (실제 작업 내용 아님)">🔀 분기 처리</span>' : ''}
+                                        ${isCompleted && item.branchOnly && !isSkipped ? '<span style="font-size:0.7rem;color:#8b5cf6;padding:1px 6px;border-radius:4px;background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.2);font-weight:600;" title="분기 처리로 완료됨 (실제 작업 내용 아님)">' + this._skipIco(11) + '분기 처리</span>' : ''}
                                         ${item.completedAt ? `<span style="font-size:0.7rem;color:var(--text-muted);letter-spacing:0.01em;">${fmtDateTime(item.completedAt, { short: true, weekday: true }) || item.completedAt}</span>` : ''}
                                     </div>
                                 </div>
@@ -13640,7 +14049,7 @@
                                 ${locked ? `<div style="text-align:center;padding:28px 20px;color:var(--text-muted);font-size:0.87rem;background:var(--bg-light);border-radius:8px;border:1px dashed var(--border-light);">레퍼런스(본보기)에서는 건너뛰기 설정을 바꿀 수 없습니다. [편집] 중에는 바꿀 수 있습니다.</div>` : `
                                 <div id="branch-execute-${workflowId}-${index}">${branchBtnsHtml}</div>
                                 <div style="font-size:0.76rem;color:var(--text-muted);margin-bottom:10px;line-height:1.6;">
-                                    자주 생기는 갈림길(예: 불출석이면 신문 단계 생략)에 버튼을 만들어 두면, 일할 때 버튼 한 번으로 정한 항목을 건너뜁니다.${setupOnly ? ' 버튼은 일하는 화면에서 누릅니다.' : ''}<br>
+                                    자주 생기는 갈림길(예: 「자체 종결」이면 상급 기관 보고 단계 생략)에 버튼을 만들어 두면, 일할 때 버튼 한 번으로 정한 항목을 건너뜁니다.${setupOnly ? ' 버튼은 일하는 화면에서 누릅니다.' : ''}<br>
                                     그때그때 필요 없는 항목(예: 피의자가 1명일 때 피의자2·3)은 설정 없이 [해당 없음]으로 빼면 됩니다.
                                 </div>
                                 <div id="branch-options-list-${workflowId}-${index}">
@@ -22143,14 +22552,19 @@ ${docScope === 'internal' ? `[내부결재 — 보고·검토·승인용]
                     // 하위 항목: 큰 원형 마커가 붙는 독립 단계로 취급하지 않고, 상위 항목 아래 작게 들여써서
                     // "이 단계의 세부 절차"라는 느낌으로만 표시. 클릭하면 해당 하위 항목으로 바로 이동.
                     const subItems = this.findSubItems(workflow.checklist, idx);
+                    const subNowIdx = (subItems.find(({ item: si }) => !this.normalizeCompleted(si) && si.skipped !== true) || {}).index;
                     const subItemsHtml = subItems.length > 0 ? `
                         <div style="margin-top:5px;padding-left:2px;display:flex;flex-direction:column;gap:3px;">
                             ${subItems.map(({ index: subIdx, item: subItem }) => {
                                 const subDone = this.normalizeCompleted(subItem);
-                                return `<div style="display:flex;align-items:center;gap:6px;cursor:pointer;" onclick="event.stopPropagation();app.scrollToMainChecklistItem(${workflowId},${subIdx})">
-                                    <span style="width:11px;height:11px;border-radius:50%;flex-shrink:0;${subDone ? 'background:#10b981;' : 'border:1.5px solid var(--border-light,#dde3ee);'}"></span>
-                                    <span style="font-size:0.79rem;line-height:1.5;color:${subDone ? 'var(--text-muted,#8899aa)' : 'var(--text-dark,#1e2d47)'};${subDone ? 'text-decoration:line-through;text-decoration-color:var(--border-light,#dde3ee);' : ''}">${esc(subItem.text || '')}</span>
-                                </div>`;
+                                const subTip = !!(subItem.tip && subItem.tip.content && subItem.tip.content.trim());
+                                // 진행중 단계에서 지금 차례인 할 일(안 끝난 첫 할 일)은 업무팁·서식을 바로 아래에 펼침
+                                const subNow = isCurrent && !procOther && subIdx === subNowIdx;
+                                return `<div class="proc-sub-row${subNow ? ' is-now' : ''}" style="display:flex;align-items:center;gap:6px;cursor:pointer;" onclick="event.stopPropagation();app.scrollToMainChecklistItem(${workflowId},${subIdx})">
+                                    <span style="width:11px;height:11px;border-radius:50%;flex-shrink:0;${subDone ? 'background:#10b981;' : subNow ? 'border:2px solid #8b5cf6;' : 'border:1.5px solid var(--border-light,#dde3ee);'}"></span>
+                                    <span style="font-size:0.79rem;line-height:1.5;color:${subDone ? 'var(--text-muted,#8899aa)' : 'var(--text-dark,#1e2d47)'};${subDone ? 'text-decoration:line-through;text-decoration-color:var(--border-light,#dde3ee);' : ''}${subNow ? 'font-weight:600;' : ''}">${esc(subItem.text || '')}</span>
+                                    ${subTip && !subNow ? `<button type="button" class="cl-ind-btn" onclick="event.stopPropagation();app.showChecklistItemModal(${workflowId},${subIdx},'tip')" title="업무팁: ${esc(this._tipPreview(subItem))} — 눌러서 보기" aria-label="업무팁 보기">💡</button>` : ''}
+                                </div>${subNow ? buildDetailHtml(subItem).replace('class="proc-step-detail" style="margin-top:6px;', 'class="proc-step-detail proc-sub-detail" style="margin:2px 0 4px 17px;') : ''}`;
                             }).join('')}
                         </div>` : '';
 
@@ -22168,8 +22582,8 @@ ${docScope === 'internal' ? `[내부결재 — 보고·검토·승인용]
                             </div>
                             <div style="flex:1;min-width:0;padding-bottom:${isLast ? '2px' : '14px'};">
                                 <div class="proc-step-title" style="font-size:${isCurrent ? '0.9rem' : '0.86rem'};font-weight:${isCurrent ? '700' : '500'};color:${textColor};line-height:1.5;${isDone ? 'text-decoration:line-through;text-decoration-color:var(--border-light,#dde3ee);' : ''}">${esc(item.text || '')}${isCurrent ? ` <span style="font-size:0.7rem;font-weight:700;color:#8b5cf6;">${procMine ? '▶ 내 차례' : '▶ 진행중'}</span>` : ''}${procMine && !procOther ? ' <span class="cb-proc-who mine">★ 내 담당</span>' : ''}${procOther ? ` <span class="cb-proc-who">${esc(procOther)}</span>` : ''}</div>
-                                ${subItemsHtml}
                                 ${detailHtml}
+                                ${subItemsHtml}
                             </div>
                         </div>
                     `;
@@ -28976,6 +29390,13 @@ ${aiPartnerCitationFirstRules}
                 return result;
             }
 
+            // 업무팁 첫 줄(기호 빼고 60자) — 💡에 마우스를 올리면 미리 보기
+            _tipPreview(item) {
+                const t = String((item && item.tip && item.tip.content) || '');
+                const line = (t.split('\n').find(l => l.trim()) || '').replace(OL_RE, '').trim();
+                return line.length > 60 ? line.slice(0, 60) + '…' : line;
+            }
+
             escapeHtml(text) {
                 const div = document.createElement('div');
                 div.textContent = text;
@@ -29265,30 +29686,55 @@ ${aiPartnerCitationFirstRules}
                     return collabBanner + cl.map((item, idx) => renderEntry(item, idx)).join('');
                 }
 
-                const expanded = !!(this._skippedGroupExpanded && this._skippedGroupExpanded[workflow.id]);
-                const groupItemsHtml = skippedEntries.map(({ item, idx }) => this.renderChecklistItem(workflow, item, idx)).join('');
-                const groupHtml = `
-                    <div class="skip-group">
-                        <button class="skip-group-toggle" onclick="app.toggleSkippedGroup(${workflow.id})">
-                            <span style="display:flex;align-items:center;gap:6px;">
-                                <span style="font-size:0.9rem;">🔀</span>
-                                <span>건너뛴 항목 ${skippedEntries.length}개</span>
-                            </span>
-                            <span class="skip-group-arrow" style="transform:rotate(${expanded ? '180deg' : '0deg'});">▾</span>
-                        </button>
-                        <div class="skip-group-items" style="display:${expanded ? 'block' : 'none'};">${groupItemsHtml}</div>
-                    </div>`;
+                // 건너뛴 항목은 한곳에 몰지 않고 "원래 자리"마다 얇은 점선 + 작은 「⤼ n」으로 (GitHub의 숨긴 항목·Gmail의 접힌 대화처럼)
+                // — 평소엔 거의 눈에 안 띄고, 마우스를 올리면 무엇을 왜 건너뛰었는지, 누르면 그 자리에 펼친다
+                const runs = [];
+                cl.forEach((item, idx) => {
+                    if (item.skipped !== true) return;
+                    if (mineOnly && !mineSet.has(this._stageIndexOf(cl, idx))) return;
+                    const last = runs[runs.length - 1];
+                    if (last && last.end === idx - 1) { last.end = idx; last.items.push({ item, idx }); }
+                    else runs.push({ start: idx, end: idx, items: [{ item, idx }] });
+                });
+                const runAt = new Map(runs.map(r => [r.start, r]));
+                const openMap = (this._skipRunOpen && this._skipRunOpen[workflow.id]) || {};
+                const runHtml = (r) => {
+                    const key = this.ensureChecklistItemId(r.items[0].item);
+                    const open = !!openMap[key];
+                    const names = r.items.map(({ item }) => (item.text || '').trim() || '(제목 없음)');
+                    // 이유: 해당 없음 / 「버튼 이름」 버튼 (skipReason은 "자체 종결 (출석 확인)" 형태라 괄호 앞만)
+                    const reasonOf = (item) => {
+                        if (item.skipManual) return '해당 없음';
+                        const label = (item.skipReason || '').replace(/\s*\(.*\)\s*$/, '');
+                        return label ? `「${label}」 버튼` : '건너뜀';
+                    };
+                    const reasons = [...new Set(r.items.map(({ item }) => reasonOf(item)))];
+                    const tip = `건너뜀 ${r.items.length}개: ${names.join(', ')}\n${reasons.join(' · ')}\n${open ? '눌러서 접기' : '눌러서 펼치기'}`;
+                    return `<div class="skip-run${open ? ' open' : ''}">
+                            <button type="button" class="skip-run-pill" onclick="app.toggleSkipRun(${workflow.id},'${key}')" title="${this.escapeHtml(tip)}" aria-expanded="${open}">${this._skipIco(11)}${r.items.length}</button>
+                        </div>${open ? `<div class="skip-run-items">${r.items.map(({ item, idx }) => this.renderChecklistItem(workflow, item, idx)).join('')}</div>` : ''}`;
+                };
 
                 let html = '';
-                let groupInserted = false;
                 cl.forEach((item, idx) => {
                     if (item.skipped === true) {
-                        if (!groupInserted) { html += groupHtml; groupInserted = true; }
+                        if (runAt.has(idx)) html += runHtml(runAt.get(idx));
                     } else {
                         html += renderEntry(item, idx);
                     }
                 });
                 return collabBanner + html;
+            }
+
+            toggleSkipRun(workflowId, key) {
+                if (!this._skipRunOpen) this._skipRunOpen = {};
+                const m = this._skipRunOpen[workflowId] || (this._skipRunOpen[workflowId] = {});
+                m[key] = !m[key];
+                const wf = this.allData.workflows.find(w => w.id === workflowId);
+                if (!wf) return;
+                this._focusTouch = { wfId: workflowId, itemId: key, at: Date.now() };
+                if (this.focusMode && this.focusedWorkflowId === workflowId) this.refreshFocusChecklist(wf);
+                else this._rerenderChecklist(wf);
             }
 
             // 건너뛴 항목 그룹 펼치기/접기
@@ -29565,7 +30011,7 @@ ${aiPartnerCitationFirstRules}
                 const hasFormats = (item.formats && item.formats.length > 0) || (item.linkedDocs && item.linkedDocs.length > 0);
                 const indicatorDots = [
                     hasResult  ? '<span title="조치결과 있음" style="width:6px;height:6px;border-radius:50%;background:#8b5cf6;display:inline-block;"></span>' : '',
-                    hasTip     ? '<span title="업무팁 있음" style="width:6px;height:6px;border-radius:50%;background:#f59e0b;display:inline-block;"></span>' : '',
+                    hasTip     ? `<span title="업무팁 있음: ${this.escapeHtml(this._tipPreview(item))}" style="width:6px;height:6px;border-radius:50%;background:#f59e0b;display:inline-block;"></span>` : '',
                     hasFormats ? '<span title="서식 첨부됨" style="width:6px;height:6px;border-radius:50%;background:#10b981;display:inline-block;"></span>' : '',
                 ].filter(Boolean).join('');
 
@@ -29588,12 +30034,13 @@ ${aiPartnerCitationFirstRules}
                                 ${stageChip}
                             </span>
                             <div style="display:flex;align-items:center;gap:4px;flex-shrink:0;margin-left:auto;">
+                                ${!isSkipped ? `<button type="button" class="cl-hover-guide" onclick="event.stopPropagation();app.showChecklistHelp(${workflow.id},${index})" title="이 항목의 업무팁·서식·법령을 한 화면에 모아 보기">✨ ${this.isAIAvailable() ? 'AI 길잡이' : '길잡이'}</button>` : ''}
                                 ${!isSub ? this._collabChipHtml(workflow, item, index) : ''}
                                 ${stageBadge}
                                 ${branchButtons}
                                 ${deadlineBadge}
                                 ${false /* 길잡이 버튼은 줄 미리보기(cl-peek)의 빠른 버튼으로 옮김 — 작은 버튼이 붙어 있어 잘못 눌리던 문제 */ && !isSkipped ? `<button class="ai-guide-btn" onclick="event.stopPropagation();app.showChecklistHelp(${workflow.id},${index})" title="${this.isAIAvailable() ? 'AI 길잡이' : '업무 길잡이'}"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M9 4.5a.75.75 0 01.721.544l.813 2.846a3.75 3.75 0 002.576 2.576l2.846.813a.75.75 0 010 1.442l-2.846.813a3.75 3.75 0 00-2.576 2.576l-.813 2.846a.75.75 0 01-1.442 0l-.813-2.846a3.75 3.75 0 00-2.576-2.576l-2.846-.813a.75.75 0 010-1.442l2.846-.813A3.75 3.75 0 007.466 7.89l.813-2.846A.75.75 0 019 4.5zM18 1.5a.75.75 0 01.728.568l.258 1.036c.236.94.97 1.674 1.91 1.91l1.036.258a.75.75 0 010 1.456l-1.036.258a2.25 2.25 0 00-1.91 1.91l-.258 1.036a.75.75 0 01-1.456 0l-.258-1.036a2.25 2.25 0 00-1.91-1.91l-1.036-.258a.75.75 0 010-1.456l1.036-.258a2.25 2.25 0 001.91-1.91l.258-1.036A.75.75 0 0118 1.5z" clip-rule="evenodd"/></svg><span class="ai-guide-label">${this.isAIAvailable() ? 'AI 길잡이' : '업무 길잡이'}</span></button>` : ''}
-                                ${isCompleted && item.branchOnly && !isSkipped ? `<span style="font-size:0.68rem;font-weight:700;color:#8b5cf6;background:rgba(139,92,246,0.1);padding:1px 6px;border-radius:4px;flex-shrink:0;" title="분기 처리로 완료됨 (실제 작업 내용 아님)">🔀 분기</span>` : ''}
+                                ${isCompleted && item.branchOnly && !isSkipped ? `<span style="font-size:0.68rem;font-weight:700;color:#8b5cf6;background:rgba(139,92,246,0.1);padding:1px 6px;border-radius:4px;flex-shrink:0;" title="분기 처리로 완료됨 (실제 작업 내용 아님)">${this._skipIco(11)}분기</span>` : ''}
                                 ${isSkipped && item.branchActionTaken ? `<button onclick="event.stopPropagation();app.undoBranchOption(${workflow.id},${index})" style="flex-shrink:0;padding:2px 7px;font-size:0.73rem;background:transparent;color:#6b7280;border:1px solid rgba(107,114,128,0.25);border-radius:5px;cursor:pointer;font-family:inherit;">실행취소</button>` : ''}
                                 ${isSkipped && !item.branchActionTaken && item.skipActionId ? `<button onclick="event.stopPropagation();app.undoBranchOptionFromSkippedItem(${workflow.id},${index})" title="이 항목을 건너뛰게 한 분기 처리를 취소합니다" style="flex-shrink:0;padding:2px 7px;font-size:0.73rem;background:transparent;color:#6b7280;border:1px solid rgba(107,114,128,0.25);border-radius:5px;cursor:pointer;font-family:inherit;">실행취소</button>` : ''}
                                 ${isSkipped && item.skipManual && !asTemplate ? `<button class="na-restore-btn" onclick="event.stopPropagation();app.restoreNotApplicable(${workflow.id},${index})" title="해당 없음을 풀고 다시 할 항목으로 되돌립니다">되살리기</button>` : ''}
@@ -30089,7 +30536,7 @@ ${aiPartnerCitationFirstRules}
                 const menu = document.createElement('div');
                 menu.id = 'checklistItemMenu';
                 menu.className = 'ci-menu';
-                menu.innerHTML = entries.map((en, i) => `<button type="button" data-i="${i}">${this.escapeHtml(en[0])}</button>`).join('');
+                menu.innerHTML = entries.map((en, i) => `<button type="button" data-i="${i}">${en[2] ? `<span class="ci-menu-ico">${en[2]}</span>` : ''}${this.escapeHtml(en[0])}</button>`).join('');  // en[2]: 앞에 붙일 아이콘(HTML)
                 document.body.appendChild(menu);
                 const r = menu.getBoundingClientRect();
                 menu.style.left = Math.max(8, Math.min(x, window.innerWidth - r.width - 8)) + 'px';
@@ -30109,6 +30556,150 @@ ${aiPartnerCitationFirstRules}
                 this._ciMenuUnbindEsc = this._bindDialogEsc(() => this._closeChecklistItemMenu());
             }
 
+            // ══ 건너뛰기 버튼 만들기 — 그 자리에서 고르기 ══
+            // 예전엔 항목 창의 건너뛰기 탭 안 작은 목록에서 대상을 골라, 실제 체크리스트와 위치를 머릿속으로 맞춰야 했다.
+            // 이제 이름을 정하면 체크리스트가 "고르기 모드"가 되어 실제 목록 위에서 건너뛸 항목을 체크한다(Gmail·사진첩 선택 모드처럼).
+            // · 기준 항목 뒤쪽만 고를 수 있다(앞으로 되돌아가는 꼬인 규칙 방지) · 단계를 고르면 그 할 일도 함께
+            // · 저장 형식은 예전과 같다 { label, action: '', targetItemIds, selfSkip } — 실행·실행취소·예전 버튼이 그대로 동작
+            // · "자기 자신 건너뛰기"는 새로 만들지 않는다(일하는 화면의 「해당 없음」으로 충분). 예전 버튼에 켜져 있으면 보여 주고 끌 수 있게만.
+            startBranchPick(workflowId, index, optIdx = null) {
+                const wf = this.allData.workflows.find(w => w.id === workflowId);
+                const item = wf?.checklist?.[index];
+                if (!item) return;
+                const opt = optIdx !== null ? (item.branchOptions || [])[optIdx] : null;
+                // 예전 번호 방식(action 'skip:self,5')은 자기 자신 건너뛰기가 번호 목록 안에 들어 있으므로, 풀어 낸 결과로 읽는다
+                const resolved = opt ? this.resolveBranchTargets(wf, opt) : { selfSkip: false, items: [] };
+                const selected = new Set(resolved.items.map(x => x.id));
+                this._branchPick = { wfId: workflowId, baseId: this.ensureChecklistItemId(item), optIdx, label: opt ? (opt.label || '') : '', selected, selfSkip: !!resolved.selfSkip };
+                document.body.classList.add('branch-picking');
+                this._focusTouch = { wfId: workflowId, itemId: item.itemId, at: Date.now() };
+                this.refreshFocusChecklist(wf);
+                setTimeout(() => { const el = document.getElementById('bpLabel'); if (el && !el.value) el.focus(); }, 80);
+            }
+            _endBranchPick() {
+                const p = this._branchPick;
+                this._branchPick = null;
+                document.body.classList.remove('branch-picking');
+                const wf = p && this.allData.workflows.find(w => w.id === p.wfId);
+                if (wf) { this._focusTouch = { wfId: wf.id, itemId: p.baseId, at: Date.now() }; this.refreshFocusChecklist(wf); }
+            }
+            cancelBranchPick() { this._endBranchPick(); }
+            toggleBranchPickItem(workflowId, index) {
+                const p = this._branchPick;
+                const wf = this.allData.workflows.find(w => w.id === workflowId);
+                if (!p || !wf) return;
+                const cl = wf.checklist;
+                const baseIdx = cl.findIndex(it => it.itemId === p.baseId);
+                if (index <= baseIdx) return;
+                const it = cl[index];
+                const id = this.ensureChecklistItemId(it);
+                const on = !p.selected.has(id);
+                const ids = [id, ...(this._isSubEntry(it) ? [] : this.findSubItems(cl, index).map(x => this.ensureChecklistItemId(x.item)))];
+                ids.forEach(x => on ? p.selected.add(x) : p.selected.delete(x));  // 단계를 누르면 그 할 일도 함께, 할 일은 하나씩
+                this._focusTouch = { wfId: workflowId, itemId: id, at: Date.now() };
+                this.refreshFocusChecklist(wf);
+            }
+            _branchPickSelfOff() {
+                if (this._branchPick) this._branchPick.selfSkip = false;
+                const wf = this._branchPick && this.allData.workflows.find(w => w.id === this._branchPick.wfId);
+                if (wf) this.refreshFocusChecklist(wf);
+            }
+            saveBranchPick() {
+                const p = this._branchPick;
+                const wf = p && this.allData.workflows.find(w => w.id === p.wfId);
+                if (!wf) return;
+                const label = String(document.getElementById('bpLabel')?.value ?? p.label).trim();
+                if (!label) { this.showToast('info', 'ℹ️', '버튼 이름을 적어 주세요 (예: 자체 종결, 반려, 서면 처리)'); document.getElementById('bpLabel')?.focus(); return; }
+                const cl = wf.checklist;
+                const baseIdx = cl.findIndex(it => it.itemId === p.baseId);
+                const targets = cl.filter((it, i) => i > baseIdx && p.selected.has(it.itemId)).map(it => it.itemId);
+                if (!targets.length && !p.selfSkip) { this.showToast('info', 'ℹ️', '건너뛸 항목을 하나 이상 골라 주세요'); return; }
+                const base = cl[baseIdx];
+                if (!base.branchOptions) base.branchOptions = [];
+                const prev = p.optIdx !== null ? base.branchOptions[p.optIdx] : null;
+                const opt = { ...(prev || {}), label, action: '', targetItemIds: targets, selfSkip: !!p.selfSkip };
+                if (prev) base.branchOptions[p.optIdx] = opt; else base.branchOptions.push(opt);
+                // 이름도 대상도 없는 빈 버튼(예전 방식에서 [추가]만 누르고 둔 것)은 정리
+                base.branchOptions = base.branchOptions.filter(o => this.isBranchOptionConfigured(o) || o === opt);
+                this.hasUnsavedChanges = true;
+                this.saveData();
+                this.showToast('success', '🔀', `「${label}」 버튼을 ${prev ? '고쳤습니다' : '만들었습니다'} — 누르면 ${targets.length}개 항목을 건너뜁니다. 체크리스트 편집의 [저장]을 눌러야 반영됩니다.`, 5000);
+                this._endBranchPick();
+            }
+            deleteBranchOption(workflowId, index, optIdx) {
+                const wf = this.allData.workflows.find(w => w.id === workflowId);
+                const item = wf?.checklist?.[index];
+                const opt = item?.branchOptions?.[optIdx];
+                if (!opt) return;
+                this._showChoiceDialog('건너뛰기 버튼 삭제', `「${opt.label || '(이름 없음)'}」 버튼을 지울까요?\n이미 이 버튼으로 건너뛴 업무 기록에는 영향이 없습니다.`,
+                    [{ label: '지우기', primary: true, onClick: () => {
+                        item.branchOptions.splice(optIdx, 1);
+                        this.hasUnsavedChanges = true;
+                        this.saveData();
+                        this.refreshFocusChecklist(wf);
+                        this.showToast('success', '🗑', `「${opt.label || ''}」 버튼을 지웠습니다. 체크리스트 편집의 [저장]을 눌러야 반영됩니다.`, 4000);
+                    } }]);
+            }
+            // 고르기 모드에서 편집 화면 줄 대신 그리는 줄 (맨 위에는 이름·선택 수·[저장][취소] 막대)
+            _renderBranchPickRow(workflow, item, index) {
+                const p = this._branchPick;
+                const cl = workflow.checklist;
+                const baseIdx = cl.findIndex(it => it.itemId === p.baseId);
+                const esc = s => this.escapeHtml(String(s ?? ''));
+                const isSub = this._isSubEntry(item);
+                const nums = this._stageInfo(cl).numbers;
+                const num = isSub ? '' : `<span class="bp-num">${String(nums.get(index) || index + 1).padStart(2, '0')}</span>`;
+                const n = cl.filter((it, i) => i > baseIdx && p.selected.has(it.itemId)).length;
+                const bar = index === 0 ? `<div class="bp-bar">
+                        <span class="bp-ico">${this._skipIco(18)}</span>
+                        <input id="bpLabel" class="bp-label" value="${esc(p.label)}" placeholder="버튼 이름 (예: 자체 종결)" oninput="app._branchPick && (app._branchPick.label = this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault();app.saveBranchPick();}">
+                        <span class="bp-hint">을(를) 누르면 건너뛸 항목을 아래에서 고르세요 · <b>${n}</b>개 선택</span>
+                        <span class="bp-actions"><button type="button" class="btn btn-primary btn-small" onclick="app.saveBranchPick()">저장</button>
+                        <button type="button" class="btn btn-secondary btn-small" onclick="app.cancelBranchPick()">취소</button></span>
+                        ${p.selfSkip ? `<div class="bp-legacy">이 버튼은 누르면 기준 항목도 건너뜁니다 (예전 설정) <button type="button" class="cb-mini" onclick="app._branchPickSelfOff()">끄기</button></div>` : ''}
+                    </div>` : '';
+                const cls = `checklist-card bp-row${isSub ? ' sub-item' : ''}`;
+                if (index === baseIdx) {
+                    return bar + `<div class="${cls} bp-base" data-index="${index}" data-workflow-id="${workflow.id}"><div class="checklist-card-header">
+                        ${num}<span class="bp-title">${esc(item.text)}</span><span class="bp-tag">「${esc(p.label || '이 버튼')}」 버튼이 달릴 항목</span></div></div>`;
+                }
+                if (index < baseIdx || item.skipped === true) {
+                    return bar + `<div class="${cls} bp-before" data-index="${index}" data-workflow-id="${workflow.id}"><div class="checklist-card-header">${num}<span class="bp-title">${esc(item.text)}</span></div></div>`;
+                }
+                const on = p.selected.has(item.itemId);
+                return bar + `<div class="${cls} bp-pick${on ? ' on' : ''}" data-index="${index}" data-workflow-id="${workflow.id}" onclick="app.toggleBranchPickItem(${workflow.id},${index})" role="checkbox" aria-checked="${on}">
+                    <div class="checklist-card-header"><span class="bp-box">${on ? '✓' : ''}</span>${num}<span class="bp-title">${esc(item.text)}</span>${on ? '<span class="bp-skip">건너뜀</span>' : ''}</div></div>`;
+            }
+
+            // ◌(건너뛸 수 있음)는 이 프로그램에만 있는 표시라, 편집 화면에서 처음 보일 때 한 번만 말풍선으로 알려 준다
+            _maybeShowTargetTip(workflowId) {
+                document.getElementById('cbTargetTip')?.remove();
+                try { if (localStorage.getItem('tipSkipTargetSeen')) return; } catch (e) { return; }
+                if (!this.focusEditMode || this._branchPick) return;
+                const mark = document.querySelector(`#focus-checklist-scroll-${workflowId} .fci-mark-target`);
+                if (!mark) return;
+                const r = mark.getBoundingClientRect();
+                if (r.width === 0) return;
+                const tip = document.createElement('div');
+                tip.id = 'cbTargetTip';
+                tip.className = 'cb-target-tip';
+                tip.innerHTML = `<b><span class="fci-mark-target"></span> 건너뛸 수 있는 항목</b><br>다른 항목의 건너뛰기 버튼(${this._skipIco(12)}이름)을 누르면 건너뛰는 항목입니다. 마우스를 올리면 어떤 버튼인지 보입니다.
+                    <button type="button" class="btn btn-primary btn-small" onclick="try{localStorage.setItem('tipSkipTargetSeen','1')}catch(e){};document.getElementById('cbTargetTip')?.remove()">알겠어요</button>`;
+                document.body.appendChild(tip);
+                const tw = tip.offsetWidth;
+                tip.style.left = Math.max(8, Math.min(r.left + r.width / 2 - tw + 30, window.innerWidth - tw - 8)) + 'px';
+                tip.style.top = (r.bottom + 10) + 'px';
+                // 화면에 고정된 말풍선이라 목록을 스크롤하면 ◌에서 떨어지므로 닫는다([알겠어요]를 안 눌렀으니 다음에 다시 나옴)
+                document.getElementById(`focus-checklist-scroll-${workflowId}`)?.addEventListener('scroll', () => tip.remove(), { once: true, passive: true });
+            }
+
+            // 편집 단축키 자세히 (제목 아래 줄의 ⓘ·「⌨ 단축키」)
+            showEditShortcuts() {
+                this._showChoiceDialog('편집 단축키',
+                    'Enter — 아래에 항목 추가\nTab — 상위(단계) ↔ 하위(할 일) 바꾸기 (누를 때마다 번갈아 바뀜)\nBackspace — 빈 항목에서 누르면 삭제\n⠿ 끌기 — 순서 바꾸기\n\n마우스로는 줄에 마우스를 올리면 나오는 ⇥(하위로)·⇤(상위로)·＋(추가)·🗑(삭제) 버튼, 또는 줄 오른쪽 끝 ⚙ 메뉴에서 할 수 있습니다.',
+                    [{ label: '확인', primary: true, onClick: () => {} }], null, '닫기');
+            }
+
             // 체크리스트 편집 화면: 항목의 [⚙ 설정] 메뉴 (MS Forms의 질문 ⋯ → "분기 추가"처럼 규칙은 만드는 화면에서)
             openItemSettingsMenu(e, workflowId, index) {
                 e.preventDefault();
@@ -30120,11 +30711,23 @@ ${aiPartnerCitationFirstRules}
                 const fmtN = (item.formats || []).length + (item.linkedDocs || []).length;
                 const hasTip = !!(item.tip && item.tip.content);
                 const r = e.currentTarget.getBoundingClientRect();
-                this._openCiMenu(r.left, r.bottom + 4, [
-                    [`🔀 건너뛰기 규칙 ${branchN ? `고치기 (${branchN}개)` : '만들기'}`, () => this.showChecklistItemModal(workflowId, index, 'branch')],
-                    [`📄 서식 붙이기${fmtN ? ` (${fmtN}개)` : ''}`, () => this.showChecklistItemModal(workflowId, index, 'formats')],
-                    [`💡 업무팁 ${hasTip ? '고치기' : '쓰기'}`, () => this.showChecklistItemModal(workflowId, index, 'tip')]
-                ]);
+                const entries = [];
+                (item.branchOptions || []).forEach((o, oi) => {
+                    if (!this.isBranchOptionConfigured(o)) return;
+                    const cnt = this.resolveBranchTargets(workflow, o).items.length;
+                    entries.push([`「${o.label || '(이름 없음)'}」 고치기 · ${cnt}개 건너뜀`, () => this.startBranchPick(workflowId, index, oi), this._skipIco(14)]);
+                    entries.push([`　　🗑 「${o.label || '(이름 없음)'}」 지우기`, () => this.deleteBranchOption(workflowId, index, oi)]);
+                });
+                entries.push([`건너뛰기 버튼 ${branchN ? '더 ' : ''}만들기 ＋`, () => this.startBranchPick(workflowId, index, null), this._skipIco(14)]);
+                entries.push([`📄 서식 붙이기${fmtN ? ` (${fmtN}개)` : ''}`, () => this.showChecklistItemModal(workflowId, index, 'formats')]);
+                entries.push([`💡 업무팁 ${hasTip ? '고치기' : '쓰기'}`, () => this.showChecklistItemModal(workflowId, index, 'tip')]);
+                if (this.focusEditMode) {
+                    entries.push([this._isSubEntry(item) ? '⇤ 상위(단계)로 올리기' : '⇥ 하위(할 일)로 내리기', () => this.focusToggleItemIndent(workflowId, index, false)]);
+                    entries.push(['＋ 아래에 항목 추가', () => this.focusAddItemAfterLive(workflowId, index)]);
+                    entries.push(['🗑 이 항목 삭제', () => this.focusDeleteItemLive(workflowId, index)]);
+                }
+                // ⚙는 오른쪽 끝에 있으므로 메뉴는 버튼 오른쪽 끝에 맞춰 왼쪽으로 펼친다
+                this._openCiMenu(r.right - 240, r.bottom + 4, entries);
             }
 
             _closeChecklistItemMenu() {
@@ -30333,8 +30936,10 @@ ${aiPartnerCitationFirstRules}
 
             // 분기 옵션 목록 렌더링
             // 건너뛰기 아이콘 (꺾여 넘어가는 화살표 — 글꼴마다 모양이 다른 기호 대신 그림으로)
+            // 건너뛰기 아이콘 ⤼ — 화살표가 아래 항목(짧은 막대)을 아치 모양으로 뛰어넘는 그림.
+            // 문자 ⤼는 PC 글꼴에 따라 네모로 깨질 수 있어 같은 모양을 SVG로 그린다(편집 표시·일하는 화면 버튼·규칙 표시 공용)
             _skipIco(size = 11) {
-                return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;margin-right:3px;vertical-align:-1px;"><path d="M4 5v6a4 4 0 0 0 4 4h11"/><polyline points="15 11 19 15 15 19"/></svg>`;
+                return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;margin-right:3px;vertical-align:-1px;"><path d="M4 18Q12 2 20 16"/><polyline points="20 10.5 20 16 15 13.5"/><line x1="9" y1="21" x2="15" y2="21"/></svg>`;
             }
 
             // 건너뛰기 설정 ─────────────────────────────────────────────
@@ -30425,7 +31030,7 @@ ${aiPartnerCitationFirstRules}
                             <div style="display:flex;gap:6px;align-items:center;margin-bottom:8px;">
                                 <span style="font-size:0.72rem;color:var(--text-muted);flex-shrink:0;">버튼 이름</span>
                                 <input type="text" class="branch-label-input" value="${this.escapeHtml(opt.label || '')}"
-                                       id="branch-label-${workflowId}-${index}-${optIdx}" placeholder="예: 불출석" maxlength="20"
+                                       id="branch-label-${workflowId}-${index}-${optIdx}" placeholder="예: 자체 종결" maxlength="20"
                                        onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}"
                                        onchange="app.saveBranchOptionLabel(${workflowId},${index},${optIdx},this.value)">
                                 <button class="branch-del-btn" onclick="app.removeBranchOption(${workflowId},${index},${optIdx})" title="이 버튼 삭제">${trashSvg}</button>
@@ -37829,6 +38434,873 @@ ${formatList}`;
             }
         };
 
+        // ══════════════ 날짜 선택 창 (브라우저 기본 달력 대신) ══════════════
+        // Todoist·MS To Do처럼 빠른 선택(오늘·내일·금요일…)을 위에 두고, 달력에는 주말·공휴일·다른 마감·업무 마감(🏁)을 표시.
+        // 프로그램의 모든 날짜 칸(type="date")에 한 번에 적용 — 고르면 칸에 값을 넣고 change 이벤트를 보내므로
+        // 각 칸의 기존 저장 동작(onchange)은 그대로 실행된다. 키보드로 숫자를 직접 입력하는 것도 그대로.
+        Object.assign(WorkflowManager.prototype, {
+            _installDatePicker() {
+                if (this._dpInstalled) return;
+                this._dpInstalled = true;
+                const self = this;
+                const isDate = el => el && el.tagName === 'INPUT' && el.type === 'date';
+                document.addEventListener('pointerdown', e => { if (!e.target.closest || !e.target.closest('.dp-pop')) self._dpLastPointer = e.target; }, true);
+                document.addEventListener('mousedown', e => {
+                    self._dpSkipReopen = false;  // 바로 앞 누름에서 닫은 경우에만 이번 클릭의 다시 열기를 건너뜀
+                    const pop = document.getElementById('dpPop');
+                    if (isDate(e.target)) {
+                        if (e.target.disabled || e.target.readOnly) return;
+                        e.preventDefault();
+                        if (pop && self._dp && self._dp.input === e.target) { self.closeDatePicker(); return; }
+                        self.openDatePicker(e.target);
+                        return;
+                    }
+                    if (pop && !pop.contains(e.target)) {
+                        // 날짜 배지(숨은 날짜 칸을 여는 단추)를 다시 누르면 닫기만
+                        const badge = e.target.closest && e.target.closest('.deadline-item-badge, .fap-dl-card');
+                        if (badge && self._dp && (self._dp.anchor === badge || badge.contains(self._dp.input))) self._dpSkipReopen = true;
+                        self.closeDatePicker();
+                    }
+                }, true);
+                document.addEventListener('click', e => { if (isDate(e.target)) e.preventDefault(); }, true);
+                document.addEventListener('keydown', e => {
+                    if (!isDate(e.target) || e.target.disabled || e.target.readOnly) return;
+                    if (e.key === 'F4' || (e.altKey && e.key === 'ArrowDown') || (e.key === ' ' && !e.ctrlKey)) {
+                        e.preventDefault();
+                        self.openDatePicker(e.target);
+                    }
+                }, true);
+                const orig = HTMLInputElement.prototype.showPicker;
+                HTMLInputElement.prototype.showPicker = function () {
+                    if (this.type === 'date') {
+                        if (self._dpSkipReopen) { self._dpSkipReopen = false; return; }
+                        if (!this.disabled) self.openDatePicker(this);
+                        return;
+                    }
+                    return orig ? orig.call(this) : undefined;
+                };
+                window.addEventListener('resize', () => self.closeDatePicker());
+                document.addEventListener('scroll', e => {
+                    const pop = document.getElementById('dpPop');
+                    if (pop && !(e.target instanceof Node && pop.contains(e.target))) self.closeDatePicker();
+                }, true);
+            },
+
+            // 이 날짜 칸이 어느 업무·항목의 것인지 (마감 점·업무 마감·경고 표시용)
+            _dpContext(input) {
+                const wfs = (this.allData && this.allData.workflows) || [];
+                const find = id => wfs.find(w => String(w.id) === String(id));
+                let m = /^dl-input-(\d+)-(\d+)$/.exec(input.id || '');
+                if (m) return { kind: 'item', wf: find(m[1]), index: Number(m[2]) };
+                const oc = input.getAttribute('onchange') || '';
+                if (input.classList.contains('focus-deadline-input') || /saveFocusDeadline\(/.test(oc)) {
+                    const id = (/saveFocusDeadline\((\d+)/.exec(oc) || [])[1] || this.focusedWorkflowId;
+                    return { kind: 'work', wf: find(id) };
+                }
+                m = /collabSetStep\((\d+),'([^']+)','deadline'/.exec(oc);
+                if (m) return { kind: 'collab', wf: find(m[1]), sid: m[2] };
+                return { kind: 'other', wf: null };
+            },
+
+            // 업무 하나(또는 진행 중인 모든 업무)의 마감 날짜 → 이름 목록
+            _dpMarks(ctx) {
+                const marks = {};
+                const add = (d, t) => { if (!d) return; d = String(d).slice(0, 10); (marks[d] = marks[d] || []).push(t); };
+                if (ctx.wf) {
+                    const wf = ctx.wf, steps = (wf.collab && wf.collab.steps) || {};
+                    (wf.checklist || []).forEach((it, i) => {
+                        if (it.skipped === true) return;
+                        if (ctx.kind === 'item' && i === ctx.index) return;
+                        if (ctx.kind === 'collab' && it.itemId === ctx.sid) return;
+                        const dl = (it.itemId && steps[it.itemId] && steps[it.itemId].deadline) || it.deadline;
+                        add(dl, it.text || '(이름 없는 항목)');
+                    });
+                } else {
+                    for (const w of (this.allData && this.allData.workflows) || []) {
+                        if (w.isDeleted || w.isArchived || w.type === 'report' || w.isReference || w.completedProcessed) continue;
+                        add(w.deadline, `🏁 ${w.title || '업무'}`);
+                    }
+                }
+                return marks;
+            },
+
+            openDatePicker(input) {
+                if (!input) return;
+                this.closeDatePicker();
+                const ctx = this._dpContext(input);
+                let anchor = input;
+                const r0 = input.getBoundingClientRect();
+                if (r0.width < 6 || r0.height < 6) {
+                    const lp = this._dpLastPointer;
+                    const near = lp && lp.closest && (lp.closest('.deadline-item-badge') || lp.closest('.deadline-badge') || lp.closest('.fap-dl-card') || lp);
+                    anchor = (near && near.isConnected) ? near : (input.parentElement || input);
+                }
+                const val = /^\d{4}-\d{2}-\d{2}$/.test(input.value || '') ? input.value : '';
+                const base = val ? _ymdDate(val) : new Date();
+                this._dp = {
+                    input, anchor, ctx, value: val,
+                    view: new Date(base.getFullYear(), base.getMonth(), 1),
+                    focus: val || localDateStr(),
+                    marks: this._dpMarks(ctx),
+                    wfDeadline: ctx.wf && ctx.wf.deadline && ctx.kind !== 'work' ? String(ctx.wf.deadline).slice(0, 10) : '',
+                    min: input.min || '', max: input.max || '',
+                };
+                const pop = document.createElement('div');
+                pop.id = 'dpPop';
+                pop.className = 'dp-pop';
+                pop.setAttribute('role', 'dialog');
+                pop.setAttribute('aria-label', '날짜 선택');
+                pop.tabIndex = -1;
+                pop.addEventListener('keydown', e => this._dpKey(e));
+                pop.addEventListener('mouseover', e => {
+                    const b = e.target.closest && e.target.closest('[data-v]');
+                    this._dpInfo(b ? b.getAttribute('data-v') : null);
+                });
+                pop.addEventListener('mouseleave', () => this._dpInfo(null));
+                pop.addEventListener('click', e => {
+                    const b = e.target.closest && e.target.closest('button');
+                    if (!b || b.disabled) return;
+                    e.stopPropagation();
+                    const act = b.getAttribute('data-act');
+                    if (act === 'prev' || act === 'next') { this._dpMove(act === 'prev' ? -1 : 1); pop.focus({ preventScroll: true }); return; }
+                    if (act === 'today') { const t = new Date(); this._dp.view = new Date(t.getFullYear(), t.getMonth(), 1); this._dp.focus = localDateStr(t); this._dpRender(); return; }
+                    if (act === 'clear') { this._dpPick(''); return; }
+                    if (act === 'close') { this.closeDatePicker(true); return; }
+                    const v = b.getAttribute('data-v');
+                    if (v) this._dpPick(v);
+                });
+                document.body.appendChild(pop);
+                this._dpRender();
+                this._dpPlace();
+                const f = pop.querySelector('.dp-day.sel') || pop.querySelector('.dp-day.today') || pop.querySelector('.dp-day:not(.out)');
+                if (f) f.focus({ preventScroll: true });
+            },
+
+            closeDatePicker(refocus = false) {
+                const pop = document.getElementById('dpPop');
+                if (pop) pop.remove();
+                const dp = this._dp;
+                this._dp = null;
+                if (refocus && dp && dp.input && dp.input.isConnected && dp.input.getBoundingClientRect().width > 5) { try { dp.input.focus({ preventScroll: true }); } catch (e) {} }
+            },
+
+            _dpOk(v) {
+                const dp = this._dp;
+                return !((dp.min && v < dp.min) || (dp.max && v > dp.max));
+            },
+
+            _dpQuick() {
+                const t = new Date(); t.setHours(0, 0, 0, 0);
+                const dow = t.getDay();
+                const fri = (5 - dow + 7) % 7 || 7;
+                const mon = (8 - dow) % 7 || 7;
+                const q = [
+                    ['오늘', localDateStr(t)],
+                    ['내일', localDateStr(_addDays(t, 1))],
+                    [fri <= 5 - dow ? '이번 주 금' : '다음 주 금', localDateStr(_addDays(t, fri))],
+                    ['다음 주 월', localDateStr(_addDays(t, mon))],
+                    ['1주 뒤', localDateStr(_addDays(t, 7))],
+                    ['근무일 5일 뒤', addWorkdays(5, t)],
+                    ['2주 뒤', localDateStr(_addDays(t, 14))],
+                ];
+                // 이달 마지막 근무일 (얼마 안 남았으면 다음 달)
+                const monthEnd = (add) => {
+                    let d = new Date(t.getFullYear(), t.getMonth() + 1 + add, 0);
+                    while (isOffDay(localDateStr(d))) d = _addDays(d, -1);
+                    return d;
+                };
+                const me = monthEnd(0);
+                q.push(me - t > 2 * 86400000 ? ['이달 말', localDateStr(me)] : ['다음 달 말', localDateStr(monthEnd(1))]);
+                q.push(['근무일 10일 뒤', addWorkdays(10, t)]);
+                // 날짜가 겹치면 앞의 것만, 2줄(8칸)까지 · 업무 마감일(🏁)은 항상 넣되 겹치면 그 칸의 이름을 바꿈
+                const seen = new Set();
+                const wd = this._dp.wfDeadline;
+                let list = q.filter(([, v]) => !seen.has(v) && seen.add(v) && this._dpOk(v));
+                if (wd && this._dpOk(wd)) {
+                    const hit = list.find(([, v]) => v === wd);
+                    if (hit) hit[0] = '🏁 업무 마감';
+                    else list = list.slice(0, 7).concat([['🏁 업무 마감', wd]]);
+                }
+                return list.slice(0, 8);
+            },
+
+            _dpLabel(v, withYear = false) {
+                const d = _ymdDate(v);
+                const W = '일월화수목금토';
+                return `${withYear && d.getFullYear() !== new Date().getFullYear() ? d.getFullYear() + '년 ' : ''}${d.getMonth() + 1}월 ${d.getDate()}일 (${W[d.getDay()]})`;
+            },
+
+            _dpRender() {
+                const pop = document.getElementById('dpPop');
+                const dp = this._dp;
+                if (!pop || !dp) return;
+                const esc = s => this.escapeHtml(String(s));
+                const today = localDateStr();
+                const y = dp.view.getFullYear(), mo = dp.view.getMonth();
+                const start = _addDays(dp.view, -dp.view.getDay());
+                let cells = '';
+                for (let i = 0; i < 42; i++) {
+                    const d = _addDays(start, i);
+                    const v = localDateStr(d);
+                    const out = d.getMonth() !== mo;
+                    if (i === 35 && out) break;  // 5줄로 끝나는 달
+                    const hn = krHolidayName(v);
+                    const cls = ['dp-day'];
+                    if (out) cls.push('out');
+                    if (d.getDay() === 0 || hn) cls.push('red'); else if (d.getDay() === 6) cls.push('sat');
+                    if (v === today) cls.push('today');
+                    if (v === dp.value) cls.push('sel');
+                    if (dp.wfDeadline && v > dp.wfDeadline) cls.push('late');
+                    const mk = dp.marks[v];
+                    const tips = [hn, dp.wfDeadline === v ? '🏁 업무 전체 마감' : '', mk ? '마감: ' + mk.slice(0, 4).join(', ') + (mk.length > 4 ? ` 외 ${mk.length - 4}` : '') : ''].filter(Boolean).join('\n');
+                    cells += `<button type="button" class="${cls.join(' ')}" data-v="${v}" tabindex="${v === dp.focus ? 0 : -1}" ${this._dpOk(v) ? '' : 'disabled'} ${tips ? `title="${esc(tips)}"` : ''}>${d.getDate()}${dp.wfDeadline === v ? '<i class="dp-flag">🏁</i>' : ''}${mk ? `<i class="dp-dot${mk.length > 1 ? ' many' : ''}"></i>` : ''}</button>`;
+                }
+                const quick = this._dpQuick().map(([l, v]) => {
+                    const d = _ymdDate(v);
+                    return `<button type="button" class="dp-q${v === dp.value ? ' on' : ''}" data-v="${v}"><span>${esc(l)}</span><small>${d.getMonth() + 1}/${d.getDate()} ${'일월화수목금토'[d.getDay()]}</small></button>`;
+                }).join('');
+                pop.innerHTML = `
+                    <div class="dp-quick">${quick}</div>
+                    <div class="dp-head">
+                        <button type="button" class="dp-nav" data-act="prev" aria-label="이전 달">‹</button>
+                        <b>${y}년 ${mo + 1}월</b>
+                        <button type="button" class="dp-nav" data-act="next" aria-label="다음 달">›</button>
+                        <button type="button" class="dp-todaybtn" data-act="today">오늘</button>
+                    </div>
+                    <div class="dp-grid">${'일월화수목금토'.split('').map((w, i) => `<span class="dp-w${i === 0 ? ' red' : i === 6 ? ' sat' : ''}">${w}</span>`).join('')}${cells}</div>
+                    <div class="dp-info" id="dpInfo"></div>
+                    <div class="dp-foot">
+                        <span class="dp-legend"><i class="dp-dot"></i> 다른 마감${dp.wfDeadline ? ' · 🏁 업무 마감' : ''} · <span class="red">빨강</span> 휴일 <span class="dp-help" title="주말·양력 공휴일·대체공휴일과 음력 공휴일(설·추석·부처님오신날, ${KR_LUNAR_YEARS}년)을 표시합니다. 선거일·임시공휴일은 표시되지 않습니다.">ⓘ</span></span>
+                        ${dp.value ? '<button type="button" class="dp-clear" data-act="clear">날짜 지우기</button>' : ''}
+                    </div>`;
+                this._dpInfo(null);
+            },
+
+            // 아래 안내 줄: 마우스를 올린 날(없으면 지금 고른 날)의 D-n·근무일·경고
+            _dpInfo(v) {
+                const el = document.getElementById('dpInfo');
+                const dp = this._dp;
+                if (!el || !dp) return;
+                const hover = !!v;
+                v = v || dp.value;
+                if (!v) { el.innerHTML = '<span class="dp-muted">날짜를 고르세요</span>'; el.className = 'dp-info'; return; }
+                const dl = this.calculateDaysLeft(v);
+                const dtext = dl === 0 ? 'D-Day' : dl < 0 ? `D+${-dl}` : `D-${dl}`;
+                const wd = workdaysUntil(v);
+                const parts = [`<b>${this._dpLabel(v, true)}</b>`, dtext];
+                if (dl > 0) parts.push(`근무일 ${wd}일`);
+                const warns = [];
+                if (dp.ctx.kind === 'collab' && dp.ctx.wf) warns.push(...this._collabDeadlineWarnings(dp.ctx.wf, dp.ctx.sid, v));
+                else {
+                    const hn = krHolidayName(v), dow = _ymdDate(v).getDay();
+                    if (hn) warns.push(`${hn}(휴일)입니다`);
+                    else if (dow === 0 || dow === 6) warns.push(`${dow === 0 ? '일' : '토'}요일입니다`);
+                    if (dp.wfDeadline && v > dp.wfDeadline) warns.push(`업무 전체 마감(${this._dpLabel(dp.wfDeadline)})보다 늦습니다`);
+                }
+                const mk = dp.marks[v];
+                el.className = 'dp-info' + (warns.length ? ' warn' : '');
+                el.innerHTML = `<div>${hover ? '' : '<span class="dp-muted">선택</span> '}${parts.join(' · ')}</div>`
+                    + warns.map(w => `<div class="dp-warn">⚠ ${this.escapeHtml(w)}</div>`).join('')
+                    + (mk ? `<div class="dp-muted">같은 날 마감: ${this.escapeHtml(mk.slice(0, 3).join(', '))}${mk.length > 3 ? ` 외 ${mk.length - 3}건` : ''}</div>` : '');
+            },
+
+            _dpMove(months) {
+                const dp = this._dp;
+                dp.view = new Date(dp.view.getFullYear(), dp.view.getMonth() + months, 1);
+                const f = _ymdDate(dp.focus);
+                const last = new Date(dp.view.getFullYear(), dp.view.getMonth() + 1, 0).getDate();
+                dp.focus = localDateStr(new Date(dp.view.getFullYear(), dp.view.getMonth(), Math.min(f.getDate(), last)));
+                this._dpRender();
+            },
+
+            _dpKey(e) {
+                const dp = this._dp;
+                if (!dp) return;
+                if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); this.closeDatePicker(true); return; }
+                const onDay = e.target.classList && e.target.classList.contains('dp-day');
+                const step = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 }[e.key];
+                if (onDay && step) {
+                    e.preventDefault();
+                    const nv = localDateStr(_addDays(_ymdDate(e.target.getAttribute('data-v')), step));
+                    dp.focus = nv;
+                    const nd = _ymdDate(nv);
+                    if (nd.getMonth() !== dp.view.getMonth() || nd.getFullYear() !== dp.view.getFullYear()) { dp.view = new Date(nd.getFullYear(), nd.getMonth(), 1); this._dpRender(); }
+                    const b = document.querySelector(`#dpPop .dp-day[data-v="${nv}"]`);
+                    if (b) { document.querySelectorAll('#dpPop .dp-day[tabindex="0"]').forEach(x => x.tabIndex = -1); b.tabIndex = 0; b.focus(); this._dpInfo(nv); }
+                    return;
+                }
+                if (e.key === 'PageUp' || e.key === 'PageDown') {
+                    e.preventDefault();
+                    this._dpMove(e.key === 'PageUp' ? -1 : 1);
+                    const b = document.querySelector(`#dpPop .dp-day[data-v="${dp.focus}"]`);
+                    if (b) b.focus();
+                }
+            },
+
+            _dpPick(v) {
+                const dp = this._dp;
+                if (!dp) return;
+                const input = dp.input;
+                this.closeDatePicker();
+                if (!input || !input.isConnected) return;
+                if ((input.value || '') === v) return;
+                input.value = v;
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+            },
+
+            _dpPlace() {
+                const pop = document.getElementById('dpPop');
+                const dp = this._dp;
+                if (!pop || !dp) return;
+                const vw = window.innerWidth, vh = window.innerHeight;
+                if (vw < 480) { pop.classList.add('sheet'); return; }  // 좁은 화면: 아래에서 올라오는 판
+                const r = (dp.anchor && dp.anchor.isConnected ? dp.anchor : dp.input).getBoundingClientRect();
+                const w = pop.offsetWidth, h = pop.offsetHeight;
+                let left = Math.min(Math.max(8, r.left), vw - w - 8);
+                let top = r.bottom + 6;
+                if (top + h > vh - 8) {
+                    if (r.top - h - 6 >= 8) top = r.top - h - 6;
+                    else if (r.right + 8 + w <= vw - 8) { left = r.right + 8; top = Math.max(8, Math.min(r.top, vh - h - 8)); }  // 위아래 모두 모자라면 옆에
+                    else top = Math.max(8, vh - h - 8);
+                }
+                pop.style.left = left + 'px';
+                pop.style.top = top + 'px';
+            },
+        });
+
+        // ══════════════ 일정 보기: 체크리스트 마감을 달력으로 (Planner·Asana의 달력 보기처럼) ══════════════
+        // · 상단 [일정] = 진행 중인 모든 업무, 업무 화면 [일정 보기] = 그 업무만
+        // · 항목을 다른 날짜 칸으로 끌어 놓으면 마감일 변경, 누르면 그 항목으로 이동
+        // · 오른쪽: 날짜를 누르면 그날 항목, 아니면 「기한 지남 + 이번 주(오늘~6일 뒤)」 할 일
+        Object.assign(WorkflowManager.prototype, {
+            openSchedule(workflowId = null) {
+                this.closeDatePicker();
+                const t = new Date();
+                const wf = workflowId != null ? this.allData.workflows.find(w => w.id === workflowId) : null;
+                this._sched = { wf: wf ? wf.id : 'all', month: new Date(t.getFullYear(), t.getMonth(), 1), sel: null, showDone: false };
+                let ov = document.getElementById('schedView');
+                if (!ov) {
+                    ov = document.createElement('div');
+                    ov.id = 'schedView';
+                    ov.className = 'sched-overlay';
+                    ov.addEventListener('mousedown', e => { if (e.target === ov) this.closeSchedule(); });
+                    ov.addEventListener('keydown', e => { if (e.key === 'Escape' && !document.getElementById('dpPop')) { e.stopPropagation(); this.closeSchedule(); } });
+                    document.body.appendChild(ov);
+                }
+                this._schedRender();
+                const box = ov.querySelector('.sched-box');
+                if (box) box.focus({ preventScroll: true });
+            },
+
+            closeSchedule() {
+                const ov = document.getElementById('schedView');
+                if (ov) ov.remove();
+                this._sched = null;
+            },
+
+            _schedSet(key, value) {
+                const s = this._sched;
+                if (!s) return;
+                if (key === 'wf') s.wf = value === 'all' ? 'all' : Number(value);
+                else if (key === 'month') {
+                    if (value === 0) { const t = new Date(); s.month = new Date(t.getFullYear(), t.getMonth(), 1); s.sel = null; }
+                    else s.month = new Date(s.month.getFullYear(), s.month.getMonth() + value, 1);
+                }
+                else if (key === 'sel') s.sel = s.sel === value ? null : value;
+                else s[key] = value;
+                this._schedRender();
+            },
+
+            _schedWorkflows() {
+                return (this.allData.workflows || []).filter(w => !w.isDeleted && !w.isArchived && w.type !== 'report' && !w.isReference && !w.completedProcessed);
+            },
+
+            // 달력에 올릴 것: 업무 전체 마감(🏁) + 항목 마감 (협업 단계 마감 포함)
+            _schedEntries() {
+                const s = this._sched;
+                const out = [];
+                const wfs = this._schedWorkflows();
+                wfs.forEach((wf, wi) => {
+                    if (s.wf !== 'all' && wf.id !== s.wf) return;
+                    const color = wi % 8;
+                    if (wf.deadline) {
+                        const done = this.calculateProgress(wf) >= 100;
+                        if (!done || s.showDone) out.push({ key: `${wf.id}|w`, kind: 'work', date: String(wf.deadline).slice(0, 10), wf, color, text: wf.title || '업무', done });
+                    }
+                    const cl = wf.checklist || [];
+                    const steps = (wf.collab && wf.collab.steps) || {};
+                    const nums = this._stageInfo(cl, wf).numbers;
+                    let stageNo = '';
+                    cl.forEach((it, i) => {
+                        if (!this._isSubEntry(it)) stageNo = nums && nums.get ? (nums.get(i) || '') : '';
+                        if (it.skipped === true) return;
+                        const st = it.itemId && steps[it.itemId];
+                        const dl = (st && st.deadline) || it.deadline;
+                        if (!dl) return;
+                        const done = this.normalizeCompleted(it);
+                        if (done && !s.showDone) return;
+                        out.push({ key: `${wf.id}|${i}`, kind: 'item', date: String(dl).slice(0, 10), wf, index: i, color, text: it.text || '(이름 없는 항목)', done,
+                            sub: this._isSubEntry(it), stageNo, collab: !!(st && st.deadline), who: st && st.assignee ? st.assignee : '' });
+                    });
+                });
+                return out.sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : (a.kind === 'work' ? 1 : 0) - (b.kind === 'work' ? 1 : 0)));
+            },
+
+            _schedChip(e, opts = {}) {
+                const esc = s => this.escapeHtml(String(s));
+                const today = localDateStr();
+                const late = !e.done && e.date < today;
+                const all = this._sched.wf === 'all';
+                const label = e.kind === 'work' ? `🏁 ${e.text} 마감` : e.text;
+                const tip = [all || e.kind === 'work' ? (e.wf.title || '업무') : '', e.kind === 'item' ? `${e.stageNo ? e.stageNo + '단계 · ' : ''}${e.text}` : '업무 전체 마감',
+                    e.who ? `담당 ${e.who}` : '', e.done ? '완료' : late ? '기한 지남' : '', e.collab ? '협업 마감(협업 창에서 변경)' : '끌어서 날짜 변경 · 눌러서 이동'].filter(Boolean).join('\n');
+                const cls = ['sched-chip', `c${e.color}`, e.kind === 'work' ? 'work' : '', e.done ? 'done' : '', late ? 'late' : ''].filter(Boolean).join(' ');
+                const drag = !e.collab && !e.done;
+                if (opts.row) {
+                    return `<div class="${cls} row" ${drag ? 'draggable="true"' : ''} data-key="${e.key}" title="${esc(tip)}" onclick="app._schedGo('${e.key}')">
+                        <span class="sched-row-main">${e.done ? '✓ ' : ''}${esc(label)}</span>
+                        <span class="sched-row-sub">${all && e.kind === 'item' ? esc(e.wf.title || '업무') + ' · ' : ''}${e.kind === 'item' && e.stageNo ? `${e.stageNo}단계${e.sub ? ' 할 일' : ''}` : ''}${e.who ? ` · ${esc(e.who)}` : ''}${opts.showDate ? ` · ${this._dpLabel(e.date)}` : ''}</span></div>`;
+                }
+                return `<div class="${cls}" ${drag ? 'draggable="true"' : ''} data-key="${e.key}" title="${esc(tip)}" onclick="event.stopPropagation();app._schedGo('${e.key}')">${e.done ? '✓ ' : ''}${esc(label)}</div>`;
+            },
+
+            _schedRender() {
+                const ov = document.getElementById('schedView');
+                const s = this._sched;
+                if (!ov || !s) return;
+                const esc = v => this.escapeHtml(String(v));
+                const entries = this._schedEntries();
+                const byDate = {};
+                entries.forEach(e => { (byDate[e.date] = byDate[e.date] || []).push(e); });
+                const today = localDateStr();
+                const y = s.month.getFullYear(), mo = s.month.getMonth();
+                const start = _addDays(s.month, -s.month.getDay());
+                const weeks = _addDays(start, 35).getMonth() === mo ? 6 : 5;
+                let cells = '';
+                for (let i = 0; i < weeks * 7; i++) {
+                    const d = _addDays(start, i), v = localDateStr(d);
+                    const hn = krHolidayName(v);
+                    const list = byDate[v] || [];
+                    const cls = ['sched-cell', d.getMonth() !== mo ? 'out' : '', v === today ? 'today' : '', v === s.sel ? 'sel' : '', (d.getDay() === 0 || hn) ? 'red' : d.getDay() === 6 ? 'sat' : ''].filter(Boolean).join(' ');
+                    cells += `<div class="${cls}" data-date="${v}" onclick="app._schedSet('sel','${v}')">
+                        <div class="sched-dn"><span class="sched-num">${d.getDate()}</span>${hn ? `<span class="sched-holi" title="${esc(hn)}">${esc(hn)}</span>` : ''}</div>
+                        <div class="sched-chips">${list.slice(0, 3).map(e => this._schedChip(e)).join('')}${list.length > 3 ? `<div class="sched-more">+${list.length - 3}건</div>` : ''}</div>
+                        ${list.length ? `<span class="sched-cnt">${list.length}</span>` : ''}
+                    </div>`;
+                }
+                // 오른쪽 목록
+                let side;
+                if (s.sel) {
+                    const list = byDate[s.sel] || [];
+                    const hn = krHolidayName(s.sel);
+                    side = `<div class="sched-side-h">${this._dpLabel(s.sel, true)}${hn ? ` <span class="sched-holi">${esc(hn)}</span>` : ''}
+                        <button type="button" class="sched-x" onclick="app._schedSet('sel','${s.sel}')" title="이번 주 할 일로 돌아가기">이번 주 보기</button></div>
+                        ${list.length ? list.map(e => this._schedChip(e, { row: true })).join('') : '<div class="sched-empty">이날 마감인 항목이 없습니다</div>'}`;
+                } else {
+                    const end = localDateStr(_addDays(_ymdDate(today), 6));
+                    const overdue = entries.filter(e => !e.done && e.date < today);
+                    let html = '';
+                    if (overdue.length) html += `<div class="sched-grp late">기한 지남 ${overdue.length}건</div>` + overdue.map(e => this._schedChip(e, { row: true, showDate: true })).join('');
+                    for (let i = 0; i <= 6; i++) {
+                        const v = localDateStr(_addDays(_ymdDate(today), i));
+                        const list = (byDate[v] || []).filter(e => s.showDone || !e.done);
+                        if (!list.length) continue;
+                        html += `<div class="sched-grp${i === 0 ? ' now' : ''}">${i === 0 ? '오늘 · ' : i === 1 ? '내일 · ' : ''}${this._dpLabel(v)}</div>` + list.map(e => this._schedChip(e, { row: true })).join('');
+                    }
+                    side = `<div class="sched-side-h">이번 주 할 일 <small>(~${this._dpLabel(end)})</small></div>${html || '<div class="sched-empty">이번 주 마감인 항목이 없습니다 🎉</div>'}`;
+                }
+                const wfs = this._schedWorkflows();
+                const opts = `<option value="all"${s.wf === 'all' ? ' selected' : ''}>진행 중인 모든 업무 (${wfs.length})</option>` + wfs.map(w => `<option value="${w.id}"${s.wf === w.id ? ' selected' : ''}>${esc(w.title || '업무')}</option>`).join('');
+                const total = entries.filter(e => e.date.slice(0, 7) === `${y}-${pad2(mo + 1)}`).length;
+                ov.innerHTML = `<div class="sched-box" tabindex="-1" role="dialog" aria-label="일정 보기">
+                    <div class="sched-top">
+                        <b class="sched-title">📅 일정</b>
+                        <select class="sched-select" onchange="app._schedSet('wf', this.value)">${opts}</select>
+                        <label class="sched-done"><input type="checkbox" ${s.showDone ? 'checked' : ''} onchange="app._schedSet('showDone', this.checked)"> 끝난 항목도 보기</label>
+                        <div class="sched-nav">
+                            <button type="button" onclick="app._schedSet('month',-1)" aria-label="이전 달">‹</button>
+                            <b>${y}년 ${mo + 1}월</b>
+                            <button type="button" onclick="app._schedSet('month',1)" aria-label="다음 달">›</button>
+                            <button type="button" class="sched-today" onclick="app._schedSet('month',0)">오늘</button>
+                        </div>
+                        <button type="button" class="sched-close" onclick="app.closeSchedule()" aria-label="닫기">✕</button>
+                    </div>
+                    <div class="sched-body">
+                        <div class="sched-cal">
+                            <div class="sched-wk">${'일월화수목금토'.split('').map((w, i) => `<span class="${i === 0 ? 'red' : i === 6 ? 'sat' : ''}">${w}</span>`).join('')}</div>
+                            <div class="sched-grid" style="grid-template-rows:repeat(${weeks},minmax(0,1fr));">${cells}</div>
+                        </div>
+                        <div class="sched-side">${side}</div>
+                    </div>
+                    <div class="sched-hint">이달 마감 ${total}건 · 항목을 끌어 다른 날짜에 놓으면 마감일이 바뀝니다 · 항목을 누르면 그 항목으로 이동 · 날짜를 누르면 그날 목록</div>
+                </div>`;
+                this._schedBindDrag(ov);
+            },
+
+            _schedBindDrag(ov) {
+                ov.querySelectorAll('.sched-chip[draggable="true"]').forEach(c => {
+                    c.addEventListener('dragstart', ev => {
+                        this._schedDrag = c.getAttribute('data-key');
+                        ev.dataTransfer.effectAllowed = 'move';
+                        try { ev.dataTransfer.setData('text/plain', this._schedDrag); } catch (e) {}
+                        c.classList.add('dragging');
+                    });
+                    c.addEventListener('dragend', () => { c.classList.remove('dragging'); ov.querySelectorAll('.sched-cell.drop').forEach(x => x.classList.remove('drop')); });
+                });
+                ov.querySelectorAll('.sched-cell').forEach(cell => {
+                    cell.addEventListener('dragover', ev => { if (!this._schedDrag) return; ev.preventDefault(); ev.dataTransfer.dropEffect = 'move'; cell.classList.add('drop'); });
+                    cell.addEventListener('dragleave', () => cell.classList.remove('drop'));
+                    cell.addEventListener('drop', ev => {
+                        ev.preventDefault();
+                        cell.classList.remove('drop');
+                        const key = this._schedDrag;
+                        this._schedDrag = null;
+                        if (key) this._schedMove(key, cell.getAttribute('data-date'));
+                    });
+                });
+            },
+
+            _schedFind(key) {
+                return this._schedEntries().find(e => e.key === key) || null;
+            },
+
+            _schedMove(key, date) {
+                const e = this._schedFind(key);
+                if (!e || !date || e.date === date) return;
+                if (e.collab) { this.showToast('info', 'ℹ️', '협업 단계의 마감은 [협업·인수인계] 창에서 바꿀 수 있습니다', 3500); return; }
+                const off = krHolidayName(date) || ([0, 6].includes(_ymdDate(date).getDay()) ? (_ymdDate(date).getDay() === 0 ? '일요일' : '토요일') : '');
+                if (e.kind === 'work') {
+                    this.saveFocusDeadline(e.wf.id, date);
+                    this.showToast('success', '', `「${e.wf.title || '업무'}」 전체 마감일을 ${this._dpLabel(date)}로 바꿨습니다${off ? ` · ⚠️ ${off}` : ''}`);
+                } else {
+                    this.saveChecklistItemDeadlineDirect(e.wf.id, e.index, date);
+                    if (off) setTimeout(() => this.showToast('info', '⚠️', `${this._dpLabel(date)}은(는) ${off}입니다`, 3000), 1600);
+                }
+                this._schedRender();
+            },
+
+            // 누른 항목으로 이동: 그 업무를 열고, 항목이 든 단계를 펼친 뒤 항목까지 스크롤·반짝
+            _schedGo(key) {
+                const e = this._schedFind(key);
+                if (!e) return;
+                this.closeSchedule();
+                const wf = e.wf;
+                if (e.kind === 'item') {
+                    const cl = wf.checklist || [];
+                    let p = e.index;
+                    while (p > 0 && this._isSubEntry(cl[p])) p--;
+                    const { currentIdx } = this._stageInfo(cl, wf);
+                    const curId = currentIdx >= 0 && cl[currentIdx] ? this.ensureChecklistItemId(cl[currentIdx]) : '';
+                    if (!this._stageOpen) this._stageOpen = {};
+                    if (!this._stageOpen[wf.id] || this._stageOpen[wf.id].__cur !== curId) this._stageOpen[wf.id] = { __cur: curId };
+                    this._stageOpen[wf.id][this.ensureChecklistItemId(cl[p])] = true;
+                }
+                if (this.focusMode && this.focusedWorkflowId === wf.id && !this.focusEditMode) this.displayWorkflows();
+                else if (this.focusMode && this.focusEditMode) { this.showToast('info', 'ℹ️', '체크리스트 편집 중에는 이동할 수 없습니다. 편집을 마친 뒤 다시 눌러 주세요.', 3500); return; }
+                else this.focusWorkflow(wf.id);
+                if (e.kind !== 'item') return;
+                const t0 = Date.now();
+                const tryScroll = () => {
+                    const sc = document.getElementById(`focus-checklist-scroll-${wf.id}`);
+                    const el = sc && sc.querySelector(`.checklist-card[data-index="${e.index}"]`);
+                    if (el && this.focusedWorkflowId === wf.id) {
+                        const delta = el.getBoundingClientRect().top - sc.getBoundingClientRect().top - Math.max(12, (sc.clientHeight - el.offsetHeight) / 3);
+                        sc.scrollTo({ top: sc.scrollTop + delta, behavior: 'smooth' });
+                        el.classList.remove('jump-flash'); void el.offsetWidth; el.classList.add('jump-flash');
+                        setTimeout(() => el.classList.remove('jump-flash'), 1200);
+                        setTimeout(() => this._updateFocusJump(wf.id), 450);
+                        return;
+                    }
+                    if (Date.now() - t0 < 2500) setTimeout(tryScroll, 120);
+                    else this.showToast('info', 'ℹ️', '항목이 지금 보기에서 숨겨져 있습니다(내 담당만 보기 등). 전체 보기로 바꿔 확인해 주세요.', 4000);
+                };
+                setTimeout(tryScroll, 380);  // 업무를 연 뒤 "마지막으로 보던 곳" 복원이 끝난 다음에
+            },
+        });
+
+        // ══════════════ 업무 화면 왼쪽: 마감 카드 (Todoist·Asana의 마감 표시 + Planner의 기간 막대) ══════════════
+        // D-n을 크게(여유 초록·7일 이내 주황·2일 이내/지남 빨강), 날짜는 「10월 30일 (금)」, 근무일 수, 생성일→마감 기간 막대.
+        // 카드를 누르면 날짜 선택 창 · 협업 담당자는 「내 마감」(본인 마감일)
+        Object.assign(WorkflowManager.prototype, {
+            _focusDeadlineCardHtml(workflow, isDone) {
+                const wid = workflow.id;
+                const d = workflow.deadline ? parseAnyDate(workflow.deadline) : null;
+                const v = d && !isNaN(d) ? localDateStr(d) : '';
+                const mine = !!(workflow.collab && workflow.collab.role === 'assignee');
+                const input = `<input class="focus-deadline-input fap-dl-input" type="date" value="${v}" tabindex="-1" aria-hidden="true" onchange="app.saveFocusDeadline(${wid}, this.value)">`;
+                const open = `var i=this.querySelector('.fap-dl-input');if(i){try{i.showPicker();}catch(e){}}`;
+                const key = `if(event.key==='Enter'||event.key===' '){event.preventDefault();${open}}`;
+                if (!v) return `<div class="fap-dl-card empty" role="button" tabindex="0" onclick="${open}" onkeydown="${key}">${input}＋ ${mine ? '내 ' : ''}마감일 정하기</div>`;
+                const dl = this.calculateDaysLeft(v);
+                const tone = isDone ? 'done' : dl <= 2 ? 'urgent' : dl <= 7 ? 'warn' : 'ok';
+                const dText = isDone ? '✓ 완료' : dl === 0 ? 'D-Day' : dl < 0 ? `D+${-dl}` : `D-${dl}`;
+                const sub = isDone ? '끝난 업무' : dl > 0 ? `근무일 ${workdaysUntil(v)}일 남음` : dl === 0 ? '오늘 마감' : `${-dl}일 지남`;
+                const hn = krHolidayName(v), dow = _ymdDate(v).getDay();
+                const off = hn || (dow === 0 ? '일요일' : dow === 6 ? '토요일' : '');
+                // 기간 막대: 생성일 → 마감일 중 오늘까지 흐른 비율
+                const st = parseAnyDate(workflow.createdAt) || this.parseWorkflowDate(workflow);
+                let bar = '';
+                if (st && !isNaN(st)) {
+                    const a = _ymdDate(localDateStr(st)), b = _ymdDate(v), t = _ymdDate(localDateStr());
+                    if (b > a) {
+                        const pct = Math.max(0, Math.min(100, Math.round((t - a) / (b - a) * 100)));
+                        const prog = this.calculateProgress(workflow);
+                        const behind = !isDone && pct - prog >= 30;
+                        bar = `<div class="fap-dl-bar" title="기간의 ${pct}%가 지났고, 진행률은 ${prog}%입니다"><i style="width:${pct}%"></i></div>
+                            <div class="fap-dl-range"><span>${a.getMonth() + 1}/${a.getDate()} 생성</span><span>${behind ? '<b class="fap-dl-behind">⚠ 진행이 기간보다 늦음</b>' : `기간 ${pct}% 지남`}</span></div>`;
+                    }
+                }
+                return `<div class="fap-dl-card ${tone}" role="button" tabindex="0" title="눌러서 마감일 바꾸기" onclick="${open}" onkeydown="${key}">${input}
+                    <div class="fap-dl-top"><span class="fap-dl-label">${mine ? '내 마감' : '마감'}</span><span class="fap-dl-d">${dText}</span></div>
+                    <div class="fap-dl-date">${this._dpLabel(v, true)}${off ? ` <span class="fap-dl-off">${this.escapeHtml(off)}</span>` : ''}</div>
+                    <div class="fap-dl-sub">${sub}</div>
+                    ${bar}
+                </div>`;
+            },
+        });
+
+        // ══════════════ 조치결과·업무팁: 상위·하위 기호 쓰기 (한글 문단 번호·Word 글머리 기호처럼) ══════════════
+        // · 입력칸 위 기호 줄: 보고서식 □ ○ - · / 공문식 1. 가. 1) 가) — 누르면 지금 줄의 기호가 그 기호로 바뀜(없으면 줄 앞에 붙음)
+        // · ⇥/⇤ 버튼(키보드 Tab/Shift+Tab): 한 단계 아래/위 — 기호도 단계에 맞게 (□→○→-→·, 1.→가.→1)→가)…)
+        // · Enter: 다음 줄에 같은 기호(번호는 다음 번호), 기호만 있는 빈 줄에서 Enter는 목록 끝
+        // · ※ ▶ 는 커서 자리에 그대로 넣음 · 글은 평범한 글자 그대로라 한글·공문에 복사해 붙여도 모양 유지
+        const OL_REPORT = ['□', '○', '-', '·'];
+        const OL_OFFICIAL = ['1.', '가.', '1)', '가)', '(1)', '(가)', '①', '㉮'];
+        const OL_GA = '가나다라마바사아자차카타파하';
+        const OL_RE = /^(\s*)(□|○|-|·|\d+\.|[가-하]\.|\d+\)|[가-하]\)|\(\d+\)|\([가-하]\)|[①-⑳]|[㉮-㉻])(?: |$)/;
+        Object.assign(WorkflowManager.prototype, {
+            _installOutlineEditor() {
+                if (this._olInstalled) return;
+                this._olInstalled = true;
+                const isTarget = el => el && el.tagName === 'TEXTAREA' && (el.classList.contains('checklist-result-textarea') || el.classList.contains('checklist-tip-textarea')) && !el.disabled && !el.readOnly;
+                document.addEventListener('focusin', e => { if (isTarget(e.target)) this._olEnsureBar(e.target); });
+                document.addEventListener('keydown', e => {
+                    const ta = e.target;
+                    if (!isTarget(ta) || e.isComposing || e.keyCode === 229 || e.ctrlKey || e.altKey || e.metaKey) return;
+                    if (e.key === 'Tab') {
+                        if (this._olShift(ta, e.shiftKey ? -1 : 1)) e.preventDefault();
+                    } else if (e.key === 'Enter' && !e.shiftKey) {
+                        if (this._olEnter(ta)) e.preventDefault();
+                    }
+                }, true);
+            },
+
+            _olEnsureBar(ta) {
+                const prev = ta.previousElementSibling;
+                if (prev && prev.classList.contains('ol-bar')) return;
+                const bar = document.createElement('div');
+                bar.className = 'ol-bar';
+                const b = (txt, title, act, cls = '') => `<button type="button" class="ol-b ${cls}" data-act="${act}" title="${title}">${txt}</button>`;
+                bar.innerHTML = b('⇤', '위 단계로 (Shift+Tab)', 'up', 'ol-ind') + b('⇥', '아래 단계로 (Tab)', 'down', 'ol-ind')
+                    + '<span class="ol-sep"></span>'
+                    + OL_REPORT.map((m, i) => b(m, `보고서식 ${i + 1}단계`, 'm:' + m)).join('')
+                    + '<span class="ol-sep"></span>'
+                    + OL_OFFICIAL.slice(0, 4).map((m, i) => b(m, `공문식 ${i + 1}단계`, 'm:' + m, 'ol-num')).join('')
+                    + '<span class="ol-sep"></span>'
+                    + b('※', '참고(커서 자리에 넣기)', 'i:※ ') + b('▶', '커서 자리에 넣기', 'i:▶ ')
+                    + `<button type="button" class="ol-b ol-help" data-act="help" title="쓰는 방법">ⓘ</button>`;
+                // 버튼을 눌러도 입력칸의 커서가 그대로 있게
+                bar.addEventListener('mousedown', e => { if (e.target.closest('button')) e.preventDefault(); });
+                bar.addEventListener('click', e => {
+                    const btn = e.target.closest('button');
+                    if (!btn) return;
+                    const act = btn.getAttribute('data-act');
+                    if (act === 'help') { this._olHelp(); return; }
+                    ta.focus();
+                    if (act === 'up' || act === 'down') this._olShift(ta, act === 'up' ? -1 : 1, true);
+                    else if (act.startsWith('m:')) this._olSetMarker(ta, act.slice(2));
+                    else if (act.startsWith('i:')) this._olInsert(ta, ta.selectionStart, ta.selectionEnd, act.slice(2));
+                });
+                ta.parentNode.insertBefore(bar, ta);
+            },
+
+            // 쓰는 방법 안내 (Notion·Slack 단축키 안내처럼: 왼쪽 누를 것 · 오른쪽 한 줄 설명, 한 줄에 한 가지, 아래에 완성 예시)
+            _olHelp() {
+                const prev = document.getElementById('olHelp');
+                if (prev) prev.remove();
+                const k = (...keys) => keys.map(x => `<kbd>${x}</kbd>`).join('');
+                const row = (keys, title, desc) => `<div class="olh-row"><div class="olh-keys">${keys}</div><div class="olh-desc"><b>${title}</b>${desc ? `<span>${desc}</span>` : ''}</div></div>`;
+                const ov = document.createElement('div');
+                ov.id = 'olHelp';
+                ov.className = 'olh-overlay';
+                ov.innerHTML = `<div class="olh-box" role="dialog" aria-label="상위·하위 기호 쓰기" tabindex="-1">
+                    <div class="olh-head">
+                        <div><h3>상위·하위 기호 쓰기</h3><p>보고서·공문처럼 단계를 나눠 쓰는 방법</p></div>
+                        <button type="button" class="olh-x" aria-label="닫기">✕</button>
+                    </div>
+                    <div class="olh-body">
+                        <div class="olh-sec">1. 기호 붙이기</div>
+                        ${row(k('□', '○', '-', '·'), '보고서식 기호', '누르면 지금 줄 앞에 붙어요')}
+                        ${row(k('1.', '가.', '1)', '가)'), '공문식 번호', '번호는 알아서 이어져요')}
+                        ${row(k('※', '▶'), '참고 표시', '커서 자리에 넣어요')}
+                        <div class="olh-sec">2. 이어 쓰기</div>
+                        ${row(k('Enter'), '다음 줄에 같은 기호', '번호는 다음 번호로 (1. → 2.)')}
+                        ${row(k('Enter', 'Enter'), '목록 끝내기', '기호만 있는 빈 줄에서 한 번 더')}
+                        <div class="olh-sec">3. 단계 바꾸기</div>
+                        ${row(k('⇥'), '한 단계 아래로', '키보드 Tab도 같아요')}
+                        ${row(k('⇤'), '한 단계 위로', '키보드 Shift+Tab도 같아요')}
+                        ${row('<span class="olh-sel">여러 줄 선택</span>' + k('⇥'), '한꺼번에 바꾸기', '고른 줄이 모두 바뀌어요')}
+                        <div class="olh-sec">완성 예시</div>
+                        <div class="olh-ex">
+                            <div><small>보고서식</small><pre>□ 현장 점검 결과
+  ○ 위반 사항 2건
+    - 무단 증축
+※ 사진 3매 첨부</pre></div>
+                            <div><small>공문식</small><pre>1. 점검 개요
+2. 조치 내용
+  가. 시정명령
+  나. 이행 확인
+3. 향후 계획</pre></div>
+                        </div>
+                    </div>
+                    <div class="olh-foot">
+                        <span>💡 평범한 글자로 저장되어 한글·공문에 그대로 붙여 넣을 수 있어요</span>
+                        <button type="button" class="btn btn-primary btn-small olh-ok">확인</button>
+                    </div>
+                </div>`;
+                const close = () => ov.remove();
+                ov.addEventListener('mousedown', e => { if (e.target === ov) close(); });
+                ov.addEventListener('keydown', e => { if (e.key === 'Escape') { e.stopPropagation(); close(); } });
+                ov.querySelector('.olh-x').onclick = close;
+                ov.querySelector('.olh-ok').onclick = close;
+                document.body.appendChild(ov);
+                ov.querySelector('.olh-ok').focus({ preventScroll: true });
+            },
+
+            // 기호 → { family, level }
+            _olKind(marker) {
+                if (!marker) return null;
+                const r = OL_REPORT.indexOf(marker);
+                if (r >= 0) return { family: 'r', level: r };
+                const tests = [/^\d+\.$/, /^[가-하]\.$/, /^\d+\)$/, /^[가-하]\)$/, /^\(\d+\)$/, /^\([가-하]\)$/, /^[①-⑳]$/, /^[㉮-㉻]$/];
+                const lv = tests.findIndex(t => t.test(marker));
+                return lv >= 0 ? { family: 'o', level: lv } : null;
+            },
+            _olNth(marker) {
+                const m = marker.replace(/[().]/g, '');
+                if (/^\d+$/.test(m)) return Number(m);
+                if (OL_GA.includes(m)) return OL_GA.indexOf(m) + 1;
+                const c = m.charCodeAt(0);
+                if (c >= 0x2460 && c <= 0x2473) return c - 0x2460 + 1;
+                if (c >= 0x326E && c <= 0x327B) return c - 0x326E + 1;
+                return 1;
+            },
+            _olMake(family, level, n = 1) {
+                if (family === 'r') return OL_REPORT[Math.max(0, Math.min(level, OL_REPORT.length - 1))];
+                level = Math.max(0, Math.min(level, OL_OFFICIAL.length - 1));
+                const ga = OL_GA[Math.min(n, OL_GA.length) - 1];
+                return [`${n}.`, `${ga}.`, `${n})`, `${ga})`, `(${n})`, `(${ga})`, String.fromCharCode(0x2460 + Math.min(n, 20) - 1), String.fromCharCode(0x326E + Math.min(n, 14) - 1)][level];
+            },
+            // 공문식 번호: 같은 단계의 바로 앞 형제 번호 + 1 (더 높은 단계 줄을 만나면 거기서 멈춤)
+            _olNumberAt(lines, idx, level) {
+                for (let i = idx - 1; i >= 0; i--) {
+                    const m = OL_RE.exec(lines[i]);
+                    if (!m) continue;
+                    const k = this._olKind(m[2]);
+                    if (!k || k.family !== 'o') continue;
+                    if (k.level < level) return 1;
+                    if (k.level === level) return this._olNth(m[2]) + 1;
+                }
+                return 1;
+            },
+            _olIndent(level) { return '  '.repeat(level); },
+
+            // 커서가 있는 줄들의 [시작, 끝] 위치
+            _olLineRange(ta, all = false) {
+                const v = ta.value;
+                const s = v.lastIndexOf('\n', ta.selectionStart - 1) + 1;
+                let endPos = all ? ta.selectionEnd : ta.selectionStart;
+                if (all && endPos > ta.selectionStart && v[endPos - 1] === '\n') endPos--;
+                let e = v.indexOf('\n', endPos);
+                if (e < 0) e = v.length;
+                return [s, e];
+            },
+
+            // 글을 바꾸되 되돌리기(Ctrl+Z)가 되도록 — 안 되는 환경이면 직접 바꾸고 input 이벤트
+            _olInsert(ta, from, to, text, caret) {
+                ta.setSelectionRange(from, to);
+                let ok = false;
+                try { ok = document.execCommand('insertText', false, text); } catch (e) {}
+                if (!ok) {
+                    ta.setRangeText(text, from, to, 'end');
+                    ta.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+                if (caret != null) ta.setSelectionRange(caret, caret);
+            },
+
+            _olSetMarker(ta, marker) {
+                const k = this._olKind(marker);
+                const [s, e] = this._olLineRange(ta);
+                const line = ta.value.slice(s, e);
+                const m = OL_RE.exec(line);
+                const body = m ? line.slice(m[0].length) : line.replace(/^\s+/, '');
+                const bodyStart = m ? m[0].length : line.length - body.length;
+                let mk = marker;
+                if (k.family === 'o') {
+                    const prevLines = s > 0 ? ta.value.slice(0, s - 1).split('\n') : [];
+                    mk = this._olMake('o', k.level, this._olNumberAt(prevLines, prevLines.length, k.level));
+                }
+                const head = this._olIndent(k.level) + mk + ' ';
+                const caretInBody = Math.max(0, ta.selectionStart - s - bodyStart);
+                this._olInsert(ta, s, e, head + body, s + head.length + Math.min(caretInBody, body.length));
+            },
+
+            // 한 단계 아래(+1)/위(-1) — 기호가 있는 줄만, 여러 줄 선택도
+            _olShift(ta, dir, fromButton = false) {
+                const [s, e] = this._olLineRange(ta, true);
+                const v = ta.value;
+                const before = v.slice(0, s).split('\n');
+                before.pop();
+                const lines = v.slice(s, e).split('\n');
+                let changed = false;
+                const all = before.slice();
+                const out = lines.map(line => {
+                    const m = OL_RE.exec(line);
+                    const k = m && this._olKind(m[2]);
+                    if (!k) { all.push(line); return line; }
+                    const max = (k.family === 'r' ? OL_REPORT.length : OL_OFFICIAL.length) - 1;
+                    const lv = Math.max(0, Math.min(max, k.level + dir));
+                    if (lv === k.level) { all.push(line); return line; }
+                    changed = true;
+                    const mk = k.family === 'r' ? this._olMake('r', lv) : this._olMake('o', lv, this._olNumberAt(all.concat(['']), all.length, lv));
+                    const nl = this._olIndent(lv) + mk + ' ' + line.slice(m[0].length);
+                    all.push(nl);
+                    return nl;
+                });
+                if (!changed) {
+                    if (fromButton) this.showToast('info', 'ℹ️', lines.some(l => OL_RE.test(l)) ? (dir > 0 ? '더 아래 단계가 없습니다' : '이미 맨 위 단계입니다') : '먼저 기호 버튼(□ 또는 1.)으로 줄 앞에 기호를 붙여 주세요', 2500);
+                    return lines.length === 1 && !OL_RE.test(lines[0]) ? false : true;  // 기호 없는 줄의 Tab은 원래대로(다음 칸으로)
+                }
+                const txt = out.join('\n');
+                const single = lines.length === 1;
+                const caret = single ? s + txt.length : null;
+                this._olInsert(ta, s, e, txt, caret);
+                if (!single) ta.setSelectionRange(s, s + txt.length);
+                return true;
+            },
+
+            _olEnter(ta) {
+                if (ta.selectionStart !== ta.selectionEnd) return false;
+                const [s, e] = this._olLineRange(ta);
+                const v = ta.value;
+                const line = v.slice(s, e);
+                const m = OL_RE.exec(line);
+                const k = m && this._olKind(m[2]);
+                if (!k || ta.selectionStart < s + m[0].length) return false;
+                if (line.slice(m[0].length).trim() === '') {
+                    // 기호만 있는 줄에서 Enter → 목록 끝 (기호 지우기)
+                    this._olInsert(ta, s, e, '', s);
+                    return true;
+                }
+                const mk = k.family === 'r' ? m[2] : this._olMake('o', k.level, this._olNth(m[2]) + 1);
+                const head = '\n' + this._olIndent(k.level) + mk + ' ';
+                const pos = ta.selectionStart;
+                this._olInsert(ta, pos, pos, head, pos + head.length);
+                return true;
+            },
+        });
+
         // 전역 변수로 선언
         window.app = null;
         
@@ -37836,6 +39308,8 @@ ${formatList}`;
         function initApp() {
             try {
                 window.app = new WorkflowManager();
+                window.app._installDatePicker();
+                window.app._installOutlineEditor();
             } catch (error) {
                 console.error('앱 초기화 오류:', error);
                 // 오류 발생 시에도 기본 객체 생성 시도
